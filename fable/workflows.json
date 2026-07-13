@@ -1,0 +1,204 @@
+{
+  "workflows": [
+    {
+      "name": "high-agency-inbox-triage",
+      "group": "Inbox + Triage",
+      "tools": ["gmail"],
+      "prompt": "Read the recent unread emails in Gmail. Classify them into bugs, billing, or inquiries. Draft high-fidelity replies for each, but do not send them. Log your triage decisions.",
+      "finish_line": "All unread emails have drafted replies and are categorized in the log.",
+      "stop_rule": "No remaining unread emails or iteration limit reached."
+    },
+    {
+      "name": "pr-to-ticket-sync",
+      "group": "Inbox + Triage",
+      "tools": ["github", "jira"],
+      "prompt": "Scan open GitHub PRs. For each PR, locate the corresponding ticket in Jira or Linear. Sync the status (e.g. In Review, Merged) and add a reference comment to the ticket.",
+      "finish_line": "All open PRs are synced with their corresponding issue tracker tickets.",
+      "stop_rule": "All open PRs processed."
+    },
+    {
+      "name": "firehose-filtering",
+      "group": "Inbox + Triage",
+      "tools": ["slack", "discord"],
+      "prompt": "Sweep slack/discord channels for high-importance keywords (e.g., 'breach', 'down', 'critical', 'fail'). Filter out normal chat noise and draft summary logs.",
+      "finish_line": "High-importance alerts compiled and posted to escalation logs.",
+      "stop_rule": "Sweep completed."
+    },
+    {
+      "name": "community-alert-system",
+      "group": "Inbox + Triage",
+      "tools": ["slack"],
+      "prompt": "Monitor developer and support channels. Identify unresolved user queries that have been open for more than 4 hours and flag them for human review.",
+      "finish_line": "All stale queries identified and compiled in the review report.",
+      "stop_rule": "Sweep completed."
+    },
+    {
+      "name": "ticket-drafting-loop",
+      "group": "Inbox + Triage",
+      "tools": ["jira", "github"],
+      "prompt": "Analyze server error logs or crash reports. Automatically draft new bug tickets in Jira/Linear with stack trace, suspected cause, and files affected.",
+      "finish_line": "Bug tickets created for all unique errors in the logs.",
+      "stop_rule": "No new unique errors found."
+    },
+    {
+      "name": "cold-outreach-pilot",
+      "group": "KPIs + Operations",
+      "tools": ["gmail", "salesforce"],
+      "prompt": "Fetch hot leads from Salesforce. Draft personalized outbound emails based on their company description. Queue them for review.",
+      "finish_line": "Outreach drafts created for all retrieved leads.",
+      "stop_rule": "All leads processed."
+    },
+    {
+      "name": "product-metrics-digest",
+      "group": "KPIs + Operations",
+      "tools": ["posthog"],
+      "prompt": "Pull active user and retention metrics from PostHog. Summarize weekly growth and highlight any significant drop-offs in key onboarding funnels.",
+      "finish_line": "Weekly metrics digest drafted with key trend highlights.",
+      "stop_rule": "Digest drafted."
+    },
+    {
+      "name": "daily-runbook-execution",
+      "group": "KPIs + Operations",
+      "tools": ["terminal"],
+      "prompt": "Execute standard database and system health runbooks. Check disk usage, verify backup status, and log diagnostic outcomes.",
+      "finish_line": "All diagnostic checklist items verified and logged.",
+      "stop_rule": "Checklist completed."
+    },
+    {
+      "name": "sla-breach-rescue",
+      "group": "KPIs + Operations",
+      "tools": ["opsgenie", "jira"],
+      "prompt": "Scan open customer support tickets. Identify tickets approaching their SLA breach limit within 1 hour, and escalate priority in Opsgenie.",
+      "finish_line": "All near-breach tickets escalated and assigned.",
+      "stop_rule": "Sweep completed."
+    },
+    {
+      "name": "database-sanity-check",
+      "group": "KPIs + Operations",
+      "tools": ["postgres"],
+      "prompt": "Run periodic Postgres sanity checks (e.g. check for orphaned subscriptions, invalid constraint values, or performance index bloat).",
+      "finish_line": "Sanity check results cataloged in database-sanity-STATE.md.",
+      "stop_rule": "Sanity queries executed."
+    },
+    {
+      "name": "compliance-checker",
+      "group": "KPIs + Operations",
+      "tools": ["gdrive"],
+      "prompt": "Scan documents in the shared Google Drive compliance folder. Verify they contain required clauses (e.g., GDPR, SOC2 compliance statements).",
+      "finish_line": "All documents checked, and a compliance matrix updated.",
+      "stop_rule": "All new files checked."
+    },
+    {
+      "name": "vendor-spending-monitor",
+      "group": "KPIs + Operations",
+      "tools": ["stripe"],
+      "prompt": "Analyze monthly transactions and vendor charges. Compare them to history and flag any charge that increased by more than 15% month-over-month.",
+      "finish_line": "Monthly transaction variance report completed.",
+      "stop_rule": "All transactions analyzed."
+    },
+    {
+      "name": "dynamic-copy-optimizer",
+      "group": "Marketing + Content",
+      "tools": ["exa"],
+      "prompt": "Search the web for current industry trends using Exa. Review product landing page copy and suggest updates to align with trending terminology.",
+      "finish_line": "landing_page_optimized.md copy variations created.",
+      "stop_rule": "Copy variants generated."
+    },
+    {
+      "name": "social-media-scheduler",
+      "group": "Marketing + Content",
+      "tools": ["buffer"],
+      "prompt": "Fetch approved social posts from the content backlog. Distribute them across scheduled time slots in Buffer.",
+      "finish_line": "Next week's social buffer queue is fully populated.",
+      "stop_rule": "All scheduled slots filled or queue empty."
+    },
+    {
+      "name": "newsletter-assembler",
+      "group": "Marketing + Content",
+      "tools": ["substack"],
+      "prompt": "Assemble newsletter drafts by curating recent company updates, product releases, and top blog posts. Draft the weekly newsletter.",
+      "finish_line": "Newsletter draft created in Substack.",
+      "stop_rule": "Draft created."
+    },
+    {
+      "name": "competitor-release-tracker",
+      "group": "Marketing + Content",
+      "tools": ["exa", "firecrawl"],
+      "prompt": "Monitor competitor websites and blogs for product releases. Compile a brief of what features they added and how they position them.",
+      "finish_line": "Competitor release intelligence report compiled.",
+      "stop_rule": "All monitored sites checked."
+    },
+    {
+      "name": "search-console-analyst",
+      "group": "Marketing + Content",
+      "tools": ["gsearch"],
+      "prompt": "Evaluate organic search console keywords. Identify keywords where position is between 11-20 (page 2) and draft targeted content improvements.",
+      "finish_line": "Target keywords identified with optimization recommendations.",
+      "stop_rule": "Report generated."
+    },
+    {
+      "name": "testimonial-harvester",
+      "group": "Marketing + Content",
+      "tools": ["twitter"],
+      "prompt": "Search X/Twitter for positive user testimonials, case studies, or praise about the product. Extract text and user handles.",
+      "finish_line": "List of new user testimonials added to social proof vault.",
+      "stop_rule": "Search completed."
+    },
+    {
+      "name": "overnight-intel-refresh",
+      "group": "Research + Decisions",
+      "tools": ["exa", "firecrawl"],
+      "prompt": "Run overnight crawls of tracked research papers or news sites. Compile a daily briefing document highlighting relevant technical shifts.",
+      "finish_line": "Daily intel briefing file created and formatted.",
+      "stop_rule": "Briefing written."
+    },
+    {
+      "name": "regulatory-digest",
+      "group": "Research + Decisions",
+      "tools": ["firecrawl"],
+      "prompt": "Check regulatory agency websites for updates on industry guidelines. Extract key compliance modifications.",
+      "finish_line": "Compliance digest updated with latest regulatory changes.",
+      "stop_rule": "Sweep completed."
+    },
+    {
+      "name": "hard-question-escalation-queue",
+      "group": "Research + Decisions",
+      "tools": ["multi-model"],
+      "prompt": "Route pending questions through cheap models. On failure or low-confidence indicators, escalate to Fable/high-capability models.",
+      "finish_line": "All escalated questions answered and verified.",
+      "stop_rule": "Queue empty."
+    },
+    {
+      "name": "kill-criteria-loop",
+      "group": "Research + Decisions",
+      "tools": ["excel"],
+      "prompt": "Track ongoing projects against their pre-defined kill criteria. Flag projects that have violated one or more of these criteria.",
+      "finish_line": "Kill-criteria status updated for all active projects.",
+      "stop_rule": "All active projects reviewed."
+    },
+    {
+      "name": "pre-mortem-loop",
+      "group": "Research + Decisions",
+      "tools": ["docs"],
+      "prompt": "Read the proposed project design document. Draft detailed failure scenarios and pre-mortem hypotheses to harden the plan.",
+      "finish_line": "Pre-mortem analysis report added as an appendix to the design doc.",
+      "stop_rule": "Pre-mortem completed."
+    },
+    {
+      "name": "repeat-offender-digest",
+      "group": "Research + Decisions",
+      "tools": ["database"],
+      "prompt": "Query the error tracking logs. Group errors by component/file and highlight repeat offender files where bugs keep reappearing.",
+      "finish_line": "Repeat offender report generated with suggested refactor targets.",
+      "stop_rule": "Logs analyzed."
+    },
+    {
+      "name": "shadow-prompt-loop",
+      "group": "Research + Decisions",
+      "tools": ["multi-model"],
+      "prompt": "Compare production input outputs between active prompt and candidate shadow prompt. Log disagreements to evaluate prompt upgrades.",
+      "finish_line": "Shadow prompt analysis matrix generated.",
+      "stop_rule": "Required comparison count achieved."
+    }
+  ]
+}

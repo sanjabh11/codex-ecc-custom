@@ -1,0 +1,30 @@
+{
+  "chain": [
+    "competitor-release-tracker",
+    "newsletter-assembler",
+    "social-media-scheduler"
+  ],
+  "steps": [
+    {
+      "workflow": "competitor-release-tracker",
+      "iterations": 1,
+      "status": "completed",
+      "final_output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nCompetitor release intelligence compiled for 2 sites. Exa trend data: 1 results. Report ready."
+    },
+    {
+      "workflow": "newsletter-assembler",
+      "iterations": 1,
+      "status": "completed",
+      "final_output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nNewsletter draft created in Substack (id=sub-draft-001). Draft ready."
+    },
+    {
+      "workflow": "social-media-scheduler",
+      "iterations": 1,
+      "status": "completed",
+      "final_output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nScheduled 2 post(s): twitter: New feature drop: Loop workflows on autopilot \ud83d\ude80; linkedin: How we automated 25 workflows with Fable 5"
+    }
+  ],
+  "prior_context": "\n[From competitor-release-tracker]: [Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nCompetitor release intelligence compiled for 2 sites. Exa trend data: 1 results. Report ready.\n\n[From newsletter-assembler]: [Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nNewsletter draft created in Substack (id=sub-draft-001). Draft ready.\n\n[From social-media-scheduler]: [Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nScheduled 2 post(s): twitter: New feature drop: Loop workflows on autopilot \ud83d\ude80; linkedin: How we automated 25 workflows with Fable 5\n",
+  "started_at": "2026-07-09T10:48:15.493127+00:00Z",
+  "completed_at": "2026-07-09T10:48:15.495688+00:00Z"
+}

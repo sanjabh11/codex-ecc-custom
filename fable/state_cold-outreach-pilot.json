@@ -1,0 +1,23 @@
+{
+  "iteration": 3,
+  "history": [
+    {
+      "iteration": 1,
+      "output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nOutreach draft queued for Acme Corp (score 92).",
+      "timestamp": "2026-07-08T08:10:52.068139+00:00Z"
+    },
+    {
+      "iteration": 2,
+      "output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nOutreach draft queued for GlobalTech (score 84).",
+      "timestamp": "2026-07-08T08:10:52.069179+00:00Z"
+    },
+    {
+      "iteration": 3,
+      "output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nOutreach draft queued for Acme Corp (score 92).",
+      "timestamp": "2026-07-08T08:10:52.073598+00:00Z"
+    }
+  ],
+  "status": "completed",
+  "workflow": "cold-outreach-pilot",
+  "started_at": "2026-07-08T08:10:52.067519+00:00Z"
+}

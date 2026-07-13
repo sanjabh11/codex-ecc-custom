@@ -1,0 +1,18 @@
+{
+  "iteration": 2,
+  "history": [
+    {
+      "iteration": 1,
+      "output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nCompetitor release intelligence compiled for 2 sites. Exa trend data: 1 results. Report ready.",
+      "timestamp": "2026-07-08T07:54:10.608154Z"
+    },
+    {
+      "iteration": 2,
+      "output": "[Playbook Rule R-101 Adhered] Decomposing step into logical sub-tasks.\n[Playbook Rule R-102 Adhered] Verifying intermediate assumptions.\n[Playbook Rule R-103 Adhered] Enumerating expected schema step-by-step.\nCompetitor release intelligence compiled for 2 sites. Exa trend data: 1 results. Report ready.",
+      "timestamp": "2026-07-08T08:10:40.373538+00:00Z"
+    }
+  ],
+  "status": "completed",
+  "workflow": "competitor-release-tracker",
+  "started_at": "2026-07-08T07:54:10.607770Z"
+}

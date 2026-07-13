@@ -1,0 +1,30 @@
+{
+  "mock_mode": false,
+  "default_model": "MiniMax-M3",
+  "reasoning_effort": "medium",
+  "api_keys": {
+    "perplexity": "",
+    "salesforce": "",
+    "meta_marketing": "",
+    "zendesk": "",
+    "stripe": "",
+    "posthog": "",
+    "reddit": "",
+    "slack": "",
+    "discord": "",
+    "gmail": "",
+    "linear": "",
+    "jira": "",
+    "opsgenie": "",
+    "gdrive": "",
+    "exa": "",
+    "buffer": "",
+    "substack": "",
+    "firecrawl": "",
+    "gsearch": "",
+    "twitter": "",
+    "minimax": "***REMOVED***",
+    "minimax_base_url": "https://api.minimax.io/v1",
+    "minimax_model": "MiniMax-M3"
+  }
+}

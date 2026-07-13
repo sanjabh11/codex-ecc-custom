@@ -1,0 +1,48 @@
+{
+  "jobs": [
+    {
+      "workflow": "high-agency-inbox-triage",
+      "cadence": "hourly",
+      "enabled": true,
+      "last_run": "2026-07-13T06:22:56.164725+00:00",
+      "params": [
+        "--mock",
+        "--iterations",
+        "1"
+      ]
+    },
+    {
+      "workflow": "daily-runbook-execution",
+      "cadence": "daily",
+      "enabled": true,
+      "last_run": "2026-07-12T10:48:45.572664+00:00",
+      "params": [
+        "--mock",
+        "--iterations",
+        "1"
+      ]
+    },
+    {
+      "workflow": "product-metrics-digest",
+      "cadence": "daily",
+      "enabled": true,
+      "last_run": "2026-07-13T05:51:19.717500+00:00",
+      "params": [
+        "--mock",
+        "--iterations",
+        "1"
+      ]
+    },
+    {
+      "workflow": "vendor-spending-monitor",
+      "cadence": "weekly",
+      "enabled": true,
+      "last_run": "2026-07-10T04:25:12.364987+00:00",
+      "params": [
+        "--mock",
+        "--iterations",
+        "1"
+      ]
+    }
+  ]
+}

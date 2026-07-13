@@ -1,0 +1,33 @@
+{
+  "mock_mode": true,
+  "default_model": "gpt-5.4-mini",
+  "reasoning_effort": "medium",
+  "api_keys": {
+    "perplexity": "",
+    "salesforce": "",
+    "meta_marketing": "",
+    "zendesk": "",
+    "stripe": "",
+    "posthog": "",
+    "reddit": "",
+    "slack": "",
+    "discord": "",
+    "gmail": "",
+    "linear": "",
+    "jira": "",
+    "opsgenie": "",
+    "gdrive": "",
+    "exa": "",
+    "buffer": "",
+    "substack": "",
+    "firecrawl": "",
+    "gsearch": "",
+    "twitter": "",
+    "xai": "",
+    "xai_base_url": "",
+    "xai_model": "",
+    "minimax": "",
+    "minimax_base_url": "",
+    "minimax_model": ""
+  }
+}

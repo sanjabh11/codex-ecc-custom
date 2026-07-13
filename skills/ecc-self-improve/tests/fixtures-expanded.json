@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ecc-loop-start-trace-wrap-required",
+    "skill": "ecc-loop-start",
+    "description": "Loop completion hook must invoke ecc-trace-wrap, not skip it",
+    "must_contain_any": ["ecc-trace-wrap", "trace-wrap", "Loop Completion Hook"],
+    "must_not_contain": ["Skip this hook unconditionally"],
+    "context": "The loop completion hook is the entry point for the self-improvement flywheel. It must always run ecc-trace-wrap first."
+  },
+  {
+    "id": "ecc-loop-start-no-autocommit",
+    "skill": "ecc-loop-start",
+    "description": "Loop start hook must never auto-commit patches — only notify the user",
+    "must_contain_any": ["NEVER auto-commits", "user to explicitly run", "notification", "Options:"],
+    "must_not_contain": ["automatically applying patches without user approval", "auto-apply patches silently"],
+    "context": "Loop hook only shows a readiness notification. The SKILL.md itself says 'NEVER auto-commits' which is correct. We only block patterns that say the opposite."
+  },
+  {
+    "id": "ecc-loop-start-boundary-conditions",
+    "skill": "ecc-loop-start",
+    "description": "Loop hook must check BC-1 through BC-4 boundary conditions",
+    "must_contain_any": ["BC-1", "BC-2", "BC-3", "BC-4"],
+    "must_not_contain": [],
+    "context": "Boundary conditions gate the readiness notification. All 4 must be checked."
+  },
+  {
+    "id": "ecc-router-tier-gate",
+    "skill": "ecc-router",
+    "description": "Router must show TIER 2 gate before routing to ecc-self-improve (non-dry-run)",
+    "must_contain_any": ["Tier 2", "TIER 2", "TERMS.md"],
+    "must_not_contain": ["skip tier gate", "bypass TERMS"],
+    "context": "Any Tier 2+ self-improve invocation requires the router to load and display TERMS.md summary first."
+  },
+  {
+    "id": "ecc-router-weakness-warning",
+    "skill": "ecc-router",
+    "description": "Router must check LEARNINGS.md for known weaknesses before routing to a skill",
+    "must_contain_any": ["Known-Weakness", "known unpatched", "LEARNINGS.md", "conversation_evidence"],
+    "must_not_contain": [],
+    "context": "Pre-flight warning shows the user what unpatched issues exist in the target skill before executing it."
+  },
+  {
+    "id": "ecc-router-dry-run-routing",
+    "skill": "ecc-router",
+    "description": "Router must route 'preview patches' and 'dry run' to ecc-self-improve --dry-run",
+    "must_contain_any": ["--dry-run", "preview patches", "dry run"],
+    "must_not_contain": ["dry run is not supported"],
+    "context": "Dry run is the Tier 1 safe mode for previewing patches without applying them."
+  },
+  {
+    "id": "ecc-learn-memory-recall",
+    "skill": "ecc-learn",
+    "description": "ecc-learn must attempt cm memory recall before aggregating LEARNINGS.md",
+    "must_contain_any": ["Step 0", "Memory Recall", "cm context", "LEARNINGS.md is ground truth"],
+    "must_not_contain": ["skip memory check unconditionally"],
+    "context": "Memory recall shows what happened in previous sessions before the user sees the current LEARNINGS aggregation."
+  },
+  {
+    "id": "ecc-learn-evidence-missing-warning",
+    "skill": "ecc-learn",
+    "description": "ecc-learn must warn when entries are missing conversation_evidence",
+    "must_contain_any": ["missing conversation_evidence", "unverifiable", "Judge Gate"],
+    "must_not_contain": ["ignore missing evidence"],
+    "context": "The Judge Gate in ecc-self-improve filters out entries without conversation_evidence. Users should know these won't be promoted."
+  },
+  {
+    "id": "ecc-trace-wrap-conversation-evidence-required",
+    "skill": "ecc-trace-wrap",
+    "description": "Trace wrap must include conversation_evidence field in every JSON entry",
+    "must_contain_any": ["conversation_evidence", "verbatim", "Judge Gate"],
+    "must_not_contain": ["conversation_evidence is optional"],
+    "context": "Without conversation_evidence, entries are rejected by Stage 2b Judge Gate B."
+  },
+  {
+    "id": "ecc-self-improve-stage0-preflight",
+    "skill": "ecc-self-improve",
+    "description": "Self-improve must run Stage 0 boundary check before any mining (non-dry-run)",
+    "must_contain_any": ["Stage 0", "boundary check", "--boundary-check", "HARD STOP"],
+    "must_not_contain": ["skip Stage 0", "bypass boundary check"],
+    "context": "Stage 0 is the first gate. It prevents premature execution when conditions are not yet met."
+  }
+]
