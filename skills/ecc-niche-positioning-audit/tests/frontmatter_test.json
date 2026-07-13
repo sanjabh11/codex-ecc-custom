@@ -1,0 +1,18 @@
+{
+  "test_name": "frontmatter_validation",
+  "description": "Validate SKILL.md frontmatter meets requirements",
+  "input": {
+    "skill_file": "SKILL.md",
+    "max_description_length": 1024,
+    "max_body_lines": 500
+  },
+  "expected": {
+    "description_length_valid": true,
+    "body_lines_valid": true,
+    "name_present": true,
+    "trigger_phrases_present": ["niche segment", "positioning"],
+    "anti_trigger_present": true
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

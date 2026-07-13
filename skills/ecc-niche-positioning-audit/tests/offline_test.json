@@ -1,0 +1,19 @@
+{
+  "test_name": "offline_web_unavailable",
+  "description": "When web search is unavailable, Phase 2 must be skipped and user notified",
+  "input": {
+    "web_search_available": false,
+    "scope": "standard",
+    "current_phase": "phase-1"
+  },
+  "expected": {
+    "phase_2_skipped": true,
+    "user_notified": true,
+    "artifact_notes_skip": true,
+    "resume_when_available": true,
+    "no_crash": true
+  },
+  "grader": "scenario",
+  "pass_threshold": 0.9,
+  "pass_at_k": 3
+}

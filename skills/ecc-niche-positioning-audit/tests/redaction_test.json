@@ -1,0 +1,39 @@
+{
+  "test_name": "redaction_before_storage",
+  "description": "Verify secrets and PII are redacted before persistence",
+  "cases": [
+    {
+      "input_text": "API key: sk-1234567890abcdefghijklmnopqrstuvwxyz",
+      "expected_pattern_absent": "sk-[a-zA-Z0-9]{20,}",
+      "expected_replacement": "REDACTED_API_KEY"
+    },
+    {
+      "input_text": "Token: ghp_1234567890abcdefghijklmnopqrstuvwxyz1234567890",
+      "expected_pattern_absent": "ghp_[a-zA-Z0-9]{36}",
+      "expected_replacement": "REDACTED_GITHUB_TOKEN"
+    },
+    {
+      "input_text": "Email: user@example.com",
+      "expected_pattern_absent": "[\\w.+-]+@[\\w-]+\\.[\\w.-]+",
+      "expected_replacement": "REDACTED_EMAIL"
+    },
+    {
+      "input_text": "Slack: xoxb-1234567890-abcdefghij",
+      "expected_pattern_absent": "xox[bpoa]-[a-zA-Z0-9-]+",
+      "expected_replacement": "REDACTED_SLACK_TOKEN"
+    },
+    {
+      "input_text": "JWT: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkw",
+      "expected_pattern_absent": "eyJ[a-zA-Z0-9_-]+\\.eyJ[a-zA-Z0-9_-]+",
+      "expected_replacement": "REDACTED_JWT"
+    }
+  ],
+  "expected": {
+    "all_secrets_redacted": true,
+    "all_pii_redacted": true,
+    "redaction_count_logged": true,
+    "no_raw_secrets_in_output": true
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

@@ -1,0 +1,60 @@
+{
+  "test_name": "artifact_schema_validation",
+  "description": "Verify phase artifacts validate against artifact.schema.json",
+  "cases": [
+    {
+      "artifact": {
+        "artifact_version": "1.0.0",
+        "phase": "phase-1",
+        "run_id": "audit-20250713-143000-a1b2",
+        "scope": "standard",
+        "scores": [
+          {"item": "PMF Evidence", "score": 3, "evidence_line": "No retention data found in codebase", "evidence_grade": "LOW"}
+        ],
+        "evidence": [
+          {"finding": "Feature inventory complete", "sources": [{"url": "internal://codebase", "source_tier": "internal"}], "contradiction_status": "none"}
+        ],
+        "recommendations": [
+          {"title": "Add analytics tracking", "owner": "Engineering", "surface": "backend", "due_date": "2025-08-13"}
+        ],
+        "confidence": {
+          "composite": 85,
+          "subscores": {
+            "evidence_density": 80,
+            "adversarial_survival": 75,
+            "assumption_risk": 100,
+            "coverage_completeness": 90,
+            "triangulation_strength": 80
+          },
+          "iterations": 1,
+          "final_score": 85
+        }
+      },
+      "expected_valid": true
+    },
+    {
+      "artifact": {
+        "artifact_version": "1.0.0",
+        "phase": "phase-2",
+        "run_id": "audit-20250713-143000-a1b2",
+        "scope": "standard",
+        "scores": [],
+        "evidence": [],
+        "recommendations": [],
+        "confidence": {
+          "composite": 0,
+          "subscores": {},
+          "iterations": 1,
+          "final_score": 0
+        }
+      },
+      "expected_valid": true
+    }
+  ],
+  "expected": {
+    "all_artifacts_validate": true,
+    "schema_enforces_required_fields": true
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

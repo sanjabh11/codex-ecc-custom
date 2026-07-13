@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex-ecc-custom/skills/ecc-niche-positioning-audit/schemas/state.schema.json",
+  "title": "Positioning Audit State",
+  "description": "Schema for .positioning-audit/state.json",
+  "type": "object",
+  "required": ["schema_version", "run_id", "codebase_path", "audit_started", "current_phase", "scope", "gate_decisions", "confidence_scores", "portfolio_opt_in"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the state schema"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^audit-\\d{8}-\\d{6}-[a-f0-9]{4}$",
+      "description": "Unique identifier for this audit run"
+    },
+    "codebase_path": {
+      "type": "string",
+      "description": "Absolute path to the codebase root"
+    },
+    "codebase_name": {
+      "type": "string",
+      "description": "Human-readable name of the codebase"
+    },
+    "audit_started": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when audit started"
+    },
+    "audit_completed": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when audit completed, or null if in progress"
+    },
+    "current_phase": {
+      "type": "string",
+      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "completed"],
+      "description": "Current phase of the audit"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["quick", "standard", "deep"],
+      "description": "Audit scope mode"
+    },
+    "stack_detected": {
+      "type": ["string", "null"],
+      "description": "Detected tech stack, or null if not yet detected"
+    },
+    "domain_detected": {
+      "type": ["string", "null"],
+      "description": "Detected domain, or null if not yet detected"
+    },
+    "gate_decisions": {
+      "type": "object",
+      "description": "Map of gate name to decision",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["GO", "CONDITIONAL_GO", "RECYCLE", "STOP", "PENDING"]
+      }
+    },
+    "confidence_scores": {
+      "type": "object",
+      "description": "Map of phase name to confidence score (0-100)",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+      }
+    },
+    "pre_gate_self_assessment": {
+      "type": "object",
+      "description": "Map of phase name to self-assessment composite (5-25)",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 5,
+        "maximum": 25
+      }
+    },
+    "redaction_log": {
+      "type": "object",
+      "properties": {
+        "secrets_redacted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of secrets redacted before storage"
+        },
+        "pii_redacted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of PII items redacted before storage"
+        }
+      }
+    },
+    "portfolio_opt_in": {
+      "type": "boolean",
+      "description": "Whether user consented to global portfolio aggregation",
+      "default": false
+    },
+    "advisor_used": {
+      "type": "boolean",
+      "description": "Whether ecc-advisor was used during this audit",
+      "default": false
+    },
+    "extensions_loaded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of per-project extension files loaded",
+      "default": []
+    }
+  }
+}

@@ -4,7 +4,7 @@
       "workflow": "high-agency-inbox-triage",
       "cadence": "hourly",
       "enabled": true,
-      "last_run": "2026-07-13T07:23:18.755800+00:00",
+      "last_run": "2026-07-13T08:23:29.546850+00:00",
       "params": [
         "--mock",
         "--iterations",
