@@ -1,0 +1,34 @@
+{
+  "test_name": "scope_dag_validity_v5",
+  "description": "Verify all 3 scopes have valid start-to-terminal paths with no impossible dependencies",
+  "cases": [
+    {
+      "scope": "quick",
+      "expected_path": ["phase-0", "phase-1", "phase-2", "phase-3-lite", "phase-4-lite", "terminal"],
+      "skipped_phases": ["phase-5", "phase-6", "phase-7"],
+      "gate_threshold": 12,
+      "note": "P3-lite replaces P3; P4-lite replaces P4 — no impossible dependency"
+    },
+    {
+      "scope": "standard",
+      "expected_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "terminal"],
+      "skipped_phases": ["phase-5", "phase-6", "phase-7"],
+      "gate_threshold": 15
+    },
+    {
+      "scope": "deep",
+      "expected_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "phase-6", "phase-7", "terminal"],
+      "skipped_phases": [],
+      "gate_threshold": 18,
+      "note": "Phase 6 skipped if no codebase"
+    }
+  ],
+  "expected": {
+    "all_scopes_valid": true,
+    "no_impossible_paths": true,
+    "no_contradictions": true,
+    "quick_uses_lite_phases": true
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

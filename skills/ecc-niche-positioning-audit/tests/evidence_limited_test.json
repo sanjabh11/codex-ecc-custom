@@ -1,0 +1,44 @@
+{
+  "test_name": "evidence_limited_mode",
+  "description": "When no customer/commercial evidence is available, audit enters evidence-limited mode with CONDITIONAL GO (never GO)",
+  "cases": [
+    {
+      "case_id": "no_customer_evidence",
+      "evidence_types_present": ["product_promise", "stakeholder_input", "codebase_evidence"],
+      "customer_commercial_types_present": 0,
+      "expected_gate": "CONDITIONAL_GO",
+      "expected_evidence_limited": true,
+      "expected_message": "Evidence-limited mode: no direct customer or commercial evidence available. Positioning recommendations are hypotheses requiring validation."
+    },
+    {
+      "case_id": "one_customer_evidence",
+      "evidence_types_present": ["product_promise", "user_quote", "codebase_evidence"],
+      "customer_commercial_types_present": 1,
+      "expected_gate": "GO",
+      "expected_evidence_limited": false,
+      "expected_message": "Sufficient customer evidence for full GO decision"
+    },
+    {
+      "case_id": "all_internal_evidence",
+      "evidence_types_present": ["product_promise", "stakeholder_input"],
+      "customer_commercial_types_present": 0,
+      "expected_gate": "CONDITIONAL_GO",
+      "expected_evidence_limited": true,
+      "note": "Only 2 types AND no customer evidence — still CONDITIONAL GO with evidence-limited flag"
+    },
+    {
+      "case_id": "all_customer_evidence",
+      "evidence_types_present": ["user_quote", "analytics_data", "support_ticket", "sales_data"],
+      "customer_commercial_types_present": 4,
+      "expected_gate": "GO",
+      "expected_evidence_limited": false
+    }
+  ],
+  "expected": {
+    "no_full_go_without_customer_evidence": true,
+    "evidence_limited_flag_set_correctly": true,
+    "gate_decision_correct": true
+  },
+  "grader": "scenario",
+  "pass_threshold": 1.0
+}

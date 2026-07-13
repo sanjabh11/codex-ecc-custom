@@ -4,14 +4,10 @@ description: >-
   Identify high-potential customer segments, unmet needs, product-market gaps,
   and defensible positioning through ultra-deep market research, customer/evidence
   analysis, product evaluation, and optional codebase reconnaissance. Eight-phase
-  pipeline (Phase 0 framing + 7 execution phases) with explicit approval gates,
-  decision confidence mechanism (95% target), evidence-anchored scoring, ICP
-  rubric, beachhead methodology, 8-type gap classification, validation experiments,
-  hypothesis status tracking, adversarial review, dynamic per-phase skill selection,
-  quarterly drift tracking, stack auto-detection, scope selection (quick/standard/deep),
-  per-project extensions, persistent state, cross-product portfolio view, and
-  evidence grading. Codebase is optional — product evidence is the primary input.
-  Designed for repeated use across multiple products and codebases.
+  pipeline with approval gates, decision confidence (95% target), 8-type gap
+  classification, validation experiments, hypothesis tracking, adversarial review,
+  scope selection (quick/standard/deep), persistent state, and cross-product
+  portfolio. Codebase is optional — product evidence is the primary input.
   TRIGGER when: "niche segment", "positioning strategy", "positioning drift",
   "customer segment identification", "product-market alignment", "market gap
   discovery", "unmet needs analysis", "ICP", "beachhead segment",
@@ -103,7 +99,7 @@ Transform product-market decisions from guesswork into evidence-anchored strateg
 | Dimension | Quick | Standard | Deep |
 |-----------|-------|----------|------|
 | **Time** | 15-30 min | 1-3 hr | 3-6 hr |
-| **Phases** | 0+1+2+4 | 0-4 (skip 5-7) | 0-7 (all) |
+| **Phases** | 0+1+2+3-lite+4-lite | 0-4 (skip 5-7) | 0-7 (all) |
 | **Segments analyzed** | Top 3 | Top 5 | Top 8 |
 | **Competitors researched** | Top 3 direct | Top 5 direct + 3 indirect | Top 8 direct + 5 indirect + 3 substitutes |
 | **Customer evidence depth** | Available signals only | Available + 5-min interview prep | Available + interview guide + survey template |
@@ -163,6 +159,20 @@ Phase Question
 - **Standard scope**: 3 levels deep, 2 counter-evidence passes
 - **Deep scope**: 4 levels deep, 3 counter-evidence passes + saturation check (new sources repeat findings from existing sources)
 
+### Saturation Stop Rules
+
+Research stops when ALL of the following are satisfied:
+
+| Rule | Quick | Standard | Deep |
+|------|-------|----------|------|
+| **Source coverage minimum** | ≥3 unique sources | ≥5 unique sources | ≥8 unique sources |
+| **Query coverage** | Each sub-question has ≥1 search query | ≥2 distinct queries per sub-question | ≥3 distinct queries per sub-question |
+| **Repetition stop** | 2 consecutive sources repeat existing findings | 3 consecutive sources repeat | 3 consecutive sources repeat |
+| **Counter-evidence stop** | ≥1 disconfirmation query, no new contradictions | ≥2 disconfirmation queries, no new contradictions | ≥3 disconfirmation queries, no new contradictions |
+| **Sub-question coverage** | All Level-1 questions have coverage status | All Level-2 questions covered | All Level-3 questions covered |
+
+**Rule**: Stop when repetition + counter-evidence + coverage rules are all met. Do not continue researching after saturation is reached.
+
 ## Gap Classification Taxonomy
 
 Every gap identified in Phase 4 is classified into one of 8 types:
@@ -173,7 +183,7 @@ Every gap identified in Phase 4 is classified into one of 8 types:
 | **Product gap** | Product lacks a capability needed to serve the identified need | "Product lacks SSO; enterprise customers require it" |
 | **Proof gap** | Product works but there is no evidence proving it to the market | "No case studies, testimonials, or ROI data" |
 | **Positioning gap** | Product is positioned for the wrong segment or use case | "Marketed as dev tool but actual users are data scientists" |
-| **Pricing gap** | Pricing model does not match the segment's WTP or buying process | | "Monthly SaaS pricing but enterprise needs annual contracts" |
+| **Pricing gap** | Pricing model does not match the segment's WTP or buying process | "Monthly SaaS pricing but enterprise needs annual contracts" |
 | **Distribution gap** | Product is not reachable through the channels the segment uses | "Sold via website but segment buys through VARs" |
 | **Adoption gap** | Product requires onboarding, integration, or migration that blocks adoption | "Requires data migration; no import tools exist" |
 | **Evidence gap** | Insufficient information to reach a conclusion about a market question | "No data on retention beyond 90 days" |
@@ -565,6 +575,7 @@ Synthesize into a 1-page Product Truth document:
 **Exit Criteria**:
 - [ ] Product promise is extracted and documented
 - [ ] At least 3 evidence types are present in the corpus (any combination)
+- [ ] **At least 1 of the 3 required evidence types is from customer/commercial sources**: `user_quote`, `behavioral_observation`, `support_ticket`, `analytics_data`, `sales_data`, or `pricing_signal` — if not, gate decision is CONDITIONAL GO with evidence-limited flag
 - [ ] Actual capability inventory is complete (from codebase, live product, or docs)
 - [ ] Promise-capability gap is documented
 - [ ] Evidence limitations are explicitly stated
@@ -573,7 +584,13 @@ Synthesize into a 1-page Product Truth document:
 - [ ] 360-degree: Customer + Product perspectives covered
 - [ ] Pre-gate self-assessment ≥ threshold
 
-**Gate Decision**: GO → Phase 2 | CONDITIONAL GO → Phase 2 with evidence limitations | RECYCLE → gather more evidence | STOP → no usable product context
+**Evidence-Limited Mode**: If no customer/commercial evidence is available, the audit proceeds in evidence-limited mode. In this mode:
+- Gate 1 decision is CONDITIONAL GO (never GO)
+- All subsequent gates are capped at CONDITIONAL GO
+- Final report must include: "This audit was conducted in evidence-limited mode — no direct customer or commercial evidence was available. Positioning recommendations should be treated as hypotheses requiring validation."
+- State file sets `evidence_limited_mode: true`
+
+**Gate Decision**: GO → Phase 2 (requires customer/commercial evidence) | CONDITIONAL GO → Phase 2 with evidence limitations or evidence-limited mode | RECYCLE → gather more evidence | STOP → no usable product context
 
 ## Phase 2: Ultra-Deep Market & Alternative Research
 
@@ -1040,11 +1057,32 @@ Compile the complete audit into a final report:
 | 0 | None | Never — mandatory |
 | 1 | Phase 0 | Never — evidence corpus is foundational |
 | 2 | Phase 1 | Never — market research needs product truth |
-| 3 | Phase 2 | Never — segments need market context |
-| 4 | Phase 3 | Never — alignment needs segments |
-| 5 | Phase 4 + User Approval | Never — validation needs approved hypothesis |
-| 6 | Phase 5 | **No codebase available** — skip entirely |
-| 7 | Phase 5 (or 6 if codebase) | Never — closes the learning loop |
+| 3 | Phase 2 | **Quick mode** — replaced by Phase 3-lite (top 3 segments from P2 needs, no 7-dimension scoring, no negative ICP) |
+| 4 | Phase 3 (or Phase 3-lite in quick mode) | Never — alignment needs segments. **Quick mode** uses Phase 4-lite (gap classification only, no positioning hypotheses, no validation experiments) |
+| 5 | Phase 4 + User Approval | Quick mode — skip entirely |
+| 6 | Phase 5 | **No codebase available** — skip entirely. Quick mode — skip entirely |
+| 7 | Phase 5 (or 6 if codebase) | Quick mode — skip entirely |
+
+### Quick Mode Path
+
+```
+P0 → P1 → P2 → P3-lite → P4-lite → TERMINAL
+```
+
+- **P3-lite**: Top 3 segments from P2 market needs directly; no 7-dimension scoring; no negative ICP; unmet-need statements only
+- **P4-lite**: Gap classification only (8-type); no positioning hypotheses; no validation experiments; no approval gate
+
+### Standard Mode Path
+
+```
+P0 → P1 → P2 → P3 → P4 → [APPROVAL] → (skip 5-7) → TERMINAL
+```
+
+### Deep Mode Path
+
+```
+P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 → P6 (if codebase) → P7 → TERMINAL
+```
 
 ## Tool Truth
 
@@ -1075,6 +1113,7 @@ Compile the complete audit into a final report:
 - Advisor checkpoints: call `ecc-advisor` before Phase 2 and Phase 4 if available; if unavailable, proceed with documented skip
 - **Absence of evidence is itself evidence** — mark as "evidence limitation" in the corpus, do not guess
 - **Contradictions are surfaced, not hidden** — if product promise contradicts customer outcomes, flag it explicitly
+- **Evidence-limited mode is explicitly flagged** in state and artifacts — no full GO decision without direct customer or commercial evidence
 
 ### Artifact Format
 

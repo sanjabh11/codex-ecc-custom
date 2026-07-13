@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/experiment.schema.json",
+  "title": "Validation Experiment",
+  "description": "Closed-loop experiment contract for validating positioning hypotheses",
+  "type": "object",
+  "required": ["experiment_id", "hypothesis_id", "claim_being_tested", "owner", "fidelity", "method", "sample_size", "success_threshold", "failure_threshold", "decision_rule", "risk_check", "instrumentation", "status"],
+  "properties": {
+    "experiment_id": {
+      "type": "string",
+      "pattern": "^EXP-\\d{3}$",
+      "description": "Unique identifier for this experiment"
+    },
+    "hypothesis_id": {
+      "type": "string",
+      "pattern": "^H\\d+$",
+      "description": "ID of the hypothesis this experiment validates"
+    },
+    "claim_being_tested": {
+      "type": "string",
+      "description": "The specific load-bearing claim being tested"
+    },
+    "owner": {
+      "type": "string",
+      "description": "Who is responsible for running this experiment (person, team, or agent)"
+    },
+    "fidelity": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "low = landing page/smoke test; medium = interview/survey; high = pilot/beta/A-B test"
+    },
+    "method": {
+      "type": "string",
+      "description": "What exactly will be done to run the experiment"
+    },
+    "sample_size": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of data points needed"
+    },
+    "duration": {
+      "type": "string",
+      "description": "How long the experiment runs (e.g., '2 weeks', '30 days')"
+    },
+    "success_threshold": {
+      "type": "string",
+      "description": "Measurable result that would confirm the hypothesis"
+    },
+    "failure_threshold": {
+      "type": "string",
+      "description": "Measurable result that would disprove the hypothesis"
+    },
+    "decision_rule": {
+      "type": "string",
+      "description": "What action to take on success, failure, or inconclusive result"
+    },
+    "risk_check": {
+      "type": "string",
+      "description": "Ethics and risk assessment: what could go wrong, what safeguards are in place"
+    },
+    "instrumentation": {
+      "type": "string",
+      "description": "How data will be collected, stored, and analyzed"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["designed", "running", "completed", "failed", "inconclusive"],
+      "description": "Current status of the experiment",
+      "default": "designed"
+    },
+    "result": {
+      "type": ["string", "null"],
+      "description": "Outcome of the experiment (filled when status is completed, failed, or inconclusive)"
+    },
+    "hypothesis_transition": {
+      "type": "string",
+      "enum": ["supported", "weakened", "disproven", "unresolved"],
+      "description": "How the hypothesis status should update based on this experiment's result",
+      "default": "unresolved"
+    },
+    "evidence_produced": {
+      "type": "string",
+      "description": "What evidence type this experiment produces (from the 11-type taxonomy)"
+    },
+    "cost_estimate": {
+      "type": "string",
+      "description": "Estimated cost in time, money, or effort"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Priority ranking (1 = highest = run first)"
+    },
+    "started_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the experiment started running"
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When the experiment was completed"
+    }
+  },
+  "additionalProperties": false
+}

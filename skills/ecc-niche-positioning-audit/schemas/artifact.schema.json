@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/artifact.schema.json",
+  "title": "Phase Artifact (v5)",
+  "description": "Standardized 4-page artifact produced by each phase",
+  "type": "object",
+  "required": ["artifact_id", "phase", "confidence", "gate_decision"],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "description": "Unique identifier for this artifact"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7"]
+    },
+    "evidence_limited": {
+      "type": "boolean",
+      "description": "True if audit is in evidence-limited mode",
+      "default": false
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["composite", "subscores", "iterations"],
+      "properties": {
+        "composite": {"type": "number", "minimum": 0, "maximum": 100},
+        "subscores": {
+          "type": "object",
+          "required": ["evidence_quality", "source_coverage", "internal_consistency", "counter_evidence_survival", "validation_evidence"],
+          "properties": {
+            "evidence_quality": {"type": "number", "minimum": 0, "maximum": 30},
+            "source_coverage": {"type": "number", "minimum": 0, "maximum": 25},
+            "internal_consistency": {"type": "number", "minimum": 0, "maximum": 20},
+            "counter_evidence_survival": {"type": "number", "minimum": 0, "maximum": 15},
+            "validation_evidence": {"type": "number", "minimum": 0, "maximum": 10}
+          }
+        },
+        "iterations": {"type": "integer", "minimum": 1, "maximum": 3},
+        "improvements_made": {"type": "string", "default": ""}
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": {"type": "string"},
+          "evidence_id": {"type": "string"},
+          "evidence_grade": {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW"]}
+        }
+      }
+    },
+    "gap_analysis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gap_type": {
+            "type": "string",
+            "enum": ["need", "product", "proof", "positioning", "pricing", "distribution", "adoption", "evidence"]
+          },
+          "severity": {"type": "string", "enum": ["critical", "major", "minor"]},
+          "description": {"type": "string"},
+          "fix_approach": {"type": "string"}
+        }
+      }
+    },
+    "adversarial_review": {
+      "type": "object",
+      "properties": {
+        "skeptic": {
+          "type": "object",
+          "properties": {
+            "finding": {"type": "string"},
+            "falsification_test": {"type": "string"}
+          }
+        },
+        "missing_perspective": {
+          "type": "object",
+          "properties": {
+            "finding": {"type": "string"},
+            "absent_perspective": {"type": "string"}
+          }
+        },
+        "contrarian": {
+          "type": "object",
+          "properties": {
+            "finding": {"type": "string"},
+            "alternative_conclusion": {"type": "string"}
+          }
+        }
+      }
+    },
+    "gate_decision": {
+      "type": "object",
+      "required": ["decision"],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": ["GO", "CONDITIONAL_GO", "RECYCLE", "STOP"]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "pre_gate_self_assessment": {"type": "number", "minimum": 5, "maximum": 25}
+      }
+    },
+    "research_question_tree_update": {
+      "type": "object",
+      "properties": {
+        "questions_covered": {"type": "integer"},
+        "questions_remaining": {"type": "integer"},
+        "counter_evidence_found": {"type": "boolean"}
+      }
+    },
+    "next_phase_skill_selection": {
+      "type": "string",
+      "description": "Skill selected for the next phase"
+    }
+  },
+  "additionalProperties": false
+}

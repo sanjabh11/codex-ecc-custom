@@ -1,0 +1,82 @@
+{
+  "test_name": "experiment_lifecycle_validation",
+  "description": "Validate that experiments form a closed loop: design → run → result → hypothesis status transition",
+  "cases": [
+    {
+      "case_id": "successful_experiment",
+      "experiment": {
+        "experiment_id": "EXP-001",
+        "hypothesis_id": "H1",
+        "claim_being_tested": "Enterprise devs will pay $50/month for this tool",
+        "owner": "Product Team",
+        "fidelity": "medium",
+        "method": "50-user survey with pricing question",
+        "sample_size": 50,
+        "success_threshold": "≥40% indicate willingness to pay $50/month",
+        "failure_threshold": "<20% indicate willingness to pay $50/month",
+        "decision_rule": "If ≥40%: proceed with $50 pricing. If <20%: test $25. If 20-40%: test $35.",
+        "risk_check": "Survey bias risk; mitigate with randomized pricing anchor",
+        "instrumentation": "Typeform survey with pricing Ladder; export to CSV",
+        "status": "completed",
+        "result": "52% indicated willingness to pay $50/month",
+        "hypothesis_transition": "supported",
+        "evidence_produced": "pricing_signal"
+      },
+      "expected_hypothesis_status": "supported",
+      "expected_gate_impact": "GO — pricing claim validated"
+    },
+    {
+      "case_id": "failed_experiment",
+      "experiment": {
+        "experiment_id": "EXP-002",
+        "hypothesis_id": "H2",
+        "claim_being_tested": "Data scientists are the primary user segment",
+        "owner": "Research Team",
+        "fidelity": "low",
+        "method": "Landing page test with segment-specific messaging",
+        "sample_size": 200,
+        "success_threshold": "≥60% of signups from data scientist persona",
+        "failure_threshold": "<30% of signups from data scientist persona",
+        "decision_rule": "If <30%: discard H2; generate new segment hypothesis",
+        "risk_check": "Landing page traffic may not represent target market",
+        "instrumentation": "Google Analytics with custom segments",
+        "status": "completed",
+        "result": "22% of signups from data scientist persona; 45% from backend engineers",
+        "hypothesis_transition": "disproven",
+        "evidence_produced": "behavioral_observation"
+      },
+      "expected_hypothesis_status": "disproven",
+      "expected_gate_impact": "RECYCLE — generate new segment hypothesis for backend engineers"
+    },
+    {
+      "case_id": "inconclusive_experiment",
+      "experiment": {
+        "experiment_id": "EXP-003",
+        "hypothesis_id": "H3",
+        "claim_being_tested": "Product reduces onboarding time by 50%",
+        "owner": "Customer Success",
+        "fidelity": "high",
+        "method": "30-day pilot with 5 enterprise customers",
+        "sample_size": 5,
+        "success_threshold": "Average onboarding time <4 hours (vs 8hr baseline)",
+        "failure_threshold": "Average onboarding time >6 hours",
+        "decision_rule": "If <4hr: claim validated. If >6hr: claim disproven. If 4-6hr: inconclusive, extend pilot.",
+        "risk_check": "Small sample; pilot customers may not be representative",
+        "instrumentation": "Time tracking via product analytics; weekly check-in calls",
+        "status": "inconclusive",
+        "result": "Average 5.2 hours; high variance (2-8 hours)",
+        "hypothesis_transition": "weakened",
+        "evidence_produced": "analytics_data"
+      },
+      "expected_hypothesis_status": "weakened",
+      "expected_gate_impact": "CONDITIONAL GO — extend pilot for more data"
+    }
+  ],
+  "expected": {
+    "results_deterministically_update_hypothesis": true,
+    "all_fields_present": true,
+    "closed_loop_complete": true
+  },
+  "grader": "scenario",
+  "pass_threshold": 0.9
+}

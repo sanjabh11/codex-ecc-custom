@@ -1,0 +1,23 @@
+{
+  "test_name": "frontmatter_validation_v5",
+  "description": "Validate SKILL.md frontmatter meets v5 requirements",
+  "input": {
+    "skill_file": "SKILL.md",
+    "max_description_length": 1024,
+    "max_body_lines": 1200
+  },
+  "expected": {
+    "description_length_valid": true,
+    "body_lines_valid": true,
+    "name_present": true,
+    "trigger_phrases_present": ["niche segment", "positioning strategy", "positioning drift", "product-market alignment"],
+    "anti_trigger_present": true,
+    "tool_truth_section_present": true,
+    "upstream_source_section_present": true,
+    "phases_present": 8,
+    "gap_types_present": 8,
+    "tool_truth_rules_count": 26
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

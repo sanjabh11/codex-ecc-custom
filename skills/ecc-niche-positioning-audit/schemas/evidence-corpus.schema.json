@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/evidence-corpus.schema.json",
+  "title": "Evidence Corpus Item",
+  "description": "Machine-readable contract for a single evidence item in the Product Truth / Evidence Corpus",
+  "type": "object",
+  "required": ["evidence_id", "type", "source", "source_tier", "timestamp", "freshness", "grade", "confidence", "provenance", "is_customer_commercial"],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EV-\\d{3}$",
+      "description": "Unique identifier for this evidence item"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "product_promise",
+        "customer_outcome",
+        "user_quote",
+        "behavioral_observation",
+        "support_ticket",
+        "analytics_data",
+        "sales_data",
+        "pricing_signal",
+        "stakeholder_input",
+        "competitor_intel",
+        "codebase_evidence"
+      ],
+      "description": "Evidence type from the 11-type taxonomy"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the evidence came from (URL, file path, interview ID, etc.)"
+    },
+    "source_tier": {
+      "type": "string",
+      "enum": ["primary", "secondary", "inferred"],
+      "description": "Primary = direct observation; Secondary = reported by others; Inferred = deduced from other evidence"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when evidence was collected or published"
+    },
+    "freshness": {
+      "type": "string",
+      "enum": ["fresh", "recent", "stale"],
+      "description": "fresh = <6 months old; recent = 6-18 months; stale = >18 months"
+    },
+    "grade": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"],
+      "description": "Evidence grade: HIGH = direct/verifiable/recent; MEDIUM = secondary/somewhat dated; LOW = anecdotal/inferred/old"
+    },
+    "segment": {
+      "type": ["string", "null"],
+      "description": "Which customer segment this evidence relates to, or null if general"
+    },
+    "geography": {
+      "type": ["string", "null"],
+      "description": "Geographic market this evidence applies to, or null if global"
+    },
+    "bias": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "self_report",
+          "survivorship",
+          "selection",
+          "confirmation",
+          "recency",
+          "availability",
+          "sponsorship",
+          "none"
+        ]
+      },
+      "description": "Potential biases affecting this evidence item",
+      "default": ["none"]
+    },
+    "contradicts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^EV-\\d{3}$"
+      },
+      "description": "IDs of other evidence items that this evidence contradicts",
+      "default": []
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence in this evidence item (0=none, 1=certain)"
+    },
+    "provenance": {
+      "type": "string",
+      "description": "Full chain of how this evidence was obtained: who collected it, when, from what source, using what method"
+    },
+    "is_customer_commercial": {
+      "type": "boolean",
+      "description": "True if evidence is from customer or commercial sources (user_quote, behavioral_observation, support_ticket, analytics_data, sales_data, pricing_signal)"
+    },
+    "content_summary": {
+      "type": "string",
+      "description": "Brief summary of what the evidence says or shows"
+    },
+    "contradiction_notes": {
+      "type": "string",
+      "description": "Explanation of any contradictions with other evidence items",
+      "default": ""
+    }
+  },
+  "additionalProperties": false
+}

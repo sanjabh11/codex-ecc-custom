@@ -1,0 +1,94 @@
+{
+  "test_name": "evidence_corpus_validation",
+  "description": "Validate evidence corpus items against the machine-readable schema",
+  "valid_examples": [
+    {
+      "evidence_id": "EV-001",
+      "type": "user_quote",
+      "source": "customer-interview-2026-07",
+      "source_tier": "primary",
+      "timestamp": "2026-07-10T14:00:00Z",
+      "freshness": "fresh",
+      "grade": "HIGH",
+      "segment": "enterprise-devs",
+      "geography": "North America",
+      "bias": ["self_report"],
+      "contradicts": [],
+      "confidence": 0.85,
+      "provenance": "Collected via 30-min interview with customer CTO on 2026-07-10",
+      "is_customer_commercial": true,
+      "content_summary": "CTO says the product saves 4 hours per week vs manual process"
+    },
+    {
+      "evidence_id": "EV-002",
+      "type": "analytics_data",
+      "source": "product-analytics-dashboard",
+      "source_tier": "primary",
+      "timestamp": "2026-07-01T00:00:00Z",
+      "freshness": "fresh",
+      "grade": "HIGH",
+      "segment": null,
+      "geography": null,
+      "bias": ["survivorship"],
+      "contradicts": ["EV-001"],
+      "confidence": 0.9,
+      "provenance": "Exported from analytics platform on 2026-07-01; covers Jan-Jun 2026",
+      "is_customer_commercial": true,
+      "content_summary": "Usage data shows 60% of users only use 3 features; contradicts CTO claim of broad usage",
+      "contradiction_notes": "Analytics show narrow feature usage while CTO claims broad value"
+    },
+    {
+      "evidence_id": "EV-003",
+      "type": "codebase_evidence",
+      "source": "/path/to/codebase/src/api/",
+      "source_tier": "primary",
+      "timestamp": "2026-07-13T12:00:00Z",
+      "freshness": "fresh",
+      "grade": "MEDIUM",
+      "segment": null,
+      "geography": null,
+      "bias": ["none"],
+      "contradicts": [],
+      "confidence": 0.7,
+      "provenance": "Codebase inspection on 2026-07-13; routes enumerated from src/api/",
+      "is_customer_commercial": false,
+      "content_summary": "API has 12 endpoints; 4 are undocumented"
+    }
+  ],
+  "invalid_examples": [
+    {
+      "evidence_id": "BAD-001",
+      "type": "invalid_type",
+      "source": "unknown",
+      "source_tier": "primary",
+      "timestamp": "2026-07-10",
+      "freshness": "fresh",
+      "grade": "HIGH",
+      "confidence": 0.8,
+      "provenance": "test",
+      "is_customer_commercial": true,
+      "expected_error": "type must be one of the 11 valid evidence types"
+    },
+    {
+      "evidence_id": "EV-999",
+      "type": "user_quote",
+      "source": "test",
+      "source_tier": "invalid_tier",
+      "timestamp": "2026-07-10T14:00:00Z",
+      "freshness": "fresh",
+      "grade": "HIGH",
+      "confidence": 0.8,
+      "provenance": "test",
+      "is_customer_commercial": true,
+      "expected_error": "source_tier must be primary, secondary, or inferred"
+    }
+  ],
+  "expected": {
+    "valid_examples_pass": true,
+    "invalid_examples_rejected": true,
+    "schema_enforces_required_fields": true,
+    "contradiction_tracking_works": true
+  },
+  "grader": "deterministic",
+  "pass_threshold": 1.0
+}

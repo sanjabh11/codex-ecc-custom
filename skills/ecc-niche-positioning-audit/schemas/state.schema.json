@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/state.schema.json",
+  "title": "Positioning Audit State (v5)",
+  "description": "Persistent state for an 8-phase positioning audit with evidence-limited mode and hypothesis tracking",
+  "type": "object",
+  "required": ["audit_id", "product_context", "scope", "started_at", "current_phase", "decision_confidence", "evidence_types_present", "evidence_limitations", "phases_completed", "gates_passed"],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "description": "Unique identifier for this audit run"
+    },
+    "product_context": {
+      "type": "string",
+      "description": "Path or description of the product being audited"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["quick", "standard", "deep"],
+      "description": "Audit scope mode"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when audit started"
+    },
+    "completed_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when audit completed, or null if in progress"
+    },
+    "current_phase": {
+      "type": "string",
+      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7", "completed"],
+      "description": "Current phase of the audit (v5: 8 phases P0-P7)"
+    },
+    "evidence_limited_mode": {
+      "type": "boolean",
+      "description": "True if no customer/commercial evidence was available at Gate 1",
+      "default": false
+    },
+    "decision_confidence": {
+      "type": "object",
+      "required": ["composite", "quality", "coverage", "consistency", "counter", "validation"],
+      "properties": {
+        "composite": {"type": "number", "minimum": 0, "maximum": 100},
+        "quality": {"type": "number", "minimum": 0, "maximum": 30},
+        "coverage": {"type": "number", "minimum": 0, "maximum": 25},
+        "consistency": {"type": "number", "minimum": 0, "maximum": 20},
+        "counter": {"type": "number", "minimum": 0, "maximum": 15},
+        "validation": {"type": "number", "minimum": 0, "maximum": 10}
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^H\\d+$"},
+          "text": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["supported", "weakened", "disproven", "stale", "unresolved"],
+            "default": "unresolved"
+          },
+          "evidence": {"type": "array", "items": {"type": "string"}},
+          "load_bearing_claims": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "default": []
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "hypothesis_id": {"type": "string"},
+          "status": {"type": "string", "enum": ["designed", "running", "completed", "failed", "inconclusive"]},
+          "result": {"type": ["string", "null"]},
+          "hypothesis_transition": {"type": "string", "enum": ["supported", "weakened", "disproven", "unresolved"]}
+        }
+      },
+      "default": []
+    },
+    "evidence_types_present": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of evidence types present in the corpus"
+    },
+    "evidence_limitations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Explicitly stated limitations in the evidence"
+    },
+    "phases_completed": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "gates_passed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": {"type": "string"},
+          "decision": {"type": "string", "enum": ["GO", "CONDITIONAL_GO", "RECYCLE", "STOP"]},
+          "timestamp": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    "stack_detected": {
+      "type": ["string", "null"],
+      "description": "Detected tech stack, or null if no codebase"
+    },
+    "domain_detected": {
+      "type": ["string", "null"]
+    },
+    "advisor_used": {
+      "type": "boolean",
+      "default": false
+    },
+    "extensions_loaded": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    },
+    "drift_status": {
+      "type": "string",
+      "enum": ["stable", "drifting", "stale", "not_assessed"],
+      "default": "not_assessed"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["v5"],
+      "default": "v5"
+    }
+  },
+  "additionalProperties": false
+}
