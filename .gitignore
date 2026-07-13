@@ -21,3 +21,14 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Runtime state
+fable/advisor_state.json
+fable/scheduler.log
+fable/scheduler_daemon.log
