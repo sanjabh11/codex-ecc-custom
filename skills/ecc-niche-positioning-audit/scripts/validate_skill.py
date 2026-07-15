@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic validator for ecc-niche-positioning-audit skill v5.
+"""Deterministic validator for ecc-niche-positioning-audit skill v6.
 
 Checks:
 1. Frontmatter description <= 1024 characters
@@ -18,6 +18,8 @@ Checks:
 14. 8 phases (P0-P7) present
 15. 8-type gap classification present
 16. Methodology sources have URLs (in provenance reference)
+17. Lifecycle contract distinguishes experiment design from market validation
+18. Optional audit-instance validation protects the validation-pending boundary
 """
 
 import sys
@@ -33,7 +35,7 @@ REFERENCES_DIR = SKILL_DIR / "references"
 
 MAX_DESC_LEN = 1024
 MAX_BODY_LINES = 1200
-EXPECTED_TOOL_TRUTH_RULES = 26
+EXPECTED_TOOL_TRUTH_RULES = 27
 EXPECTED_PHASES = 8
 EXPECTED_GAP_TYPES = 8
 
@@ -175,6 +177,66 @@ def check_methodology_provenance() -> dict:
     return result
 
 
+def check_lifecycle_contract(body: str) -> dict:
+    """Ensure the documented paths cannot call designed experiments validation."""
+    required_phrases = [
+        "P5 design → VALIDATION_PENDING",
+        "Designed experiments are not validation evidence",
+        "market_validation_status: validation_pending",
+        "first-party buyer evidence",
+    ]
+    missing = [phrase for phrase in required_phrases if phrase not in body]
+    return {"valid": not missing, "missing": missing}
+
+
+def validate_audit_instance(audit_dir: Path) -> dict:
+    """Check an audit instance's designed-versus-executed lifecycle boundary."""
+    state_path = audit_dir / "state.json"
+    experiments_path = audit_dir / "experiments.json"
+    result = {"audit_dir": str(audit_dir), "checks": [], "all_pass": True}
+
+    try:
+        state = json.loads(state_path.read_text())
+        experiments = json.loads(experiments_path.read_text()).get("experiments", [])
+    except (OSError, json.JSONDecodeError) as error:
+        return {"audit_dir": str(audit_dir), "checks": [{"name": "audit_files", "pass": False, "error": str(error)}], "all_pass": False}
+
+    executed_statuses = {"completed", "failed", "inconclusive"}
+    observed_executed = sum(1 for experiment in experiments if experiment.get("status") in executed_statuses)
+    declared_executed = state.get("experiments_executed", observed_executed)
+    has_first_party_evidence = bool(
+        set(state.get("evidence_types_present", []))
+        & {"user_quote", "behavioral_observation", "support_ticket", "analytics_data", "sales_data"}
+    )
+    validation_score = state.get("decision_confidence", {}).get("validation")
+
+    result["checks"].append({
+        "name": "executed_count_consistency",
+        "pass": declared_executed == observed_executed,
+        "declared": declared_executed,
+        "observed": observed_executed,
+    })
+    if declared_executed == 0:
+        result["checks"].extend([
+            {
+                "name": "design_is_not_validation",
+                "pass": state.get("market_validation_status") == "validation_pending",
+                "value": state.get("market_validation_status"),
+            },
+            {"name": "validation_score_zero", "pass": validation_score == 0, "value": validation_score},
+            {
+                "name": "validation_pending_phase",
+                "pass": state.get("current_phase") == "VALIDATION_PENDING",
+                "value": state.get("current_phase"),
+            },
+        ])
+    if not state.get("evidence_limited_mode", False):
+        result["checks"].append({"name": "first_party_buyer_evidence", "pass": has_first_party_evidence})
+
+    result["all_pass"] = all(check["pass"] for check in result["checks"])
+    return result
+
+
 def run_validation() -> dict:
     """Run all validation checks."""
     results = {"checks": [], "all_pass": True}
@@ -250,6 +312,9 @@ def run_validation() -> dict:
     prov = check_methodology_provenance()
     results["checks"].append({"name": "methodology_provenance", "pass": prov["valid"], "exists": prov["exists"]})
 
+    lifecycle = check_lifecycle_contract(body)
+    results["checks"].append({"name": "lifecycle_contract", "pass": lifecycle["valid"], "missing": lifecycle["missing"]})
+
     # Aggregate
     results["all_pass"] = all(c["pass"] for c in results["checks"])
     return results
@@ -258,7 +323,7 @@ def run_validation() -> dict:
 def main():
     results = run_validation()
     print("=" * 60)
-    print("ecc-niche-positioning-audit v5 Validator")
+    print("ecc-niche-positioning-audit v6 Validator")
     print("=" * 60)
 
     for check in results["checks"]:
@@ -279,11 +344,25 @@ def main():
         print(f"  [{status}] {check['name']}{detail}")
 
     print("=" * 60)
+    instance = None
+    audit_dir_index = sys.argv.index("--audit-dir") if "--audit-dir" in sys.argv else None
+    if audit_dir_index is not None:
+        if audit_dir_index + 1 >= len(sys.argv):
+            print("  [FAIL] audit_instance — --audit-dir requires a path")
+            sys.exit(1)
+        instance = validate_audit_instance(Path(sys.argv[audit_dir_index + 1]))
+        for check in instance["checks"]:
+            status = "PASS" if check["pass"] else "FAIL"
+            print(f"  [{status}] audit_instance.{check['name']}")
+        results["all_pass"] = results["all_pass"] and instance["all_pass"]
+
     if results["all_pass"]:
         print("ALL CHECKS PASSED")
         sys.exit(0)
     else:
         failed = [c["name"] for c in results["checks"] if not c["pass"]]
+        if instance:
+            failed.extend(f"audit_instance.{c['name']}" for c in instance["checks"] if not c["pass"])
         print(f"FAILED: {', '.join(failed)}")
         sys.exit(1)
 

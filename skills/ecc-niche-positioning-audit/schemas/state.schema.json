@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/state.schema.json",
-  "title": "Positioning Audit State (v5)",
-  "description": "Persistent state for an 8-phase positioning audit with evidence-limited mode and hypothesis tracking",
+  "title": "Positioning Audit State (v6)",
+  "description": "Persistent state for an 8-phase positioning audit with an explicit validation-pending lifecycle",
   "type": "object",
   "required": ["audit_id", "product_context", "scope", "started_at", "current_phase", "decision_confidence", "evidence_types_present", "evidence_limitations", "phases_completed", "gates_passed"],
   "properties": {
@@ -31,13 +31,31 @@
     },
     "current_phase": {
       "type": "string",
-      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7", "completed"],
-      "description": "Current phase of the audit (v5: 8 phases P0-P7)"
+      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7", "VALIDATION_PENDING", "completed"],
+      "description": "Current phase of the audit, including the post-design validation-pending state"
     },
     "evidence_limited_mode": {
       "type": "boolean",
       "description": "True if no customer/commercial evidence was available at Gate 1",
       "default": false
+    },
+    "analysis_status": {
+      "type": "string",
+      "enum": ["in_progress", "complete"],
+      "description": "Whether the analysis and experiment-design phases are complete"
+    },
+    "market_validation_status": {
+      "type": "string",
+      "enum": ["not_started", "validation_pending", "in_progress", "validated", "invalidated"],
+      "description": "Buyer-validation lifecycle; experiment design alone is validation_pending"
+    },
+    "experiments_designed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "experiments_executed": {
+      "type": "integer",
+      "minimum": 0
     },
     "decision_confidence": {
       "type": "object",
@@ -136,8 +154,8 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": ["v5"],
-      "default": "v5"
+      "enum": ["v5", "v6"],
+      "default": "v6"
     }
   },
   "additionalProperties": false

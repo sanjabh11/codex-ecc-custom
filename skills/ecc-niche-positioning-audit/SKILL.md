@@ -99,11 +99,11 @@ Transform product-market decisions from guesswork into evidence-anchored strateg
 | Dimension | Quick | Standard | Deep |
 |-----------|-------|----------|------|
 | **Time** | 15-30 min | 1-3 hr | 3-6 hr |
-| **Phases** | 0+1+2+3-lite+4-lite | 0-4 (skip 5-7) | 0-7 (all) |
+| **Phases** | 0+1+2+3-lite+4-lite | 0-5 design-only, then `VALIDATION_PENDING` | 0-5 design, execute experiments, then 6-7 |
 | **Segments analyzed** | Top 3 | Top 5 | Top 8 |
 | **Competitors researched** | Top 3 direct | Top 5 direct + 3 indirect | Top 8 direct + 5 indirect + 3 substitutes |
 | **Customer evidence depth** | Available signals only | Available + 5-min interview prep | Available + interview guide + survey template |
-| **Validation experiments** | Proposed only | Designed with thresholds | Designed + execution plan + success metrics |
+| **Validation experiments** | Proposed only | Designed with thresholds; no validation claim | Designed, executed, and assessed against success/failure thresholds |
 | **Gate threshold** | 12/25 pre-gate | 15/25 pre-gate | 18/25 pre-gate |
 | **Confidence target** | 85% | 90% | 95% |
 | **Counter-evidence search** | 1 pass | 2 passes | 3 passes + adversarial review |
@@ -124,7 +124,7 @@ Before any market research, assemble the Product Truth — what the product actu
 | `support_ticket` | Support data, complaint patterns | Where the product fails expectations |
 | `analytics_data` | Usage metrics, conversion funnels | Quantitative product performance |
 | `sales_data` | Pipeline, win/loss, deal size | Market willingness to pay |
-| `pricing_signal` | Pricing page, competitor pricing | Price sensitivity and positioning |
+| `pricing_signal` | First-party buyer/prospect pricing response, or secondary pricing context | WTP only when first-party; otherwise market context |
 | `stakeholder_input` | Team knowledge, internal docs | Internal assumptions and beliefs |
 | `competitor_intel` | Competitor analysis, market reports | Competitive landscape and movement |
 | `codebase_evidence` | Code analysis (optional) | Actual technical capabilities and constraints |
@@ -283,7 +283,7 @@ Create `.positioning-audit/extras/` directory for domain-specific audit dimensio
 - `competitor-extra.md` — additional competitor tracking dimensions
 - `customer-extra.md` — customer evidence collection templates
 
-Extensions are loaded automatically if present. Built-in dimensions are always evaluated; extensions add to them.
+The auditor inspects and records extensions explicitly if present; no automatic loader is implied. Built-in dimensions are always evaluated; extensions add to them.
 
 ## Persistent State
 
@@ -323,7 +323,7 @@ All audit artifacts are stored in `.positioning-audit/` in the product/codebase 
 
 ## Cross-Product Portfolio View
 
-Portfolio aggregates all audited products (not just codebases) at `~/.positioning-audit-portfolio/portfolio.json`:
+An auditor may manually maintain a portfolio across audited products (not just codebases) at `~/.positioning-audit-portfolio/portfolio.json`; the skill does not provide an automatic aggregator.
 
 ```json
 {
@@ -575,7 +575,7 @@ Synthesize into a 1-page Product Truth document:
 **Exit Criteria**:
 - [ ] Product promise is extracted and documented
 - [ ] At least 3 evidence types are present in the corpus (any combination)
-- [ ] **At least 1 of the 3 required evidence types is from customer/commercial sources**: `user_quote`, `behavioral_observation`, `support_ticket`, `analytics_data`, `sales_data`, or `pricing_signal` — if not, gate decision is CONDITIONAL GO with evidence-limited flag
+- [ ] **At least 1 of the 3 required evidence types is first-party buyer evidence**: `user_quote`, `behavioral_observation`, `support_ticket`, `analytics_data`, or `sales_data`. A pricing page or competitor price is market context, not buyer validation; if absent, gate decision is CONDITIONAL GO with evidence-limited flag.
 - [ ] Actual capability inventory is complete (from codebase, live product, or docs)
 - [ ] Promise-capability gap is documented
 - [ ] Evidence limitations are explicitly stated
@@ -589,6 +589,7 @@ Synthesize into a 1-page Product Truth document:
 - All subsequent gates are capped at CONDITIONAL GO
 - Final report must include: "This audit was conducted in evidence-limited mode — no direct customer or commercial evidence was available. Positioning recommendations should be treated as hypotheses requiring validation."
 - State file sets `evidence_limited_mode: true`
+- A designed experiment is recorded as `design_complete`; `market_validation_status` remains `validation_pending`, `decision_confidence.validation` remains `0`, and no hypothesis becomes Supported until first-party results are recorded.
 
 **Gate Decision**: GO → Phase 2 (requires customer/commercial evidence) | CONDITIONAL GO → Phase 2 with evidence limitations or evidence-limited mode | RECYCLE → gather more evidence | STOP → no usable product context
 
@@ -917,7 +918,7 @@ Compile all experiments into a Validation Plan:
 - [ ] 360-degree: Customer + Financial perspectives covered
 - [ ] Pre-gate self-assessment ≥ threshold
 
-**Gate Decision**: GO → Phase 6 (if codebase) or Phase 7 (if no codebase) | CONDITIONAL GO → proceed with reduced validation | RECYCLE → redesign experiments | STOP → hypothesis cannot be validated
+**Gate Decision**: DESIGN COMPLETE → set `analysis_status: complete` and `market_validation_status: validation_pending`; implementation work may proceed, but market validation does not. RECYCLE → redesign experiments | STOP → hypothesis cannot be validated. Advance to Phase 7 only after experiment results are recorded.
 
 ## Phase 6: Optional Codebase Audit & Remediation
 
@@ -1048,7 +1049,7 @@ Compile the complete audit into a final report:
 - [ ] State is persisted to `.positioning-audit/state.json`
 - [ ] Portfolio is updated at `~/.positioning-audit-portfolio/portfolio.json`
 
-**Gate Decision**: GO → audit complete | CONDITIONAL GO → complete with follow-up experiments queued | RECYCLE → re-run specific phases | STOP → fundamental positioning failure; reframe needed
+**Gate Decision**: GO → audit complete only after results support the decision | CONDITIONAL GO → `VALIDATION_PENDING` with experiments queued (analysis complete, market validation unproven) | RECYCLE → re-run specific phases | STOP → fundamental positioning failure; reframe needed
 
 ## Dependency Gating
 
@@ -1060,8 +1061,8 @@ Compile the complete audit into a final report:
 | 3 | Phase 2 | **Quick mode** — replaced by Phase 3-lite (top 3 segments from P2 needs, no 7-dimension scoring, no negative ICP) |
 | 4 | Phase 3 (or Phase 3-lite in quick mode) | Never — alignment needs segments. **Quick mode** uses Phase 4-lite (gap classification only, no positioning hypotheses, no validation experiments) |
 | 5 | Phase 4 + User Approval | Quick mode — skip entirely |
-| 6 | Phase 5 | **No codebase available** — skip entirely. Quick mode — skip entirely |
-| 7 | Phase 5 (or 6 if codebase) | Quick mode — skip entirely |
+| 6 | Phase 5 design | **No codebase available** — skip entirely. Implementation work does not validate market claims. |
+| 7 | Recorded experiment results (and 6 if codebase) | Quick mode — skip entirely; standard mode pauses at `VALIDATION_PENDING` until results exist. |
 
 ### Quick Mode Path
 
@@ -1075,13 +1076,13 @@ P0 → P1 → P2 → P3-lite → P4-lite → TERMINAL
 ### Standard Mode Path
 
 ```
-P0 → P1 → P2 → P3 → P4 → [APPROVAL] → (skip 5-7) → TERMINAL
+P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 design → VALIDATION_PENDING
 ```
 
 ### Deep Mode Path
 
 ```
-P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 → P6 (if codebase) → P7 → TERMINAL
+P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 design → execute → P6 (if codebase) → P7 → TERMINAL
 ```
 
 ## Tool Truth
@@ -1098,9 +1099,9 @@ P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 → P6 (if codebase) → P7
 - Scope selection (quick/standard/deep) adjusts phase depth, gate thresholds, and confidence targets — default is standard
 - Stack auto-detection runs in Phase 0a only if codebase is available — if detection fails, ask user
 - Pre-audit questionnaire calibrates the audit — unanswered questions are "unknown" not guessed
-- Per-project extensions in `.positioning-audit/extras/*.md` are loaded if present — extends built-in dimensions
+- Per-project extensions in `.positioning-audit/extras/*.md` are explicitly inspected and recorded by the auditor; no automatic loader is claimed
 - Persistent state in `.positioning-audit/state.json` enables resumption and drift tracking
-- Cross-product portfolio at `~/.positioning-audit-portfolio/portfolio.json` aggregates all audited products
+- A cross-product portfolio at `~/.positioning-audit-portfolio/portfolio.json` is optional manual output, not an automatic aggregation service
 - Evidence grading (HIGH/MEDIUM/LOW) is mandatory for every finding — LOW findings cannot be load-bearing
 - **At least one HIGH or two MEDIUM evidence items required per load-bearing positioning claim**
 - **Every load-bearing claim gets a validation experiment** with measurable success and failure thresholds
@@ -1114,6 +1115,7 @@ P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 → P6 (if codebase) → P7
 - **Absence of evidence is itself evidence** — mark as "evidence limitation" in the corpus, do not guess
 - **Contradictions are surfaced, not hidden** — if product promise contradicts customer outcomes, flag it explicitly
 - **Evidence-limited mode is explicitly flagged** in state and artifacts — no full GO decision without direct customer or commercial evidence
+- **Designed experiments are not validation evidence** — with zero executed first-party experiments, use `VALIDATION_PENDING`, score validation as 0, and keep hypotheses unresolved
 
 ### Artifact Format
 
@@ -1135,3 +1137,4 @@ Every phase produces a standardized 4-page artifact:
 - v3 additions: Phase 0 Pre-Execution Protocol, Confidence Threshold Mechanism (95% target), Inter-Phase Skill Re-Evaluation, dynamic per-phase skill selection
 - v4 additions: Input Parameters, Scope Selection (quick/standard/deep), Stack Auto-Detection, Pre-Audit Questionnaire, Per-Project Extensions, Persistent State, Cross-Codebase Portfolio View, Evidence Grading, IMPACT Framework integration, advisor checkpoint verification
 - v5 redesign: Codebase made optional; Product Truth / Evidence Corpus added as primary input; Research Question Trees with saturation criteria; 8-type Gap Classification (need/product/proof/positioning/pricing/distribution/adoption/evidence); Alignment Chain (market need → customer outcome → product promise → actual capability → proof → positioning → experiment); Validation Experiments with fidelity ladder and success/failure thresholds; Hypothesis Status Tracking (supported/weakened/disproven/stale/unresolved); Decision Confidence renamed (not statistical); Unified Outcome Matrix; counter-evidence search mandatory; Phase 6 made optional; Phase 7 added for evidence refresh and drift tracking; Cross-product portfolio replaces cross-codebase portfolio; JTBD Framework, NIST AI RMF Core, NIST AI 800-3, Evidence Engine, Latent Spark, AHRQ Research Gap Framework, Lean Startup Validated Learning, ParallelHQ Market Gap Guide added as methodology sources
+- v6 hardening: First-party buyer evidence is distinguished from desk/competitor pricing; standard scope ends in `VALIDATION_PENDING` after design; experiment design cannot inflate validation confidence or mark hypotheses supported; extensions and portfolio output are explicit manual actions; instance validation checks the lifecycle boundary.
