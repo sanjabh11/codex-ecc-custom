@@ -20,7 +20,8 @@
         "status": "completed",
         "result": "52% indicated willingness to pay $50/month",
         "hypothesis_transition": "supported",
-        "evidence_produced": "pricing_signal"
+        "evidence_produced": "pricing_signal",
+        "completed_at": "2026-07-16T15:00:00Z"
       },
       "expected_hypothesis_status": "supported",
       "expected_gate_impact": "GO — pricing claim validated"
@@ -43,7 +44,8 @@
         "status": "completed",
         "result": "22% of signups from data scientist persona; 45% from backend engineers",
         "hypothesis_transition": "disproven",
-        "evidence_produced": "behavioral_observation"
+        "evidence_produced": "behavioral_observation",
+        "completed_at": "2026-07-16T15:00:00Z"
       },
       "expected_hypothesis_status": "disproven",
       "expected_gate_impact": "RECYCLE — generate new segment hypothesis for backend engineers"
@@ -66,7 +68,8 @@
         "status": "inconclusive",
         "result": "Average 5.2 hours; high variance (2-8 hours)",
         "hypothesis_transition": "weakened",
-        "evidence_produced": "analytics_data"
+        "evidence_produced": "analytics_data",
+        "completed_at": "2026-07-16T15:00:00Z"
       },
       "expected_hypothesis_status": "weakened",
       "expected_gate_impact": "CONDITIONAL GO — extend pilot for more data"

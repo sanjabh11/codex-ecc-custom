@@ -38,6 +38,10 @@
       "confidence": 0.9,
       "provenance": "Exported from analytics platform on 2026-07-01; covers Jan-Jun 2026",
       "is_customer_commercial": true,
+      "authority_tier": "tier-1",
+      "checked_at": "2026-07-01T12:00:00Z",
+      "expiry": "2027-01-01T00:00:00Z",
+      "url_health": "not_applicable",
       "content_summary": "Usage data shows 60% of users only use 3 features; contradicts CTO claim of broad usage",
       "contradiction_notes": "Analytics show narrow feature usage while CTO claims broad value"
     },
@@ -56,6 +60,10 @@
       "confidence": 0.7,
       "provenance": "Codebase inspection on 2026-07-13; routes enumerated from src/api/",
       "is_customer_commercial": false,
+      "authority_tier": "tier-1",
+      "checked_at": "2026-07-13T12:30:00Z",
+      "expiry": "2027-01-13T00:00:00Z",
+      "url_health": "not_applicable",
       "content_summary": "API has 12 endpoints; 4 are undocumented"
     }
   ],

@@ -1,12 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/hypothesis.schema.json",
-  "title": "Positioning Hypotheses (v7)",
+  "title": "Positioning Hypotheses (v8)",
   "description": "Corpus of positioning hypotheses with status tracking and evidence linkage",
   "type": "object",
   "required": [
     "audit_id",
-    "hypotheses"
+    "hypotheses",
+    "schema_version"
   ],
   "properties": {
     "audit_id": {
@@ -21,13 +22,8 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": [
-        "v5",
-        "v6",
-        "v7",
-        "v8"
-      ],
-      "default": "v8"
+      "const": "v8",
+      "description": "Current hypothesis schema version; migrate older snapshots before validation"
     }
   },
   "additionalProperties": false,
@@ -120,13 +116,33 @@
                 "type": "boolean",
                 "description": "Whether the evidence bundle meets the minimum threshold"
               }
-            }
+            },
+            "allOf": [
+              {
+                "anyOf": [
+                  {"properties": {"min_high": {"minimum": 1}}},
+                  {"properties": {"min_medium": {"minimum": 2}}}
+                ]
+              }
+            ]
           },
           "description": "Evidence bundles for each load-bearing claim — enforces minimum evidence per claim",
           "default": []
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "supported"}},
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["evidence_bundle"],
+            "properties": {"evidence_bundle": {"minItems": 1}}
+          }
+        }
+      ]
     }
   },
   "version": "v8"

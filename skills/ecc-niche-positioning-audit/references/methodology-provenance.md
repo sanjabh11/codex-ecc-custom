@@ -1,6 +1,8 @@
 # Methodology Provenance Registry
 
-All 26 methodology sources with URLs, versions, dates, applicability, and limitations.
+All 26 methodology sources are registered with version/date, applicability, and
+limitations. External sources include URLs; internal and synthesized methods are
+explicitly marked as such and are not presented as independently validated.
 
 ## Direct Methodology Sources
 

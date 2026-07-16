@@ -15,6 +15,16 @@
       "artifact.schema.json",
       "hypothesis.schema.json"
     ],
+    "required_references": [
+      "references/methodology-provenance.md",
+      "references/research-protocol.md",
+      "references/scope-dag.md",
+      "references/scoring-rubric.md",
+      "references/state-schema.md",
+      "references/stack-recon.md",
+      "references/governance.md",
+      "references/eval-harness.md"
+    ],
     "required_sections": [
       "## Tool Truth",
       "## Upstream Source",
@@ -50,8 +60,11 @@
     "freshness_terms": ["fresh", "stale", "recent"],
     "scope_dag": {
       "quick_path": ["phase-0", "phase-1", "phase-2", "phase-3-lite", "phase-4-lite", "terminal"],
-      "standard_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "terminal"],
-      "deep_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "phase-6", "phase-7", "terminal"],
+      "standard_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "validation_pending", "terminal"],
+      "deep_path_variants": [
+        ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "phase-7", "terminal"],
+        ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "phase-6", "phase-7", "terminal"]
+      ],
       "quick_gate_threshold": 12,
       "standard_gate_threshold": 15,
       "deep_gate_threshold": 18

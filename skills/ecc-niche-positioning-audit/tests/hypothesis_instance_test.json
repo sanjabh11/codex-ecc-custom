@@ -1,0 +1,21 @@
+{
+  "audit_id": "AUD-FIXTURE-001",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "hypothesis": "The beachhead segment has a high-priority unmet need.",
+      "status": "unresolved",
+      "load_bearing_claims": ["C1"],
+      "evidence_bundle": [
+        {
+          "claim": "The segment reports the problem directly.",
+          "evidence_ids": [],
+          "min_high": 1,
+          "min_medium": 2,
+          "satisfied": false
+        }
+      ]
+    }
+  ],
+  "schema_version": "v8"
+}

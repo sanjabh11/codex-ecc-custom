@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/state.schema.json",
-  "title": "Positioning Audit State (v7)",
+  "title": "Positioning Audit State (v8)",
   "description": "Persistent state for an 8-phase positioning audit with an explicit validation-pending lifecycle",
   "type": "object",
   "required": [
@@ -15,6 +15,7 @@
     "evidence_limitations",
     "phases_completed",
     "gates_passed",
+    "last_updated",
     "schema_version"
   ],
   "properties": {
@@ -495,13 +496,8 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": [
-        "v5",
-        "v6",
-        "v7",
-        "v8"
-      ],
-      "default": "v8"
+      "const": "v8",
+      "description": "Current state schema version; migrate older snapshots before validation"
     }
   },
   "additionalProperties": false,

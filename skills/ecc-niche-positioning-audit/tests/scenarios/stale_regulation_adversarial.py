@@ -24,14 +24,14 @@ def run():
         "started_at": "2026-07-13T10:00:00Z",
         "current_phase": "VALIDATION_PENDING",
         "decision_confidence": {
-            "composite": 35,
+            "composite": 31,
             "quality": 8,
             "coverage": 10,
             "consistency": 8,
             "counter": 5,
-            "validation": 4,
+            "validation": 0,
         },
-        "evidence_types_present": ["user_quote", "stakeholder_input", "product_promise"],
+        "evidence_types_present": ["competitor_intel"],
         "evidence_limitations": [
             "Regulatory evidence is >18 months old (stale)",
             "Adversarial review identified missing HIPAA 2025 update coverage",
@@ -50,6 +50,7 @@ def run():
         "experiments_designed": 0,
         "experiments_executed": 0,
         "drift_status": "stale",
+        "last_updated": "2026-07-13T10:00:00Z",
     }
 
     experiments = {
@@ -60,13 +61,54 @@ def run():
 
     (tmpdir / "state.json").write_text(json.dumps(state, indent=2))
     (tmpdir / "experiments.json").write_text(json.dumps(experiments, indent=2))
+    (tmpdir / "evidence-corpus.json").write_text(json.dumps({
+        "audit_id": "AUD-STALE-005",
+        "evidence_items": [{
+            "evidence_id": "EV-001",
+            "type": "competitor_intel",
+            "source": "regulatory-summary-2024",
+            "source_tier": "secondary",
+            "timestamp": "2024-01-10T00:00:00Z",
+            "freshness": "stale",
+            "grade": "LOW",
+            "confidence": 0.4,
+            "provenance": "Secondary regulatory summary collected during a prior audit.",
+            "is_customer_commercial": False,
+            "authority_tier": "tier-2",
+            "checked_at": "2026-07-13T10:00:00Z",
+            "expiry": "2025-01-10T00:00:00Z",
+            "url_health": "alive",
+            "content_summary": "Old compliance summary that may miss current regulatory requirements."
+        }],
+        "total_items": 1,
+        "types_present": 1,
+        "types_missing": 10,
+        "evidence_limited_mode": True,
+        "schema_version": "v8"
+    }, indent=2))
+    (tmpdir / "hypotheses.json").write_text(json.dumps({
+        "audit_id": "AUD-STALE-005",
+        "hypotheses": [{
+            "id": "H1",
+            "hypothesis": "The current compliance positioning is still valid.",
+            "status": "unresolved",
+            "evidence_bundle": [{
+                "claim": "The regulatory positioning remains current.",
+                "evidence_ids": ["EV-001"],
+                "min_high": 1,
+                "min_medium": 2,
+                "satisfied": False
+            }]
+        }],
+        "schema_version": "v8"
+    }, indent=2))
 
     result = validate_audit_instance(tmpdir)
 
-    # Evidence-limited mode must be true (no customer evidence beyond user_quote which is borderline)
-    # Actually user_quote IS customer evidence, so evidence_limited_mode should be False
-    # But we set it to True to simulate the case where the user_quote was from a stakeholder, not a buyer
-    # The key check is: stale evidence + adversarial challenge = RECYCLE
+    # The key check is: stale evidence + adversarial challenge = RECYCLE.
+    assert not result["all_pass"], "Stale load-bearing evidence must fail the audit validator"
+    checks_by_name = {c["name"]: c for c in result["checks"]}
+    assert not checks_by_name["evidence_bundle_semantics"]["pass"], "Stale evidence must be rejected for load-bearing claims"
 
     # Check that at least one gate was RECYCLE
     recycle_gates = [g for g in state["gates_passed"] if g["decision"] == "RECYCLE"]

@@ -46,6 +46,7 @@ def run():
         "market_validation_status": "validation_pending",
         "experiments_designed": 2,
         "experiments_executed": 0,
+        "last_updated": "2026-07-13T10:00:00Z",
     }
 
     experiments = {
@@ -87,8 +88,22 @@ def run():
 
     (tmpdir / "state.json").write_text(json.dumps(state, indent=2))
     (tmpdir / "experiments.json").write_text(json.dumps(experiments, indent=2))
+    (tmpdir / "evidence-corpus.json").write_text(json.dumps({
+        "audit_id": "AUD-NEUTRAL-002",
+        "evidence_items": [
+            {"evidence_id": "EV-001", "type": "user_quote", "source": "prospect interview", "source_tier": "primary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "MEDIUM", "confidence": 0.7, "provenance": "Prospect interview recorded during audit framing.", "is_customer_commercial": True, "authority_tier": "tier-3", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "A prospect described the CLI workflow as promising but unfinished."},
+            {"evidence_id": "EV-002", "type": "stakeholder_input", "source": "product workshop", "source_tier": "primary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "LOW", "confidence": 0.5, "provenance": "Internal workshop notes recorded during audit framing.", "is_customer_commercial": False, "authority_tier": "tier-3", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "The team believes CLI adoption will be straightforward."},
+            {"evidence_id": "EV-003", "type": "product_promise", "source": "product brief", "source_tier": "secondary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "MEDIUM", "confidence": 0.8, "provenance": "Current product brief reviewed during audit framing.", "is_customer_commercial": False, "authority_tier": "tier-2", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "The product promises a fast CLI-based developer workflow."}
+        ],
+        "total_items": 3,
+        "types_present": 3,
+        "types_missing": 8,
+        "evidence_limited_mode": False,
+        "schema_version": "v8"
+    }, indent=2))
 
     result = validate_audit_instance(tmpdir)
+    assert result["all_pass"], f"Expected valid neutral lifecycle state: {result['checks']}"
 
     # With 0 executed experiments, validation score should be 0 and status should be validation_pending
     assert state["market_validation_status"] == "validation_pending", "Should be VALIDATION_PENDING"

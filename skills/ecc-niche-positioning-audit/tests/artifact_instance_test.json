@@ -1,0 +1,32 @@
+{
+  "artifact_id": "ART-FIXTURE-001",
+  "phase": "phase-0",
+  "scope": "standard",
+  "evidence_limited": true,
+  "confidence": {
+    "composite": 0,
+    "subscores": {
+      "evidence_quality": 0,
+      "source_coverage": 0,
+      "internal_consistency": 0,
+      "counter_evidence_survival": 0,
+      "validation_evidence": 0
+    },
+    "iterations": 1,
+    "improvements_made": ""
+  },
+  "findings": [],
+  "gap_analysis": [],
+  "adversarial_review": {},
+  "adversarial_reviews": [],
+  "gate_decision": {
+    "decision": "CONDITIONAL_GO",
+    "conditions": ["First-party buyer evidence is missing"]
+  },
+  "research_question_tree_update": {},
+  "next_phase_skill_selection": "deep-research",
+  "generated_from_state_hash": null,
+  "generated_at": "2026-07-16T10:00:00Z",
+  "superseded": false,
+  "schema_version": "v8"
+}

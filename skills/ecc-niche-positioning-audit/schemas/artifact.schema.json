@@ -1,14 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/artifact.schema.json",
-  "title": "Phase Artifact (v7)",
+  "title": "Phase Artifact (v8)",
   "description": "Standardized 4-page artifact produced by each phase",
   "type": "object",
   "required": [
     "artifact_id",
     "phase",
     "confidence",
-    "gate_decision"
+    "gate_decision",
+    "generated_from_state_hash",
+    "generated_at",
+    "superseded",
+    "schema_version"
   ],
   "properties": {
     "artifact_id": {
@@ -300,6 +304,11 @@
       "type": "boolean",
       "default": false,
       "description": "True if this artifact has been superseded by a regenerated version"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "v8",
+      "description": "Schema version of this artifact instance"
     }
   },
   "additionalProperties": false,

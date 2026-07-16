@@ -41,6 +41,7 @@ def run():
         "market_validation_status": "invalid_status",  # NOT in valid enum
         "experiments_designed": 0,
         "experiments_executed": 0,
+        "last_updated": "2026-07-13T10:00:00Z",
     }
 
     experiments = {
@@ -65,6 +66,7 @@ def run():
     if "design_is_not_validation" in checks_by_name:
         assert not checks_by_name["design_is_not_validation"]["pass"], \
             "Validator should FAIL design_is_not_validation check with invalid market_validation_status"
+    assert not result["all_pass"], "Schema drift must fail the persisted-audit validator"
 
     print("PASS: schema_drift_failure — validator correctly detects schema drift")
     return 0

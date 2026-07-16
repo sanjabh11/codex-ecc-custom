@@ -1,12 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/experiment.schema.json",
-  "title": "Validation Experiments (v7)",
+  "title": "Validation Experiments (v8)",
   "description": "Corpus of closed-loop experiment contracts for validating positioning hypotheses",
   "type": "object",
   "required": [
     "audit_id",
-    "experiments"
+    "experiments",
+    "schema_version"
   ],
   "properties": {
     "audit_id": {
@@ -31,13 +32,8 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": [
-        "v5",
-        "v6",
-        "v7",
-        "v8"
-      ],
-      "default": "v8"
+      "const": "v8",
+      "description": "Current experiment schema version; migrate older snapshots before validation"
     }
   },
   "additionalProperties": false,
@@ -240,6 +236,25 @@
           "description": "When the experiment was completed"
         }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["completed", "failed", "inconclusive"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["result", "completed_at", "hypothesis_transition"],
+            "properties": {
+              "result": {"type": "string", "minLength": 1},
+              "completed_at": {"type": "string", "format": "date-time"}
+            }
+          }
+        }
+      ],
       "additionalProperties": false
     }
   },

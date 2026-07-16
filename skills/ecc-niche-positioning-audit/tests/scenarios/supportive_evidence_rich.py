@@ -46,6 +46,7 @@ def run():
         "market_validation_status": "in_progress",
         "experiments_designed": 3,
         "experiments_executed": 1,
+        "last_updated": "2026-07-13T10:00:00Z",
     }
 
     experiments = {
@@ -68,6 +69,7 @@ def run():
                 "result": "52% WTP",
                 "hypothesis_transition": "supported",
                 "evidence_produced": "pricing_signal",
+                "completed_at": "2026-07-13T15:00:00Z",
             },
             {
                 "experiment_id": "EXP-002",
@@ -105,6 +107,20 @@ def run():
 
     (tmpdir / "state.json").write_text(json.dumps(state, indent=2))
     (tmpdir / "experiments.json").write_text(json.dumps(experiments, indent=2))
+    (tmpdir / "evidence-corpus.json").write_text(json.dumps({
+        "audit_id": "AUD-SUPPORTIVE-001",
+        "evidence_items": [
+            {"evidence_id": "EV-001", "type": "user_quote", "source": "customer interview", "source_tier": "primary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "HIGH", "confidence": 0.9, "provenance": "Customer interview recorded during audit framing.", "is_customer_commercial": True, "authority_tier": "tier-3", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "A customer reports material time savings from the product."},
+            {"evidence_id": "EV-002", "type": "analytics_data", "source": "product analytics", "source_tier": "primary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "HIGH", "confidence": 0.9, "provenance": "Analytics export reviewed during audit framing.", "is_customer_commercial": True, "authority_tier": "tier-1", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "Usage data shows recurring adoption by target teams."},
+            {"evidence_id": "EV-003", "type": "sales_data", "source": "CRM export", "source_tier": "primary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "HIGH", "confidence": 0.9, "provenance": "CRM export reviewed during audit framing.", "is_customer_commercial": True, "authority_tier": "tier-1", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "Sales data shows willingness to pay in the target segment."},
+            {"evidence_id": "EV-004", "type": "product_promise", "source": "product brief", "source_tier": "secondary", "timestamp": "2026-07-13T09:00:00Z", "freshness": "fresh", "grade": "MEDIUM", "confidence": 0.8, "provenance": "Current product brief reviewed during audit framing.", "is_customer_commercial": False, "authority_tier": "tier-2", "checked_at": "2026-07-13T10:00:00Z", "expiry": "2027-01-13T00:00:00Z", "url_health": "not_applicable", "content_summary": "The product promises faster analytics decisions."}
+        ],
+        "total_items": 4,
+        "types_present": 4,
+        "types_missing": 7,
+        "evidence_limited_mode": False,
+        "schema_version": "v8"
+    }, indent=2))
 
     result = validate_audit_instance(tmpdir)
 
