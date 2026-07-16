@@ -1,106 +1,247 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/experiment.schema.json",
-  "title": "Validation Experiment",
-  "description": "Closed-loop experiment contract for validating positioning hypotheses",
+  "title": "Validation Experiments (v7)",
+  "description": "Corpus of closed-loop experiment contracts for validating positioning hypotheses",
   "type": "object",
-  "required": ["experiment_id", "hypothesis_id", "claim_being_tested", "owner", "fidelity", "method", "sample_size", "success_threshold", "failure_threshold", "decision_rule", "risk_check", "instrumentation", "status"],
+  "required": [
+    "audit_id",
+    "experiments"
+  ],
   "properties": {
-    "experiment_id": {
+    "audit_id": {
       "type": "string",
-      "pattern": "^EXP-\\d{3}$",
-      "description": "Unique identifier for this experiment"
+      "description": "Audit instance identifier"
     },
-    "hypothesis_id": {
+    "experiments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/experiment"
+      }
+    },
+    "priority_ranking": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "description": "Ordered list of experiment IDs by priority"
+    },
+    "schema_version": {
       "type": "string",
-      "pattern": "^H\\d+$",
-      "description": "ID of the hypothesis this experiment validates"
-    },
-    "claim_being_tested": {
-      "type": "string",
-      "description": "The specific load-bearing claim being tested"
-    },
-    "owner": {
-      "type": "string",
-      "description": "Who is responsible for running this experiment (person, team, or agent)"
-    },
-    "fidelity": {
-      "type": "string",
-      "enum": ["low", "medium", "high"],
-      "description": "low = landing page/smoke test; medium = interview/survey; high = pilot/beta/A-B test"
-    },
-    "method": {
-      "type": "string",
-      "description": "What exactly will be done to run the experiment"
-    },
-    "sample_size": {
-      "type": "integer",
-      "minimum": 1,
-      "description": "Number of data points needed"
-    },
-    "duration": {
-      "type": "string",
-      "description": "How long the experiment runs (e.g., '2 weeks', '30 days')"
-    },
-    "success_threshold": {
-      "type": "string",
-      "description": "Measurable result that would confirm the hypothesis"
-    },
-    "failure_threshold": {
-      "type": "string",
-      "description": "Measurable result that would disprove the hypothesis"
-    },
-    "decision_rule": {
-      "type": "string",
-      "description": "What action to take on success, failure, or inconclusive result"
-    },
-    "risk_check": {
-      "type": "string",
-      "description": "Ethics and risk assessment: what could go wrong, what safeguards are in place"
-    },
-    "instrumentation": {
-      "type": "string",
-      "description": "How data will be collected, stored, and analyzed"
-    },
-    "status": {
-      "type": "string",
-      "enum": ["designed", "running", "completed", "failed", "inconclusive"],
-      "description": "Current status of the experiment",
-      "default": "designed"
-    },
-    "result": {
-      "type": ["string", "null"],
-      "description": "Outcome of the experiment (filled when status is completed, failed, or inconclusive)"
-    },
-    "hypothesis_transition": {
-      "type": "string",
-      "enum": ["supported", "weakened", "disproven", "unresolved"],
-      "description": "How the hypothesis status should update based on this experiment's result",
-      "default": "unresolved"
-    },
-    "evidence_produced": {
-      "type": "string",
-      "description": "What evidence type this experiment produces (from the 11-type taxonomy)"
-    },
-    "cost_estimate": {
-      "type": "string",
-      "description": "Estimated cost in time, money, or effort"
-    },
-    "priority": {
-      "type": "integer",
-      "minimum": 1,
-      "description": "Priority ranking (1 = highest = run first)"
-    },
-    "started_at": {
-      "type": ["string", "null"],
-      "format": "date-time",
-      "description": "When the experiment started running"
-    },
-    "completed_at": {
-      "type": ["string", "null"],
-      "format": "date-time",
-      "description": "When the experiment was completed"
+      "enum": [
+        "v5",
+        "v6",
+        "v7",
+        "v8"
+      ],
+      "default": "v8"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "experiment": {
+      "type": "object",
+      "required": [
+        "experiment_id",
+        "hypothesis_id",
+        "claim_being_tested",
+        "owner",
+        "fidelity",
+        "method",
+        "sample_size",
+        "success_threshold",
+        "failure_threshold",
+        "decision_rule",
+        "risk_check",
+        "instrumentation",
+        "status"
+      ],
+      "properties": {
+        "experiment_id": {
+          "type": "string",
+          "pattern": "^EXP-\\d{3}$",
+          "description": "Unique identifier for this experiment"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^EXP-\\d{3}$",
+          "description": "Alias for experiment_id (legacy compatibility)"
+        },
+        "hypothesis_id": {
+          "type": "string",
+          "pattern": "^H(-[A-Z]+-\\d+|\\d+)$",
+          "description": "ID of the hypothesis this experiment validates"
+        },
+        "hypothesis_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^H(-[A-Z]+-\\d+|\\d+)$"
+          },
+          "description": "Additional hypothesis IDs this experiment touches",
+          "default": []
+        },
+        "claim_being_tested": {
+          "type": "string",
+          "description": "The specific load-bearing claim being tested"
+        },
+        "claim": {
+          "type": "string",
+          "description": "Alias for claim_being_tested (legacy compatibility)"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Who is responsible for running this experiment"
+        },
+        "fidelity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "description": "low = landing page/smoke test; medium = interview/survey; high = pilot/beta/A-B test"
+        },
+        "method": {
+          "type": "string",
+          "description": "What exactly will be done to run the experiment"
+        },
+        "sample_size": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "description": "Number of data points needed (integer) or description (string for legacy)"
+        },
+        "sample_description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Human-readable description of the sample (when sample_size is a number)"
+        },
+        "duration": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "How long the experiment runs"
+        },
+        "success_threshold": {
+          "type": "string",
+          "description": "Measurable result that would confirm the hypothesis"
+        },
+        "failure_threshold": {
+          "type": "string",
+          "description": "Measurable result that would disprove the hypothesis"
+        },
+        "decision_rule": {
+          "type": "string",
+          "description": "What action to take on success, failure, or inconclusive result"
+        },
+        "risk_check": {
+          "type": "string",
+          "description": "Ethics and risk assessment"
+        },
+        "instrumentation": {
+          "type": "string",
+          "description": "How data will be collected, stored, and analyzed"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "designed",
+            "running",
+            "completed",
+            "failed",
+            "inconclusive"
+          ],
+          "description": "Current status of the experiment",
+          "default": "designed"
+        },
+        "result": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Outcome of the experiment"
+        },
+        "hypothesis_transition": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "weakened",
+            "disproven",
+            "unresolved"
+          ],
+          "description": "How the hypothesis status should update",
+          "default": "unresolved"
+        },
+        "evidence_produced": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "What evidence type this experiment produces"
+        },
+        "cost_estimate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Estimated cost in time, money, or effort"
+        },
+        "cost": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Alias for cost_estimate (legacy compatibility)"
+        },
+        "priority": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "description": "Priority ranking (1 = highest)"
+        },
+        "falsification_potential": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "How easily this experiment can falsify the hypothesis"
+        },
+        "blocking_potential": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Whether failure blocks the hypothesis"
+        },
+        "started_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the experiment started running"
+        },
+        "completed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "When the experiment was completed"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "version": "v8"
 }

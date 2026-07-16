@@ -1,10 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/state.schema.json",
-  "title": "Positioning Audit State (v6)",
+  "title": "Positioning Audit State (v7)",
   "description": "Persistent state for an 8-phase positioning audit with an explicit validation-pending lifecycle",
   "type": "object",
-  "required": ["audit_id", "product_context", "scope", "started_at", "current_phase", "decision_confidence", "evidence_types_present", "evidence_limitations", "phases_completed", "gates_passed"],
+  "required": [
+    "audit_id",
+    "product_context",
+    "scope",
+    "started_at",
+    "current_phase",
+    "decision_confidence",
+    "evidence_types_present",
+    "evidence_limitations",
+    "phases_completed",
+    "gates_passed",
+    "schema_version"
+  ],
   "properties": {
     "audit_id": {
       "type": "string",
@@ -14,9 +26,20 @@
       "type": "string",
       "description": "Path or description of the product being audited"
     },
+    "product": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Human-readable product name (alias for product_context)"
+    },
     "scope": {
       "type": "string",
-      "enum": ["quick", "standard", "deep"],
+      "enum": [
+        "quick",
+        "standard",
+        "deep"
+      ],
       "description": "Audit scope mode"
     },
     "started_at": {
@@ -25,14 +48,42 @@
       "description": "ISO 8601 timestamp when audit started"
     },
     "completed_at": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date-time",
       "description": "ISO 8601 timestamp when audit completed, or null if in progress"
     },
     "current_phase": {
       "type": "string",
-      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7", "VALIDATION_PENDING", "completed"],
-      "description": "Current phase of the audit, including the post-design validation-pending state"
+      "enum": [
+        "phase-0",
+        "phase-1",
+        "phase-2",
+        "phase-3",
+        "phase-4",
+        "phase-5",
+        "phase-6",
+        "phase-7",
+        "VALIDATION_PENDING",
+        "completed"
+      ],
+      "description": "Current phase of the audit"
+    },
+    "current_gate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "GO",
+        "CONDITIONAL_GO",
+        "RECYCLE",
+        "STOP",
+        null
+      ],
+      "description": "Current gate decision"
     },
     "evidence_limited_mode": {
       "type": "boolean",
@@ -41,13 +92,35 @@
     },
     "analysis_status": {
       "type": "string",
-      "enum": ["in_progress", "complete"],
+      "enum": [
+        "in_progress",
+        "complete"
+      ],
       "description": "Whether the analysis and experiment-design phases are complete"
     },
     "market_validation_status": {
       "type": "string",
-      "enum": ["not_started", "validation_pending", "in_progress", "validated", "invalidated"],
-      "description": "Buyer-validation lifecycle; experiment design alone is validation_pending"
+      "enum": [
+        "not_started",
+        "validation_pending",
+        "in_progress",
+        "validated",
+        "invalidated"
+      ],
+      "description": "Buyer-validation lifecycle"
+    },
+    "implementation_hardening_status": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "not_started",
+        "in_progress",
+        "complete",
+        null
+      ],
+      "description": "Status of implementation hardening (Phase 6 remediation)"
     },
     "experiments_designed": {
       "type": "integer",
@@ -59,31 +132,87 @@
     },
     "decision_confidence": {
       "type": "object",
-      "required": ["composite", "quality", "coverage", "consistency", "counter", "validation"],
+      "required": [
+        "composite",
+        "quality",
+        "coverage",
+        "consistency",
+        "counter",
+        "validation"
+      ],
       "properties": {
-        "composite": {"type": "number", "minimum": 0, "maximum": 100},
-        "quality": {"type": "number", "minimum": 0, "maximum": 30},
-        "coverage": {"type": "number", "minimum": 0, "maximum": 25},
-        "consistency": {"type": "number", "minimum": 0, "maximum": 20},
-        "counter": {"type": "number", "minimum": 0, "maximum": 15},
-        "validation": {"type": "number", "minimum": 0, "maximum": 10}
+        "composite": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "quality": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 30
+        },
+        "coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 25
+        },
+        "consistency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "counter": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "validation": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
       }
     },
     "hypotheses": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "text", "status"],
+        "required": [
+          "id",
+          "text",
+          "status"
+        ],
         "properties": {
-          "id": {"type": "string", "pattern": "^H\\d+$"},
-          "text": {"type": "string"},
+          "id": {
+            "type": "string",
+            "pattern": "^H(-[A-Z]+-\\d+|\\d+)$"
+          },
+          "text": {
+            "type": "string"
+          },
           "status": {
             "type": "string",
-            "enum": ["supported", "weakened", "disproven", "stale", "unresolved"],
+            "enum": [
+              "supported",
+              "weakened",
+              "disproven",
+              "stale",
+              "unresolved"
+            ],
             "default": "unresolved"
           },
-          "evidence": {"type": "array", "items": {"type": "string"}},
-          "load_bearing_claims": {"type": "array", "items": {"type": "string"}}
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "load_bearing_claims": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
       "default": []
@@ -93,46 +222,180 @@
       "items": {
         "type": "object",
         "properties": {
-          "experiment_id": {"type": "string"},
-          "hypothesis_id": {"type": "string"},
-          "status": {"type": "string", "enum": ["designed", "running", "completed", "failed", "inconclusive"]},
-          "result": {"type": ["string", "null"]},
-          "hypothesis_transition": {"type": "string", "enum": ["supported", "weakened", "disproven", "unresolved"]}
+          "experiment_id": {
+            "type": "string"
+          },
+          "hypothesis_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "designed",
+              "running",
+              "completed",
+              "failed",
+              "inconclusive"
+            ]
+          },
+          "result": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hypothesis_transition": {
+            "type": "string",
+            "enum": [
+              "supported",
+              "weakened",
+              "disproven",
+              "unresolved"
+            ]
+          }
         }
       },
       "default": []
     },
     "evidence_types_present": {
       "type": "array",
-      "items": {"type": "string"},
+      "items": {
+        "type": "string"
+      },
       "description": "List of evidence types present in the corpus"
+    },
+    "evidence_types_missing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of evidence types missing from the corpus"
     },
     "evidence_limitations": {
       "type": "array",
-      "items": {"type": "string"},
+      "items": {
+        "type": "string"
+      },
       "description": "Explicitly stated limitations in the evidence"
     },
     "phases_completed": {
       "type": "array",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      },
+      "description": "Completed phases as strings (e.g. 'phase-0')"
     },
     "gates_passed": {
       "type": "array",
       "items": {
         "type": "object",
+        "required": [
+          "gate",
+          "decision"
+        ],
         "properties": {
-          "gate": {"type": "string"},
-          "decision": {"type": "string", "enum": ["GO", "CONDITIONAL_GO", "RECYCLE", "STOP"]},
-          "timestamp": {"type": "string", "format": "date-time"}
+          "gate": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "GO",
+              "CONDITIONAL_GO",
+              "RECYCLE",
+              "STOP"
+            ]
+          },
+          "timestamp": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
         }
       }
     },
+    "gaps": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "major": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minor": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "beachhead": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Identified beachhead segment"
+    },
+    "beachhead_score": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Beachhead segment score"
+    },
+    "remediation_completed": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Remediation items completed by phase"
+    },
+    "next_audit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "When the next audit should occur"
+    },
+    "audit_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Audit version identifier"
+    },
+    "previous_audit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Reference to previous audit snapshot"
+    },
     "stack_detected": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Detected tech stack, or null if no codebase"
     },
     "domain_detected": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "advisor_used": {
       "type": "boolean",
@@ -140,12 +403,90 @@
     },
     "extensions_loaded": {
       "type": "array",
-      "items": {"type": "string"},
+      "items": {
+        "type": "string"
+      },
       "default": []
+    },
+    "research_log": {
+      "type": "array",
+      "description": "Research query log with saturation and contradiction tracking",
+      "items": {
+        "type": "object",
+        "required": ["query_id", "query_text", "sources_found", "saturation_reached"],
+        "properties": {
+          "query_id": {
+            "type": "string",
+            "pattern": "^Q-\\d{3}$",
+            "description": "Unique query identifier"
+          },
+          "query_text": {
+            "type": "string",
+            "description": "The search query or research question"
+          },
+          "phase": {
+            "type": "string",
+            "description": "Which phase this query was run in"
+          },
+          "sources_found": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Source IDs or URLs found by this query"
+          },
+          "saturation_reached": {
+            "type": "boolean",
+            "description": "True if no new information was found in the last pass"
+          },
+          "contradiction_status": {
+            "type": "string",
+            "enum": ["none", "found", "resolved", "unresolved"],
+            "default": "none",
+            "description": "Whether this query uncovered contradictions"
+          },
+          "counter_evidence_found": {
+            "type": "boolean",
+            "default": false
+          },
+          "timestamp": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    },
+    "tool_health": {
+      "type": "object",
+      "description": "Recorded health status of tools used during the audit",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["available", "installed", "healthy", "unavailable", "not_checked"],
+            "default": "not_checked"
+          },
+          "checked_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "default": {}
     },
     "drift_status": {
       "type": "string",
-      "enum": ["stable", "drifting", "stale", "not_assessed"],
+      "enum": [
+        "stable",
+        "drifting",
+        "stale",
+        "not_assessed"
+      ],
       "default": "not_assessed"
     },
     "last_updated": {
@@ -154,9 +495,15 @@
     },
     "schema_version": {
       "type": "string",
-      "enum": ["v5", "v6"],
-      "default": "v6"
+      "enum": [
+        "v5",
+        "v6",
+        "v7",
+        "v8"
+      ],
+      "default": "v8"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "version": "v8"
 }

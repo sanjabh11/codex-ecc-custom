@@ -1,0 +1,66 @@
+{
+  "schema_version": "v8",
+  "description": "Machine-readable validation rules for ecc-niche-positioning-audit validator",
+  "rules": {
+    "max_description_length": 1024,
+    "max_body_lines": 1200,
+    "expected_tool_truth_rules": 29,
+    "expected_phases": 8,
+    "expected_gap_types": 8,
+    "expected_schema_version": "v8",
+    "required_schemas": [
+      "evidence-corpus.schema.json",
+      "experiment.schema.json",
+      "state.schema.json",
+      "artifact.schema.json",
+      "hypothesis.schema.json"
+    ],
+    "required_sections": [
+      "## Tool Truth",
+      "## Upstream Source",
+      "## Dependency Gating"
+    ],
+    "required_trigger_phrases": [
+      "niche segment",
+      "positioning strategy",
+      "product-market alignment",
+      "market gap discovery",
+      "unmet needs analysis",
+      "ICP",
+      "beachhead segment",
+      "product-market fit audit"
+    ],
+    "required_anti_trigger": "DO NOT TRIGGER when: no product or codebase context is available, or the task is purely marketing copy generation without strategic analysis.",
+    "required_lifecycle_phrases": [
+      "Designed experiments are not validation evidence",
+      "VALIDATION_PENDING",
+      "first-party",
+      "validation",
+      "evidence_limited_mode",
+      "CONDITIONAL GO",
+      "never GO",
+      "all subsequent gates are capped",
+      "no hypothesis becomes Supported until first-party results are recorded"
+    ],
+    "required_evidence_rules": [
+      "at least one HIGH or two MEDIUM",
+      "load-bearing",
+      "cannot be load-bearing"
+    ],
+    "freshness_terms": ["fresh", "stale", "recent"],
+    "scope_dag": {
+      "quick_path": ["phase-0", "phase-1", "phase-2", "phase-3-lite", "phase-4-lite", "terminal"],
+      "standard_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "terminal"],
+      "deep_path": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "approval", "phase-5", "phase-6", "phase-7", "terminal"],
+      "quick_gate_threshold": 12,
+      "standard_gate_threshold": 15,
+      "deep_gate_threshold": 18
+    },
+    "audit_instance_checks": {
+      "executed_count_consistency": true,
+      "first_party_buyer_evidence": true,
+      "validation_score_zero_when_no_experiments": true,
+      "design_is_not_validation": true
+    }
+  }
+}

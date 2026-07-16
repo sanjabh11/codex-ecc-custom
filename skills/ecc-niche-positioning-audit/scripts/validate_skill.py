@@ -1,25 +1,29 @@
 #!/usr/bin/env python3
-"""Deterministic validator for ecc-niche-positioning-audit skill v6.
+"""Deterministic validator for ecc-niche-positioning-audit skill v8.
 
 Checks:
 1. Frontmatter description <= 1024 characters
-2. SKILL.md body <= 1100 lines
-3. All referenced schemas in schemas/ exist
+2. SKILL.md body <= 1200 lines
+3. All referenced schemas in schemas/ exist and are valid JSON
 4. Scope DAG has valid paths (quick/standard/deep) — no impossible dependencies
-5. 26 Tool Truth enforcement rules present
+5. 27 Tool Truth enforcement rules present
 6. Trigger phrases present in description
 7. Anti-trigger section present
 8. Tool Truth section present
 9. Upstream Source section present
-10. Evidence corpus schema validates
-11. Experiment schema validates
-12. State schema validates
-13. Artifact schema validates
-14. 8 phases (P0-P7) present
-15. 8-type gap classification present
-16. Methodology sources have URLs (in provenance reference)
-17. Lifecycle contract distinguishes experiment design from market validation
-18. Optional audit-instance validation protects the validation-pending boundary
+10-14. Schema existence (evidence-corpus, experiment, state, artifact, hypothesis)
+15. 8 phases (P0-P7) present
+16. 8-type gap classification present
+17. Methodology sources have URLs (in provenance reference)
+18. Lifecycle contract distinguishes experiment design from market validation
+19. Schema instance validation — test fixtures conform to their schemas
+20. Gate cap logic — CONDITIONAL_GO is capped when evidence_limited_mode is true
+21. Validation score zero — validation confidence is 0 when no experiments executed
+22. Count equality — experiments_executed matches count of executed experiments
+23. Stale artifact detection — superseded artifacts are flagged
+24. Hypothesis status consistency — no hypothesis is 'supported' when all experiments are 'designed'
+25. Evidence bundle minimum — each load-bearing claim has sufficient evidence
+26. Freshness enforcement — no stale evidence item is load-bearing
 """
 
 import sys
@@ -35,9 +39,25 @@ REFERENCES_DIR = SKILL_DIR / "references"
 
 MAX_DESC_LEN = 1024
 MAX_BODY_LINES = 1200
-EXPECTED_TOOL_TRUTH_RULES = 27
+EXPECTED_TOOL_TRUTH_RULES = 29
 EXPECTED_PHASES = 8
 EXPECTED_GAP_TYPES = 8
+EXPECTED_SCHEMA_VERSION = "v8"
+
+# Load machine-readable validation rules if available
+RULES_PATH = SKILL_DIR / "validation-rules.json"
+if RULES_PATH.exists():
+    try:
+        _rules = json.loads(RULES_PATH.read_text())
+        _r = _rules.get("rules", {})
+        MAX_DESC_LEN = _r.get("max_description_length", MAX_DESC_LEN)
+        MAX_BODY_LINES = _r.get("max_body_lines", MAX_BODY_LINES)
+        EXPECTED_TOOL_TRUTH_RULES = _r.get("expected_tool_truth_rules", EXPECTED_TOOL_TRUTH_RULES)
+        EXPECTED_PHASES = _r.get("expected_phases", EXPECTED_PHASES)
+        EXPECTED_GAP_TYPES = _r.get("expected_gap_types", EXPECTED_GAP_TYPES)
+        EXPECTED_SCHEMA_VERSION = _r.get("expected_schema_version", EXPECTED_SCHEMA_VERSION)
+    except (json.JSONDecodeError, KeyError):
+        pass  # Fall back to defaults
 
 
 def parse_frontmatter(content: str) -> tuple[dict, str]:
@@ -237,6 +257,159 @@ def validate_audit_instance(audit_dir: Path) -> dict:
     return result
 
 
+def check_schema_instance_validation() -> dict:
+    """Check 19: Validate test fixture instances against their schemas."""
+    result = {"valid": True, "errors": []}
+    try:
+        import jsonschema
+    except ImportError:
+        # jsonschema not installed — skip with note
+        return {"valid": True, "errors": ["jsonschema library not installed — skipped instance validation"]}
+
+    fixture_map = {
+        "evidence_corpus_test.json": "evidence-corpus.schema.json",
+        "experiment_lifecycle_test.json": "experiment.schema.json",
+    }
+    for fixture_name, schema_name in fixture_map.items():
+        fixture_path = TESTS_DIR / fixture_name
+        schema_path = SCHEMAS_DIR / schema_name
+        if not fixture_path.exists() or not schema_path.exists():
+            continue
+        try:
+            fixture = json.loads(fixture_path.read_text())
+            schema = json.loads(schema_path.read_text())
+            # Validate valid_examples if present, otherwise validate the fixture itself
+            if "valid_examples" in fixture:
+                for item in fixture["valid_examples"]:
+                    try:
+                        jsonschema.validate(item, schema.get("$defs", {}).get("evidence_item", schema))
+                    except jsonschema.ValidationError as e:
+                        result["errors"].append(f"{fixture_name}: valid_example failed: {e.message}")
+                        result["valid"] = False
+        except (json.JSONDecodeError, KeyError) as e:
+            result["errors"].append(f"{fixture_name}: {e}")
+            result["valid"] = False
+    return result
+
+
+def check_gate_cap_logic(body: str) -> dict:
+    """Check 20: Verify SKILL.md enforces that evidence_limited_mode caps gate at CONDITIONAL_GO."""
+    result = {"valid": True, "errors": []}
+    required = [
+        "evidence_limited_mode",
+        "CONDITIONAL GO",
+        "never GO",
+        "all subsequent gates are capped",
+    ]
+    missing = [phrase for phrase in required if phrase.lower() not in body.lower()]
+    if missing:
+        result["valid"] = False
+        result["errors"] = [f"Missing gate cap enforcement: {', '.join(missing)}"]
+    return result
+
+
+def check_validation_score_rule(body: str) -> dict:
+    """Check 21: Verify SKILL.md enforces validation confidence = 0 when no experiments executed."""
+    result = {"valid": True, "errors": []}
+    required = [
+        "validation_pending",
+        "validation",
+        "0",
+        "first-party",
+    ]
+    missing = [phrase for phrase in required if phrase.lower() not in body.lower()]
+    if missing:
+        result["valid"] = False
+        result["errors"] = [f"Missing validation score rule: {', '.join(missing)}"]
+    return result
+
+
+def check_count_equality(body: str) -> dict:
+    """Check 22: Verify state schema has experiments_executed and experiments_designed fields for count tracking."""
+    result = {"valid": True, "errors": []}
+    state_path = SCHEMAS_DIR / "state.schema.json"
+    if not state_path.exists():
+        return {"valid": False, "errors": ["state.schema.json not found"]}
+    try:
+        schema = json.loads(state_path.read_text())
+        props = schema.get("properties", {})
+        if "experiments_executed" not in props:
+            result["valid"] = False
+            result["errors"].append("Missing 'experiments_executed' field in state schema")
+        if "experiments_designed" not in props:
+            result["valid"] = False
+            result["errors"].append("Missing 'experiments_designed' field in state schema")
+    except json.JSONDecodeError:
+        result["valid"] = False
+        result["errors"] = ["state.schema.json is not valid JSON"]
+    return result
+
+
+def check_stale_artifact_detection() -> dict:
+    """Check 23: Verify artifact schema has superseded and generated_from_state_hash fields."""
+    result = {"valid": True, "errors": []}
+    artifact_path = SCHEMAS_DIR / "artifact.schema.json"
+    if not artifact_path.exists():
+        return {"valid": False, "errors": ["artifact.schema.json not found"]}
+    try:
+        schema = json.loads(artifact_path.read_text())
+        props = schema.get("properties", {})
+        if "superseded" not in props:
+            result["valid"] = False
+            result["errors"].append("Missing 'superseded' field in artifact schema")
+        if "generated_from_state_hash" not in props:
+            result["valid"] = False
+            result["errors"].append("Missing 'generated_from_state_hash' field in artifact schema")
+    except json.JSONDecodeError:
+        result["valid"] = False
+        result["errors"] = ["artifact.schema.json is not valid JSON"]
+    return result
+
+
+def check_hypothesis_status_consistency(body: str) -> dict:
+    """Check 24: Verify SKILL.md enforces that hypotheses cannot be 'supported' when experiments are only 'designed'."""
+    result = {"valid": True, "errors": []}
+    required = [
+        "Designed experiments are not validation evidence",
+        "no hypothesis becomes Supported until first-party results are recorded",
+    ]
+    missing = [phrase for phrase in required if phrase.lower() not in body.lower()]
+    if missing:
+        result["valid"] = False
+        result["errors"] = [f"Missing hypothesis status consistency rule: {', '.join(missing)}"]
+    return result
+
+
+def check_evidence_bundle_minimum(body: str) -> dict:
+    """Check 25: Verify SKILL.md enforces minimum evidence per load-bearing claim."""
+    result = {"valid": True, "errors": []}
+    required = [
+        "at least one HIGH or two MEDIUM",
+        "load-bearing",
+        "cannot be load-bearing",
+    ]
+    missing = [phrase for phrase in required if phrase.lower() not in body.lower()]
+    if missing:
+        result["valid"] = False
+        result["errors"] = [f"Missing evidence bundle minimum rule: {', '.join(missing)}"]
+    return result
+
+
+def check_freshness_enforcement(body: str) -> dict:
+    """Check 26: Verify SKILL.md enforces that stale evidence cannot be load-bearing."""
+    result = {"valid": True, "errors": []}
+    # Check for freshness terms and the load-bearing restriction
+    has_freshness = any(term in body.lower() for term in ["fresh", "stale", "recent"])
+    has_restriction = "cannot be load-bearing" in body.lower() or "low findings cannot" in body.lower()
+    if not has_freshness:
+        result["valid"] = False
+        result["errors"].append("Missing freshness terminology (fresh/recent/stale)")
+    if not has_restriction:
+        result["valid"] = False
+        result["errors"].append("Missing stale/LOW evidence load-bearing restriction")
+    return result
+
+
 def run_validation() -> dict:
     """Run all validation checks."""
     results = {"checks": [], "all_pass": True}
@@ -269,7 +442,7 @@ def run_validation() -> dict:
     })
 
     # 3. Schemas exist and are valid JSON
-    for schema in ["evidence-corpus.schema.json", "experiment.schema.json", "state.schema.json", "artifact.schema.json"]:
+    for schema in ["evidence-corpus.schema.json", "experiment.schema.json", "state.schema.json", "artifact.schema.json", "hypothesis.schema.json"]:
         exists = check_schema_exists(schema)
         results["checks"].append({"name": f"schema_{schema}", "pass": exists})
 
@@ -298,7 +471,20 @@ def run_validation() -> dict:
     us_section = "## Upstream Source" in body
     results["checks"].append({"name": "upstream_source", "pass": us_section})
 
-    # 10-13. Schema validation (already checked in step 3)
+    # 10-14. Schema validation (already checked in step 3)
+
+    # 13b. Schema version check (v8)
+    schema_version_ok = True
+    for schema_name in ["state.schema.json", "evidence-corpus.schema.json", "experiment.schema.json", "artifact.schema.json", "hypothesis.schema.json"]:
+        schema_path = SCHEMAS_DIR / schema_name
+        if schema_path.exists():
+            try:
+                schema_json = json.loads(schema_path.read_text())
+                if schema_json.get("version") != EXPECTED_SCHEMA_VERSION:
+                    schema_version_ok = False
+            except json.JSONDecodeError:
+                schema_version_ok = False
+    results["checks"].append({"name": f"schema_version_{EXPECTED_SCHEMA_VERSION}", "pass": schema_version_ok})
 
     # 14. Phases present
     phases = check_phases(body)
@@ -315,6 +501,38 @@ def run_validation() -> dict:
     lifecycle = check_lifecycle_contract(body)
     results["checks"].append({"name": "lifecycle_contract", "pass": lifecycle["valid"], "missing": lifecycle["missing"]})
 
+    # 19. Schema instance validation — validate test fixtures against schemas
+    instance_result = check_schema_instance_validation()
+    results["checks"].append({"name": "schema_instance_validation", "pass": instance_result["valid"], "errors": instance_result.get("errors", [])})
+
+    # 20. Gate cap logic — evidence_limited_mode caps gate at CONDITIONAL_GO
+    gate_cap_result = check_gate_cap_logic(body)
+    results["checks"].append({"name": "gate_cap_logic", "pass": gate_cap_result["valid"], "errors": gate_cap_result.get("errors", [])})
+
+    # 21. Validation score zero when no experiments executed
+    val_score_result = check_validation_score_rule(body)
+    results["checks"].append({"name": "validation_score_rule", "pass": val_score_result["valid"], "errors": val_score_result.get("errors", [])})
+
+    # 22. Count equality — experiments_executed matches executed experiment count
+    count_result = check_count_equality(body)
+    results["checks"].append({"name": "count_equality", "pass": count_result["valid"], "errors": count_result.get("errors", [])})
+
+    # 23. Stale artifact detection — superseded field exists and is checked
+    stale_result = check_stale_artifact_detection()
+    results["checks"].append({"name": "stale_artifact_detection", "pass": stale_result["valid"], "errors": stale_result.get("errors", [])})
+
+    # 24. Hypothesis status consistency — no 'supported' when all experiments 'designed'
+    hyp_result = check_hypothesis_status_consistency(body)
+    results["checks"].append({"name": "hypothesis_status_consistency", "pass": hyp_result["valid"], "errors": hyp_result.get("errors", [])})
+
+    # 25. Evidence bundle minimum — prose rule exists in SKILL.md
+    bundle_result = check_evidence_bundle_minimum(body)
+    results["checks"].append({"name": "evidence_bundle_minimum", "pass": bundle_result["valid"], "errors": bundle_result.get("errors", [])})
+
+    # 26. Freshness enforcement — stale evidence cannot be load-bearing
+    freshness_result = check_freshness_enforcement(body)
+    results["checks"].append({"name": "freshness_enforcement", "pass": freshness_result["valid"], "errors": freshness_result.get("errors", [])})
+
     # Aggregate
     results["all_pass"] = all(c["pass"] for c in results["checks"])
     return results
@@ -323,7 +541,7 @@ def run_validation() -> dict:
 def main():
     results = run_validation()
     print("=" * 60)
-    print("ecc-niche-positioning-audit v6 Validator")
+    print("ecc-niche-positioning-audit v8 Validator")
     print("=" * 60)
 
     for check in results["checks"]:

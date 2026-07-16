@@ -1,6 +1,6 @@
 {
-  "test_name": "evidence_corpus_validation",
-  "description": "Validate evidence corpus items against the machine-readable schema",
+  "test_name": "evidence_corpus_validation_v8",
+  "description": "Validate evidence corpus items against the v8 machine-readable schema",
   "valid_examples": [
     {
       "evidence_id": "EV-001",
@@ -17,6 +17,10 @@
       "confidence": 0.85,
       "provenance": "Collected via 30-min interview with customer CTO on 2026-07-10",
       "is_customer_commercial": true,
+      "authority_tier": "tier-1",
+      "checked_at": "2026-07-10T14:30:00Z",
+      "expiry": "2027-01-10T00:00:00Z",
+      "url_health": "not_applicable",
       "content_summary": "CTO says the product saves 4 hours per week vs manual process"
     },
     {

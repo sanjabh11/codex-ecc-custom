@@ -351,11 +351,13 @@ Every finding and evidence item is graded:
 
 | Grade | Criteria | Weight in Confidence |
 |-------|----------|---------------------|
-| **HIGH** | Direct observation, primary source, verifiable, recent (<6mo) | Full weight |
-| **MEDIUM** | Secondary source, indirect observation, somewhat dated (6-18mo) | 0.6x weight |
-| **LOW** | Anecdotal, inferred, old (>18mo), or unverified | 0.3x weight; **cannot be load-bearing** |
+| **HIGH** | Direct observation, primary source, verifiable, recent (<6mo), authority_tier: tier-1 or tier-2 | Full weight |
+| **MEDIUM** | Secondary source, indirect observation, somewhat dated (6-18mo), authority_tier: tier-2 | 0.6x weight |
+| **LOW** | Anecdotal, inferred, old (>18mo), or unverified, authority_tier: tier-3 | 0.3x weight; **cannot be load-bearing** |
 
 **Rule**: No positioning claim can rest solely on LOW-grade evidence. At least one HIGH or two MEDIUM evidence items required per load-bearing claim.
+
+**Source Freshness**: Every evidence item must record `checked_at` (ISO 8601 timestamp of last verification), `expiry` (date after which evidence is stale), and `url_health` (alive/dead/redirected/paywalled/not_applicable). Stale evidence (past expiry) cannot be load-bearing and must be re-validated or removed.
 
 ## Pipeline Overview
 
@@ -417,6 +419,10 @@ Three hostile personas review findings before gate:
 3. **The Contrarian**: "The opposite conclusion is also defensible. What evidence supports the opposite?"
 
 Findings must survive all three reviews. If a review identifies a fatal flaw, RECYCLE.
+
+**Adversarial Review Persistence**: Each review must be persisted in the artifact's `adversarial_reviews` array with: `reviewer_id` (e.g., ADV-001), `persona` (skeptic/missing_perspective/contrarian), `context` (what was challenged), `challenge` (the counter-argument), `resolution_status` (survived/fatal_flaw/partial/unresolved), and `resolution_notes`. Narrative-only reviews without persisted records are non-compliant.
+
+**Research Log**: Every research query must be logged in `state.json`'s `research_log` array with: `query_id` (Q-###), `query_text`, `phase`, `sources_found`, `saturation_reached` (boolean), `contradiction_status` (none/found/resolved/unresolved), and `counter_evidence_found`. Saturation is reached when no new information is found in a pass. Unresolved contradictions block GO decisions.
 
 ### Inter-Phase Consistency Check
 
@@ -1116,6 +1122,8 @@ P0 → P1 → P2 → P3 → P4 → [APPROVAL] → P5 design → execute → P6 (
 - **Contradictions are surfaced, not hidden** — if product promise contradicts customer outcomes, flag it explicitly
 - **Evidence-limited mode is explicitly flagged** in state and artifacts — no full GO decision without direct customer or commercial evidence
 - **Designed experiments are not validation evidence** — with zero executed first-party experiments, use `VALIDATION_PENDING`, score validation as 0, and keep hypotheses unresolved
+- **Tool health is recorded** — every tool used during the audit must have its status recorded in `state.json`'s `tool_health` map (available/installed/healthy/unavailable/not_checked) with `checked_at` timestamp
+- **Artifact reproducibility** — every artifact must record `generated_from_state_hash` (SHA-256 of canonical state.json); superseded artifacts must have `superseded: true`; use `scripts/generate_artifact.py` for generation and verification
 
 ### Artifact Format
 
@@ -1138,3 +1146,5 @@ Every phase produces a standardized 4-page artifact:
 - v4 additions: Input Parameters, Scope Selection (quick/standard/deep), Stack Auto-Detection, Pre-Audit Questionnaire, Per-Project Extensions, Persistent State, Cross-Codebase Portfolio View, Evidence Grading, IMPACT Framework integration, advisor checkpoint verification
 - v5 redesign: Codebase made optional; Product Truth / Evidence Corpus added as primary input; Research Question Trees with saturation criteria; 8-type Gap Classification (need/product/proof/positioning/pricing/distribution/adoption/evidence); Alignment Chain (market need → customer outcome → product promise → actual capability → proof → positioning → experiment); Validation Experiments with fidelity ladder and success/failure thresholds; Hypothesis Status Tracking (supported/weakened/disproven/stale/unresolved); Decision Confidence renamed (not statistical); Unified Outcome Matrix; counter-evidence search mandatory; Phase 6 made optional; Phase 7 added for evidence refresh and drift tracking; Cross-product portfolio replaces cross-codebase portfolio; JTBD Framework, NIST AI RMF Core, NIST AI 800-3, Evidence Engine, Latent Spark, AHRQ Research Gap Framework, Lean Startup Validated Learning, ParallelHQ Market Gap Guide added as methodology sources
 - v6 hardening: First-party buyer evidence is distinguished from desk/competitor pricing; standard scope ends in `VALIDATION_PENDING` after design; experiment design cannot inflate validation confidence or mark hypotheses supported; extensions and portfolio output are explicit manual actions; instance validation checks the lifecycle boundary.
+- v7 remediation: Schema versioning with `schema_version: "v7"` across all audit JSON files; `hypothesis.schema.json` added as fifth schema; `evidence_id` canonical identifier (replacing `id`); `experiment_id` canonical identifier; `timestamp` replacing `date_collected`; hypothesis ID pattern supports `H-TIER-N` format; `phases_completed` as string array; `gates_passed` as array of objects; artifact drift detection via `generated_from_state_hash` and `superseded` fields; verifier semantic checks (schema version, count consistency, stale artifact detection, gate semantics).
+- v8 hardening: Source freshness fields (`authority_tier`, `checked_at`, `expiry`, `url_health`) added to evidence schema; adversarial review persistence (`adversarial_reviews` array with reviewer_id, persona, challenge, resolution_status) in artifact schema; research log (`research_log` array with query_id, saturation, contradiction_status) in state schema; tool health recording (`tool_health` map) in state schema; evidence bundle minimum enforcement (`evidence_bundle` with min_high/min_medium per claim) in hypothesis schema; artifact reproducibility script (`scripts/generate_artifact.py`); machine-readable validation rules (`validation-rules.json`); 5 executable behavioral scenario scripts; 8 new semantic validator checks (19-26) for schema instance validation, gate cap logic, validation score rules, count equality, stale artifact detection, hypothesis status consistency, evidence bundle minimum, and freshness enforcement.

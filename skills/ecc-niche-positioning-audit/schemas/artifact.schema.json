@@ -1,10 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/artifact.schema.json",
-  "title": "Phase Artifact (v5)",
+  "title": "Phase Artifact (v7)",
   "description": "Standardized 4-page artifact produced by each phase",
   "type": "object",
-  "required": ["artifact_id", "phase", "confidence", "gate_decision"],
+  "required": [
+    "artifact_id",
+    "phase",
+    "confidence",
+    "gate_decision"
+  ],
   "properties": {
     "artifact_id": {
       "type": "string",
@@ -12,7 +17,21 @@
     },
     "phase": {
       "type": "string",
-      "enum": ["phase-0", "phase-1", "phase-2", "phase-3", "phase-4", "phase-5", "phase-6", "phase-7"]
+      "enum": [
+        "phase-0",
+        "phase-1",
+        "phase-2",
+        "phase-3",
+        "phase-4",
+        "phase-5",
+        "phase-6",
+        "phase-7"
+      ]
+    },
+    "scope": {
+      "type": ["string", "null"],
+      "enum": ["quick", "standard", "deep", null],
+      "description": "Audit scope mode for this artifact"
     },
     "evidence_limited": {
       "type": "boolean",
@@ -21,22 +40,63 @@
     },
     "confidence": {
       "type": "object",
-      "required": ["composite", "subscores", "iterations"],
+      "required": [
+        "composite",
+        "subscores",
+        "iterations"
+      ],
       "properties": {
-        "composite": {"type": "number", "minimum": 0, "maximum": 100},
+        "composite": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
         "subscores": {
           "type": "object",
-          "required": ["evidence_quality", "source_coverage", "internal_consistency", "counter_evidence_survival", "validation_evidence"],
+          "required": [
+            "evidence_quality",
+            "source_coverage",
+            "internal_consistency",
+            "counter_evidence_survival",
+            "validation_evidence"
+          ],
           "properties": {
-            "evidence_quality": {"type": "number", "minimum": 0, "maximum": 30},
-            "source_coverage": {"type": "number", "minimum": 0, "maximum": 25},
-            "internal_consistency": {"type": "number", "minimum": 0, "maximum": 20},
-            "counter_evidence_survival": {"type": "number", "minimum": 0, "maximum": 15},
-            "validation_evidence": {"type": "number", "minimum": 0, "maximum": 10}
+            "evidence_quality": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 30
+            },
+            "source_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 25
+            },
+            "internal_consistency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "counter_evidence_survival": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 15
+            },
+            "validation_evidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10
+            }
           }
         },
-        "iterations": {"type": "integer", "minimum": 1, "maximum": 3},
-        "improvements_made": {"type": "string", "default": ""}
+        "iterations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "improvements_made": {
+          "type": "string",
+          "default": ""
+        }
       }
     },
     "findings": {
@@ -44,9 +104,20 @@
       "items": {
         "type": "object",
         "properties": {
-          "claim": {"type": "string"},
-          "evidence_id": {"type": "string"},
-          "evidence_grade": {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW"]}
+          "claim": {
+            "type": "string"
+          },
+          "evidence_id": {
+            "type": "string"
+          },
+          "evidence_grade": {
+            "type": "string",
+            "enum": [
+              "HIGH",
+              "MEDIUM",
+              "LOW"
+            ]
+          }
         }
       }
     },
@@ -57,11 +128,31 @@
         "properties": {
           "gap_type": {
             "type": "string",
-            "enum": ["need", "product", "proof", "positioning", "pricing", "distribution", "adoption", "evidence"]
+            "enum": [
+              "need",
+              "product",
+              "proof",
+              "positioning",
+              "pricing",
+              "distribution",
+              "adoption",
+              "evidence"
+            ]
           },
-          "severity": {"type": "string", "enum": ["critical", "major", "minor"]},
-          "description": {"type": "string"},
-          "fix_approach": {"type": "string"}
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "major",
+              "minor"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "fix_approach": {
+            "type": "string"
+          }
         }
       }
     },
@@ -71,53 +162,146 @@
         "skeptic": {
           "type": "object",
           "properties": {
-            "finding": {"type": "string"},
-            "falsification_test": {"type": "string"}
+            "finding": {
+              "type": "string"
+            },
+            "falsification_test": {
+              "type": "string"
+            }
           }
         },
         "missing_perspective": {
           "type": "object",
           "properties": {
-            "finding": {"type": "string"},
-            "absent_perspective": {"type": "string"}
+            "finding": {
+              "type": "string"
+            },
+            "absent_perspective": {
+              "type": "string"
+            }
           }
         },
         "contrarian": {
           "type": "object",
           "properties": {
-            "finding": {"type": "string"},
-            "alternative_conclusion": {"type": "string"}
+            "finding": {
+              "type": "string"
+            },
+            "alternative_conclusion": {
+              "type": "string"
+            }
           }
         }
       }
     },
+    "adversarial_reviews": {
+      "type": "array",
+      "description": "Persisted adversarial review records with reviewer identity, context, challenge, and resolution",
+      "items": {
+        "type": "object",
+        "required": ["reviewer_id", "persona", "challenge", "resolution_status"],
+        "properties": {
+          "reviewer_id": {
+            "type": "string",
+            "description": "Unique identifier for the reviewer (e.g., 'ADV-001')"
+          },
+          "persona": {
+            "type": "string",
+            "enum": ["skeptic", "missing_perspective", "contrarian"],
+            "description": "Which adversarial persona this review represents"
+          },
+          "context": {
+            "type": "string",
+            "description": "What specific finding or claim is being challenged"
+          },
+          "challenge": {
+            "type": "string",
+            "description": "The specific challenge or counter-argument raised"
+          },
+          "resolution_status": {
+            "type": "string",
+            "enum": ["survived", "fatal_flaw", "partial", "unresolved"],
+            "description": "Whether the finding survived the challenge"
+          },
+          "resolution_notes": {
+            "type": "string",
+            "description": "How the challenge was addressed or why it was fatal"
+          },
+          "timestamp": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    },
     "gate_decision": {
       "type": "object",
-      "required": ["decision"],
+      "required": [
+        "decision"
+      ],
       "properties": {
         "decision": {
           "type": "string",
-          "enum": ["GO", "CONDITIONAL_GO", "RECYCLE", "STOP"]
+          "enum": [
+            "GO",
+            "CONDITIONAL_GO",
+            "RECYCLE",
+            "STOP"
+          ]
         },
         "conditions": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
-        "pre_gate_self_assessment": {"type": "number", "minimum": 5, "maximum": 25}
+        "pre_gate_self_assessment": {
+          "type": "number",
+          "minimum": 5,
+          "maximum": 25
+        }
       }
     },
     "research_question_tree_update": {
       "type": "object",
       "properties": {
-        "questions_covered": {"type": "integer"},
-        "questions_remaining": {"type": "integer"},
-        "counter_evidence_found": {"type": "boolean"}
+        "questions_covered": {
+          "type": "integer"
+        },
+        "questions_remaining": {
+          "type": "integer"
+        },
+        "counter_evidence_found": {
+          "type": "boolean"
+        }
       }
     },
     "next_phase_skill_selection": {
       "type": "string",
       "description": "Skill selected for the next phase"
+    },
+    "generated_from_state_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "SHA-256 hash of the canonical state.json when this artifact was generated"
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "When this artifact was generated from canonical state"
+    },
+    "superseded": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this artifact has been superseded by a regenerated version"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "version": "v8"
 }

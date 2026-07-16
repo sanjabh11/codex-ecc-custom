@@ -1,6 +1,6 @@
 {
-  "test_name": "frontmatter_validation_v5",
-  "description": "Validate SKILL.md frontmatter meets v5 requirements",
+  "test_name": "frontmatter_validation_v8",
+  "description": "Validate SKILL.md frontmatter meets v8 requirements",
   "input": {
     "skill_file": "SKILL.md",
     "max_description_length": 1024,
@@ -16,7 +16,8 @@
     "upstream_source_section_present": true,
     "phases_present": 8,
     "gap_types_present": 8,
-    "tool_truth_rules_count": 26
+    "tool_truth_rules_count": 29,
+    "schema_version": "v8"
   },
   "grader": "deterministic",
   "pass_threshold": 1.0

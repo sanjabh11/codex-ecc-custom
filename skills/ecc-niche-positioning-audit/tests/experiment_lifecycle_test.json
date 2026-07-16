@@ -1,5 +1,5 @@
 {
-  "test_name": "experiment_lifecycle_validation",
+  "test_name": "experiment_lifecycle_validation_v8",
   "description": "Validate that experiments form a closed loop: design → run → result → hypothesis status transition",
   "cases": [
     {

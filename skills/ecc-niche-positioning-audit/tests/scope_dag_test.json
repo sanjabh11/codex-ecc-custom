@@ -1,5 +1,5 @@
 {
-  "test_name": "scope_dag_validity_v5",
+  "test_name": "scope_dag_validity_v8",
   "description": "Verify all 3 scopes have valid start-to-terminal paths with no impossible dependencies",
   "cases": [
     {

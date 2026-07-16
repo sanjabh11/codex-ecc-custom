@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/skills/ecc-niche-positioning-audit/schemas/hypothesis.schema.json",
+  "title": "Positioning Hypotheses (v7)",
+  "description": "Corpus of positioning hypotheses with status tracking and evidence linkage",
+  "type": "object",
+  "required": [
+    "audit_id",
+    "hypotheses"
+  ],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "description": "Audit instance identifier"
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/hypothesis"
+      }
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "v5",
+        "v6",
+        "v7",
+        "v8"
+      ],
+      "default": "v8"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "hypothesis": {
+      "type": "object",
+      "required": [
+        "id",
+        "hypothesis",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^H(-[A-Z]+-\\d+|\\d+)$",
+          "description": "Unique hypothesis identifier"
+        },
+        "hypothesis": {
+          "type": "string",
+          "description": "The hypothesis text"
+        },
+        "text": {
+          "type": "string",
+          "description": "Alias for hypothesis (legacy compatibility)"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "weakened",
+            "disproven",
+            "stale",
+            "unresolved"
+          ],
+          "default": "unresolved"
+        },
+        "load_bearing_claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Claim IDs this hypothesis depends on",
+          "default": []
+        },
+        "evidence_support": {
+          "type": "string",
+          "description": "Summary of supporting evidence"
+        },
+        "counter_evidence": {
+          "type": "string",
+          "description": "Summary of counter-evidence"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Evidence item IDs supporting this hypothesis",
+          "default": []
+        },
+        "evidence_bundle": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim", "evidence_ids", "min_high", "min_medium"],
+            "properties": {
+              "claim": {
+                "type": "string",
+                "description": "Load-bearing claim text"
+              },
+              "evidence_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^EV-\\d{3}$"
+                },
+                "description": "Evidence item IDs supporting this claim"
+              },
+              "min_high": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Minimum HIGH-grade items required (default 1)"
+              },
+              "min_medium": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Minimum MEDIUM-grade items required if no HIGH (default 2)"
+              },
+              "satisfied": {
+                "type": "boolean",
+                "description": "Whether the evidence bundle meets the minimum threshold"
+              }
+            }
+          },
+          "description": "Evidence bundles for each load-bearing claim — enforces minimum evidence per claim",
+          "default": []
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "version": "v8"
+}
