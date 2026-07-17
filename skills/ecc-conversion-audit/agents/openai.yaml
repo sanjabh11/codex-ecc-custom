@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conversion Audit"
+  short_description: "Audit conversion paths with evidence gates"
+  default_prompt: "Use $ecc-conversion-audit to apply this workflow with evidence and safe external-action defaults."

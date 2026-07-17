@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lead Dossier"
+  short_description: "Build evidence-bound account research dossiers"
+  default_prompt: "Use $ecc-lead-dossier to apply this workflow with evidence and safe external-action defaults."

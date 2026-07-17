@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "growth-engine",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-growth-experiment-loop",
+  "portfolio_average": 4.6,
+  "repository_scores": {
+    "career": 4.5,
+    "canada": 4.7,
+    "codex": 4.8,
+    "strategic": 4.6,
+    "avalanche": 4.4
+  },
+  "existing_ecc_overlap": [
+    "agent-phase-ratchet",
+    "ecc-niche-positioning-audit",
+    "marketing-campaign"
+  ],
+  "retained_behavior": "Turn commercial ideas into falsifiable experiments instead of untracked activity.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-growth-experiment-loop-S001",
+    "ecc-growth-experiment-loop-S002",
+    "ecc-growth-experiment-loop-S003",
+    "ecc-growth-experiment-loop-S004",
+    "ecc-growth-experiment-loop-S005",
+    "ecc-growth-experiment-loop-S006",
+    "ecc-growth-experiment-loop-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

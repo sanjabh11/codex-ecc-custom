@@ -1,0 +1,4 @@
+interface:
+  display_name: "Growth Experiment Loop"
+  short_description: "Design and evaluate bounded growth experiments"
+  default_prompt: "Use $ecc-growth-experiment-loop to apply this workflow with evidence and safe external-action defaults."

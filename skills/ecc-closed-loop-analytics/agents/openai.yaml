@@ -1,0 +1,4 @@
+interface:
+  display_name: "Closed-Loop Analytics"
+  short_description: "Promote workflow changes from measured outcomes"
+  default_prompt: "Use $ecc-closed-loop-analytics to apply this workflow with evidence and safe external-action defaults."

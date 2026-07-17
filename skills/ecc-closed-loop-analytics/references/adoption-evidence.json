@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "closed-loop-analytics-upgrade",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-closed-loop-analytics",
+  "portfolio_average": 4.9,
+  "repository_scores": {
+    "career": 4.8,
+    "canada": 4.9,
+    "codex": 5,
+    "strategic": 4.8,
+    "avalanche": 4.8
+  },
+  "existing_ecc_overlap": [
+    "agent-phase-ratchet",
+    "skill-optimizer",
+    "marketing-campaign"
+  ],
+  "retained_behavior": "Close the loop between a shipped workflow change and real platform or buyer evidence.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-closed-loop-analytics-S001",
+    "ecc-closed-loop-analytics-S002",
+    "ecc-closed-loop-analytics-S003",
+    "ecc-closed-loop-analytics-S004",
+    "ecc-closed-loop-analytics-S005",
+    "ecc-closed-loop-analytics-S006",
+    "ecc-closed-loop-analytics-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Outbound Campaign"
+  short_description: "Draft and govern evidence-backed outbound campaigns"
+  default_prompt: "Use $ecc-outbound-campaign to apply this workflow with evidence and safe external-action defaults."

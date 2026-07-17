@@ -1,0 +1,4 @@
+interface:
+  display_name: "Buyer Pipeline"
+  short_description: "Govern buyer stages and evidence handoffs"
+  default_prompt: "Use $ecc-buyer-pipeline to apply this workflow with evidence and safe external-action defaults."

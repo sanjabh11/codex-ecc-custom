@@ -1,0 +1,42 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "sales-playbook",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-value-pricing",
+  "portfolio_average": 4.5,
+  "repository_scores": {
+    "career": 4.5,
+    "canada": 4.8,
+    "codex": 3.8,
+    "strategic": 4.7,
+    "avalanche": 4.7
+  },
+  "existing_ecc_overlap": [
+    "commercial-launch-readiness-orchestrator",
+    "ecc-niche-positioning-audit"
+  ],
+  "retained_behavior": "Translate buyer outcomes and evidence into offers without inventing ROI or willingness to pay.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-value-pricing-S001",
+    "ecc-value-pricing-S002",
+    "ecc-value-pricing-S003",
+    "ecc-value-pricing-S004",
+    "ecc-value-pricing-S005",
+    "ecc-value-pricing-S006",
+    "ecc-value-pricing-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

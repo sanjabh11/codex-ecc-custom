@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revenue Attribution"
+  short_description: "Trace content and outreach to bounded revenue evidence"
+  default_prompt: "Use $ecc-revenue-attribution to apply this workflow with evidence and safe external-action defaults."

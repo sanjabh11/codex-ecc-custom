@@ -1,0 +1,42 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "lead-dossier",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-lead-dossier",
+  "portfolio_average": 4.6,
+  "repository_scores": {
+    "career": 4.5,
+    "canada": 4.9,
+    "codex": 3.8,
+    "strategic": 4.8,
+    "avalanche": 4.9
+  },
+  "existing_ecc_overlap": [
+    "lead-intelligence",
+    "ecc-niche-positioning-audit"
+  ],
+  "retained_behavior": "Create decision-ready account research before any outreach is drafted.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-lead-dossier-S001",
+    "ecc-lead-dossier-S002",
+    "ecc-lead-dossier-S003",
+    "ecc-lead-dossier-S004",
+    "ecc-lead-dossier-S005",
+    "ecc-lead-dossier-S006",
+    "ecc-lead-dossier-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

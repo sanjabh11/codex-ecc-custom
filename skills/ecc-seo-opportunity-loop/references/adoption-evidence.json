@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "seo-ops",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-seo-opportunity-loop",
+  "portfolio_average": 4,
+  "repository_scores": {
+    "career": 4,
+    "canada": 4.4,
+    "codex": 3.4,
+    "strategic": 4.2,
+    "avalanche": 4.1
+  },
+  "existing_ecc_overlap": [
+    "seo",
+    "content-engine",
+    "ecc-closed-loop-analytics"
+  ],
+  "retained_behavior": "Extend technical SEO into a measured opportunity and content-maintenance loop.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-seo-opportunity-loop-S001",
+    "ecc-seo-opportunity-loop-S002",
+    "ecc-seo-opportunity-loop-S003",
+    "ecc-seo-opportunity-loop-S004",
+    "ecc-seo-opportunity-loop-S005",
+    "ecc-seo-opportunity-loop-S006",
+    "ecc-seo-opportunity-loop-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

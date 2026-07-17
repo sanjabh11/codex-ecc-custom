@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "sales-pipeline",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-buyer-pipeline",
+  "portfolio_average": 4.4,
+  "repository_scores": {
+    "career": 4.3,
+    "canada": 4.8,
+    "codex": 3.7,
+    "strategic": 4.7,
+    "avalanche": 4.6
+  },
+  "existing_ecc_overlap": [
+    "lead-intelligence",
+    "commercial-launch-readiness-orchestrator",
+    "ecc-niche-positioning-audit"
+  ],
+  "retained_behavior": "Move buyer opportunities through evidence-backed stages without automatic CRM or campaign mutations.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-buyer-pipeline-S001",
+    "ecc-buyer-pipeline-S002",
+    "ecc-buyer-pipeline-S003",
+    "ecc-buyer-pipeline-S004",
+    "ecc-buyer-pipeline-S005",
+    "ecc-buyer-pipeline-S006",
+    "ecc-buyer-pipeline-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

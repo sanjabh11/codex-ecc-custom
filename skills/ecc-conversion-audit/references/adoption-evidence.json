@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "conversion-ops",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-conversion-audit",
+  "portfolio_average": 4.3,
+  "repository_scores": {
+    "career": 4.4,
+    "canada": 4.7,
+    "codex": 3.5,
+    "strategic": 4.5,
+    "avalanche": 4.3
+  },
+  "existing_ecc_overlap": [
+    "landing-page-conversion-auditor",
+    "marketing-campaign",
+    "accessibility"
+  ],
+  "retained_behavior": "Find conversion friction while separating heuristic review from measured uplift.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-conversion-audit-S001",
+    "ecc-conversion-audit-S002",
+    "ecc-conversion-audit-S003",
+    "ecc-conversion-audit-S004",
+    "ecc-conversion-audit-S005",
+    "ecc-conversion-audit-S006",
+    "ecc-conversion-audit-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

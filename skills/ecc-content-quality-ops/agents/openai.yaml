@@ -1,0 +1,4 @@
+interface:
+  display_name: "Content Quality Ops"
+  short_description: "Gate evidence-heavy content before publication"
+  default_prompt: "Use $ecc-content-quality-ops to apply this workflow with evidence and safe external-action defaults."

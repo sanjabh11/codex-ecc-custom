@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "outbound-engine",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-outbound-campaign",
+  "portfolio_average": 4.5,
+  "repository_scores": {
+    "career": 4.4,
+    "canada": 5,
+    "codex": 3.6,
+    "strategic": 4.8,
+    "avalanche": 4.8
+  },
+  "existing_ecc_overlap": [
+    "lead-intelligence",
+    "marketing-campaign",
+    "ceip-linkedin-outreach-draft-generator"
+  ],
+  "retained_behavior": "Convert approved account evidence into personalized, compliant outreach drafts and measurable response loops.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-outbound-campaign-S001",
+    "ecc-outbound-campaign-S002",
+    "ecc-outbound-campaign-S003",
+    "ecc-outbound-campaign-S004",
+    "ecc-outbound-campaign-S005",
+    "ecc-outbound-campaign-S006",
+    "ecc-outbound-campaign-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

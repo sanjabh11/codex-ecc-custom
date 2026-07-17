@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO Opportunity Loop"
+  short_description: "Prioritize measurable search opportunities"
+  default_prompt: "Use $ecc-seo-opportunity-loop to apply this workflow with evidence and safe external-action defaults."

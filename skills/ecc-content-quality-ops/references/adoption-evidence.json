@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "content-ops",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-content-quality-ops",
+  "portfolio_average": 4.5,
+  "repository_scores": {
+    "career": 4.4,
+    "canada": 4.6,
+    "codex": 4.3,
+    "strategic": 4.5,
+    "avalanche": 4.5
+  },
+  "existing_ecc_overlap": [
+    "content-engine",
+    "brand-voice",
+    "marketing-campaign"
+  ],
+  "retained_behavior": "Apply a reproducible editorial and claim-quality gate without treating simulated expert scores as market evidence.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-content-quality-ops-S001",
+    "ecc-content-quality-ops-S002",
+    "ecc-content-quality-ops-S003",
+    "ecc-content-quality-ops-S004",
+    "ecc-content-quality-ops-S005",
+    "ecc-content-quality-ops-S006",
+    "ecc-content-quality-ops-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}

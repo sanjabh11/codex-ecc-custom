@@ -1,0 +1,4 @@
+interface:
+  display_name: "Value Pricing"
+  short_description: "Build proof-bounded pricing and offer packages"
+  default_prompt: "Use $ecc-value-pricing to apply this workflow with evidence and safe external-action defaults."

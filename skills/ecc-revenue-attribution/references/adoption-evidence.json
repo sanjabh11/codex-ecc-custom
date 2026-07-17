@@ -1,0 +1,43 @@
+{
+  "schema_version": "ecc-adoption.v1",
+  "upstream": {
+    "repository": "https://github.com/ericosiu/ai-marketing-skills",
+    "commit": "a9f11007aca31cc85f231698e22b64412f847b76",
+    "skill": "revenue-intelligence",
+    "license": "MIT"
+  },
+  "decision": "create-new-ecc-native",
+  "canonical_skill": "ecc-revenue-attribution",
+  "portfolio_average": 4.6,
+  "repository_scores": {
+    "career": 4.6,
+    "canada": 4.9,
+    "codex": 4,
+    "strategic": 4.8,
+    "avalanche": 4.6
+  },
+  "existing_ecc_overlap": [
+    "commercial-launch-readiness-orchestrator",
+    "customer-billing-ops",
+    "marketing-campaign"
+  ],
+  "retained_behavior": "Connect commercial activity to defensible buyer and revenue evidence without overclaiming causality.",
+  "removed_behavior": [
+    "upstream telemetry preambles",
+    "Claude-only commands and assumed MCP availability",
+    "automatic or implicit external writes",
+    "vendor branding",
+    "unbounded dependency installation"
+  ],
+  "scenario_ids": [
+    "ecc-revenue-attribution-S001",
+    "ecc-revenue-attribution-S002",
+    "ecc-revenue-attribution-S003",
+    "ecc-revenue-attribution-S004",
+    "ecc-revenue-attribution-S005",
+    "ecc-revenue-attribution-S006",
+    "ecc-revenue-attribution-S007"
+  ],
+  "promotion_gate": "new-skill-all-pass",
+  "external_actions_default": "draft-or-dry-run"
+}
