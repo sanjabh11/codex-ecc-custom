@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hormozi Funnel Audit",
+  "description": "Schema for funnel audits covering awareness and lead capture",
+  "type": "object",
+  "required": ["audit_id", "positioning_audit_id", "awareness_audit", "lead_capture_audit", "overall_score", "fixes", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v8" },
+    "audit_id": { "type": "string", "pattern": "^FA-\\d{3}$" },
+    "positioning_audit_id": { "type": "string", "description": "Cites positioning audit ID" },
+    "awareness_audit": {
+      "type": "object",
+      "required": ["hook_score", "messaging_score", "proof_upfront_score", "attention_leaks"],
+      "properties": {
+        "hook_score": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "messaging_score": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "proof_upfront_score": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "attention_leaks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["leak_id", "description", "severity", "location"],
+            "properties": {
+              "leak_id": { "type": "string", "pattern": "^LK-\\d{2}$" },
+              "description": { "type": "string" },
+              "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
+              "location": { "type": "string", "enum": ["hook", "intro", "body", "cta", "landing_page", "ad_creative"] }
+            }
+          }
+        },
+        "hooks_tested": { "type": "integer", "description": "Number of hook variants tested" },
+        "best_performing_hook_id": { "type": "string", "description": "Hook ID from hook generator" }
+      }
+    },
+    "lead_capture_audit": {
+      "type": "object",
+      "required": ["opt_in_score", "value_equation_score", "friction_items", "weakest_magnet"],
+      "properties": {
+        "opt_in_score": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "value_equation_score": {
+          "type": "object",
+          "required": ["dream_outcome", "likelihood", "time_delay", "effort"],
+          "properties": {
+            "dream_outcome": { "type": "integer", "minimum": 1, "maximum": 10 },
+            "likelihood": { "type": "integer", "minimum": 1, "maximum": 10 },
+            "time_delay": { "type": "integer", "minimum": 1, "maximum": 10 },
+            "effort": { "type": "integer", "minimum": 1, "maximum": 10 }
+          }
+        },
+        "friction_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["friction_id", "description", "type", "fix"],
+            "properties": {
+              "friction_id": { "type": "string", "pattern": "^FR-\\d{2}$" },
+              "description": { "type": "string" },
+              "type": { "type": "string", "enum": ["form_field", "page_load", "unclear_value", "too_many_steps", "no_proof", "weak_cta"] },
+              "fix": { "type": "string" }
+            }
+          }
+        },
+        "weakest_magnet": {
+          "type": "object",
+          "required": ["current_text", "rewrite"],
+          "properties": {
+            "current_text": { "type": "string" },
+            "rewrite": { "type": "string" },
+            "rewrite_rationale": { "type": "string" }
+          }
+        }
+      }
+    },
+    "overall_score": { "type": "number", "minimum": 0, "maximum": 10, "description": "Weighted average of awareness and lead capture scores" },
+    "fixes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["fix_id", "priority", "description"],
+        "properties": {
+          "fix_id": { "type": "string", "pattern": "^FX-\\d{2}$" },
+          "priority": { "type": "string", "enum": ["P0", "P1", "P2"] },
+          "description": { "type": "string" },
+          "expected_impact": { "type": "string" },
+          "evidence_citation": { "type": "string", "description": "Evidence ID from positioning audit" }
+        }
+      }
+    },
+    "evidence_citations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "All evidence IDs cited from positioning audit"
+    }
+  }
+}

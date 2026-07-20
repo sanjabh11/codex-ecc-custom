@@ -1,0 +1,76 @@
+{
+  "offer_id": "OFF-001",
+  "segment_id": "SEG-001",
+  "pain_id": "H-SEG1-001",
+  "dream_outcome": {
+    "statement": "Triple your MRR in 60 days using our proven framework so you can finally stop trading time for dollars",
+    "specificity_score": 9,
+    "identity_anchor": "A founder who runs a system, not a job",
+    "time_bound": "60 days"
+  },
+  "value_equation_scores": {
+    "dream_outcome": 9,
+    "likelihood": 8,
+    "time_delay": 8,
+    "effort_sacrifice": 7,
+    "composite": 40.0
+  },
+  "bonus_stack": [
+    {
+      "bonus_name": "Fast-Start Audit Template",
+      "solves": "speed",
+      "dollar_value": 500,
+      "description": "Done-for-you audit template that gets results in week 1"
+    },
+    {
+      "bonus_name": "Automation Playbook",
+      "solves": "effort",
+      "dollar_value": 300,
+      "description": "10 automation recipes that eliminate manual work"
+    },
+    {
+      "bonus_name": "Founder Community Access",
+      "solves": "likelihood",
+      "dollar_value": 1000,
+      "description": "Private community of 200+ founders for accountability"
+    },
+    {
+      "bonus_name": "Hiring Kit",
+      "solves": "adjacent",
+      "dollar_value": 400,
+      "description": "Job descriptions and interview templates for your first hire"
+    }
+  ],
+  "guarantee": {
+    "type": "conditional",
+    "terms": "If you complete all 12 modules and don't triple MRR in 60 days, get a full refund plus keep all bonuses",
+    "duration_days": 60
+  },
+  "scarcity_urgency": {
+    "scarcity_type": "cohort",
+    "scarcity_detail": "Only 20 spots per quarter",
+    "urgency_type": "deadline",
+    "urgency_detail": "Q3 cohort closes Friday at midnight",
+    "is_real": true
+  },
+  "price": 2500,
+  "total_value_stack": 25000,
+  "value_ratio": 10.0,
+  "offer_name": "The MRR Triple-Threat Framework",
+  "offer_presentation": {
+    "headline": "Triple Your MRR in 60 Days — Guaranteed",
+    "core_offer_description": "A 12-week framework that takes you from trading time for dollars to running a system that scales",
+    "bonus_descriptions": [
+      "Fast-Start Audit Template ($500 value)",
+      "Automation Playbook ($300 value)",
+      "Founder Community Access ($1,000 value)",
+      "Hiring Kit ($400 value)"
+    ],
+    "guarantee_statement": "Complete all 12 modules or get a full refund plus keep everything",
+    "cta": "Claim Your Spot Now — Only 20 Available"
+  },
+  "evidence_citations": ["E-001", "E-005", "E-012"],
+  "rank": 1,
+  "rewrite_notes": "Strengthened dream outcome with identity anchor. Added conditional guarantee. Real cohort-based scarcity.",
+  "schema_version": "v8"
+}

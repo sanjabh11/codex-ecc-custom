@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hormozi Hook Artifact",
+  "description": "Schema for hooks generated using Hormozi 4-formula approach",
+  "type": "object",
+  "required": ["hook_id", "formula_type", "pain_id", "segment_id", "hook_text", "word_count", "awareness_level", "ranking_score", "evidence_citation", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v8" },
+    "hook_id": { "type": "string", "pattern": "^HK-\\d{3}$" },
+    "formula_type": { "type": "string", "enum": ["pain", "desire", "proof", "curiosity"] },
+    "pain_id": { "type": "string", "description": "Cites positioning audit pain/hypothesis ID" },
+    "segment_id": { "type": "string", "description": "Cites positioning audit segment ID" },
+    "hook_text": { "type": "string", "maxLength": 200, "description": "10-15 words ideally" },
+    "word_count": { "type": "integer", "minimum": 3, "maximum": 30 },
+    "awareness_level": { "type": "string", "enum": ["unaware", "problem_aware", "solution_aware", "product_aware"] },
+    "ranking_score": {
+      "type": "object",
+      "required": ["clarity", "curiosity", "pull", "composite"],
+      "properties": {
+        "clarity": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "curiosity": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "pull": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "composite": { "type": "number", "description": "Average of clarity, curiosity, pull" }
+      }
+    },
+    "evidence_citation": { "type": "string", "description": "Evidence ID from positioning audit corpus" },
+    "format_variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "format": { "type": "string", "enum": ["video_hook", "written_hook", "thumbnail_text"] },
+          "text": { "type": "string" }
+        }
+      },
+      "description": "Top 10 hooks rewritten in 3 formats"
+    },
+    "rank": { "type": "integer", "minimum": 1, "description": "Rank among all generated hooks (1 = best)" }
+  }
+}

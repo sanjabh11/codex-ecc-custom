@@ -1,0 +1,32 @@
+{
+  "hook_id": "HK-001",
+  "formula_type": "pain",
+  "pain_id": "H-SEG1-001",
+  "segment_id": "SEG-001",
+  "hook_text": "Spending 3 hours every Monday manually exporting reports?",
+  "word_count": 9,
+  "awareness_level": "problem_aware",
+  "ranking_score": {
+    "clarity": 9,
+    "curiosity": 7,
+    "pull": 8,
+    "composite": 8.0
+  },
+  "evidence_citation": "E-002",
+  "format_variants": [
+    {
+      "format": "video_hook",
+      "text": "Are you spending 3 hours every Monday just exporting reports?"
+    },
+    {
+      "format": "written_hook",
+      "text": "3 hours. Every Monday. Just exporting reports. There's a better way."
+    },
+    {
+      "format": "thumbnail_text",
+      "text": "Stop wasting 3 hours every Monday"
+    }
+  ],
+  "rank": 1,
+  "schema_version": "v8"
+}
