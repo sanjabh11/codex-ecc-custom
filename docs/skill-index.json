@@ -1,0 +1,925 @@
+{
+  "skills": [
+    {
+      "skill_dir": "agents-md-generator",
+      "name": "agents-md-generator",
+      "description": "Generate and maintain AGENTS.md files with engineering doctrine, verification  ladder, safety rules, branch policy, and spec-first workflow guidelines for  AI coding agents. Use when setting up a new repo for AI-assisted development  or upgrading existing agent guidelines.",
+      "canonical_path": "skills/agents-md-generator/SKILL.md",
+      "sha256": "3a867a0efcec1e7375288b60ee533e51825ea042d935c0b0b71260a2b667a012",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "deterministic-simulation-testing",
+      "name": "deterministic-simulation-testing",
+      "description": "FoundationDB-class testing with virtual time, DPOR schedule exploration,  chaos injection, and seed-replayable failures. Use when building concurrent,  distributed, or stateful systems where concurrency bugs must be found before  production. Covers the four DST ingredients (concurrency control, virt",
+      "canonical_path": "skills/deterministic-simulation-testing/SKILL.md",
+      "sha256": "3871d3df47a64d7f90a4f0eefb85be6c99bc1990eba3e01785dda0b106394f5d",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-advisor",
+      "name": "ecc-advisor",
+      "description": "Multi-provider advisor pattern pairing the harness's native model (executor)  with a stronger advisor model for cost-optimized multi-model orchestration.  Supports three advisor backends: (1) Native Claude Advisor API (advisor_20260301)  server-side tool for Claude Code, (2) Grok 4.5 via Super Grok ",
+      "canonical_path": "skills/ecc-advisor/SKILL.md",
+      "sha256": "f852c88cf9c27d00cd0f156954b4c59360d21a5087a9e55708220f97a71207b6",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-agent-reach",
+      "name": "ecc-agent-reach",
+      "description": "",
+      "canonical_path": "skills/ecc-agent-reach/SKILL.md",
+      "sha256": "0e225f888b85a97c1fa209645cb6adace7b53fe297a6f4de0dc1bb7f3ab7b534",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-aside",
+      "name": "ecc-aside",
+      "description": "",
+      "canonical_path": "skills/ecc-aside/SKILL.md",
+      "sha256": "3ba80c294f2012294d74ea4343178b65ba4f09c0d012893f9cabab754e2b6f2b",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-build-fix",
+      "name": "ecc-build-fix",
+      "description": "",
+      "canonical_path": "skills/ecc-build-fix/SKILL.md",
+      "sha256": "ecb51ac88ed3d138472da063778a3efcc9823718962f76c5dedb6c3d622f0eda",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-buyer-pipeline",
+      "name": "ecc-buyer-pipeline",
+      "description": "Govern a privacy-safe buyer pipeline from qualified account through discovery, evidence intake, pilot, review, and outcome, with explicit stage gates and dry-run integrations. Use for lead routing, deal follow-up, buyer-evidence progression, dormant-opportunity review, and ICP learning.",
+      "canonical_path": "skills/ecc-buyer-pipeline/SKILL.md",
+      "sha256": "203bd3afa6b95572aa99ab791980d37ba08c00e8a63bf4eead9229b921c8f314",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-checkpoint",
+      "name": "ecc-checkpoint",
+      "description": "",
+      "canonical_path": "skills/ecc-checkpoint/SKILL.md",
+      "sha256": "89ab813c9051e8e700e7d3e7fcf2f1208bbac57d5371945a94022abf76056779",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-claw",
+      "name": "ecc-claw",
+      "description": "",
+      "canonical_path": "skills/ecc-claw/SKILL.md",
+      "sha256": "32043bf90d9cfef567669d2ad7ad12455a324fd43f220f4c8ee41584aa88bdaf",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-closed-loop-analytics",
+      "name": "ecc-closed-loop-analytics",
+      "description": "Measure whether marketing, content, outreach, SEO, conversion, or revenue workflow changes improved real outcomes, then promote, hold, roll back, or retest them. Use for analytics readback, baseline-versus-candidate evaluation, workflow learning loops, and evidence-backed playbook updates.",
+      "canonical_path": "skills/ecc-closed-loop-analytics/SKILL.md",
+      "sha256": "4c0aa4cc856dfdf792511ee57144598827f5a9dd525a8bdc396482e98d05e025",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-code-review",
+      "name": "ecc-code-review",
+      "description": "",
+      "canonical_path": "skills/ecc-code-review/SKILL.md",
+      "sha256": "9e03df0e998a8dcc183d369871fa7efb26f11a30f2c548e5b4ca90e60f370b9f",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-command-catalog",
+      "name": "ecc-command-catalog",
+      "description": "",
+      "canonical_path": "skills/ecc-command-catalog/SKILL.md",
+      "sha256": "9afc6821481f96c6d36d6ff81fb889d2187c608130545fd64174cf3e9e0d07dc",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-content-quality-ops",
+      "name": "ecc-content-quality-ops",
+      "description": "Evaluate and improve evidence-heavy marketing, technical, scientific, or sales content against audience-specific rubrics and proof boundaries. Use for content quality gates, expert-panel review, editorial consistency, quote mining, messaging variants, and pre-publication claim checks.",
+      "canonical_path": "skills/ecc-content-quality-ops/SKILL.md",
+      "sha256": "5ab148af430d1b38fe5194043a973fa0e72bd855875b3a3bde567dd73f2fa0c5",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-context-budget",
+      "name": "ecc-context-budget",
+      "description": "",
+      "canonical_path": "skills/ecc-context-budget/SKILL.md",
+      "sha256": "bcac1dc409f7325c4ac12b80b3b97139c2230d14c55d4e37d4f14190b108f949",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-conversion-audit",
+      "name": "ecc-conversion-audit",
+      "description": "Audit landing pages, proof-pack routes, forms, pricing paths, and lead magnets for message match, friction, trust, accessibility, and measurement readiness. Use for CRO reviews and conversion remediation; do not claim uplift without comparable traffic evidence.",
+      "canonical_path": "skills/ecc-conversion-audit/SKILL.md",
+      "sha256": "d83256f075e67d92eb2a327b1ca4edaf632e5953e05c0b663c92c5d25445ed12",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-cpp-build",
+      "name": "ecc-cpp-build",
+      "description": "",
+      "canonical_path": "skills/ecc-cpp-build/SKILL.md",
+      "sha256": "d4f723a70ee2e7106b21499d205550eb393ad3ef53f0c033064e5d00dbbe6d9b",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-cpp-review",
+      "name": "ecc-cpp-review",
+      "description": "",
+      "canonical_path": "skills/ecc-cpp-review/SKILL.md",
+      "sha256": "cf578bc744eaf6fe82ab285485843ba8931f220098b862df22302de457cad0b1",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-cpp-test",
+      "name": "ecc-cpp-test",
+      "description": "",
+      "canonical_path": "skills/ecc-cpp-test/SKILL.md",
+      "sha256": "4babce1693254fd8a8bfbcf21a55bab3d79d66b1618f334aba690f24084053a3",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-devfleet",
+      "name": "ecc-devfleet",
+      "description": "",
+      "canonical_path": "skills/ecc-devfleet/SKILL.md",
+      "sha256": "7331ac1e21ab1e653171b79d32add06a0ff54516220a1a76bc6d6a3cbb74c35d",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-docs",
+      "name": "ecc-docs",
+      "description": "",
+      "canonical_path": "skills/ecc-docs/SKILL.md",
+      "sha256": "dc77cfab01e08c9baa0dfdbd39b383cb528fa269f187927c57441f253683b4e6",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-e2e",
+      "name": "ecc-e2e",
+      "description": "",
+      "canonical_path": "skills/ecc-e2e/SKILL.md",
+      "sha256": "879c9fae01a449e1608e68d3aa739139497f07f823459b38b535b6a07817dda5",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-eval",
+      "name": "ecc-eval",
+      "description": "",
+      "canonical_path": "skills/ecc-eval/SKILL.md",
+      "sha256": "8c0c9e5cc09cbd196ee9a34eca50d0620f29b4bc89e85367afe968bb87bdd894",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-evolve",
+      "name": "ecc-evolve",
+      "description": "",
+      "canonical_path": "skills/ecc-evolve/SKILL.md",
+      "sha256": "58fd280d9fb98e81a2605d57a112b55f4c0abf0a47067b17481490fd2e0c6df4",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-fable-goal",
+      "name": "ecc-fable-goal",
+      "description": "",
+      "canonical_path": "skills/ecc-fable-goal/SKILL.md",
+      "sha256": "cf9feb106880c3c05580cdb5ffd9a9c536b6476a3a951c8f7b8ed3a3fb221e6e",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-fable-loop",
+      "name": "ecc-fable-loop",
+      "description": "",
+      "canonical_path": "skills/ecc-fable-loop/SKILL.md",
+      "sha256": "79915fffa3c7c05c7b2d80fb5907fa4415b65551d2d5deb05e73c95b0c599440",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-go-build",
+      "name": "ecc-go-build",
+      "description": "",
+      "canonical_path": "skills/ecc-go-build/SKILL.md",
+      "sha256": "55cc4d472526a0e6d792c9eac3ba5978209190c818e9f116d3b7468565b20b31",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-go-review",
+      "name": "ecc-go-review",
+      "description": "",
+      "canonical_path": "skills/ecc-go-review/SKILL.md",
+      "sha256": "cc332bf32b68d7febe98591beb9776ad902f9cb44d0f9b0e2525eb1ee59e5857",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-go-test",
+      "name": "ecc-go-test",
+      "description": "",
+      "canonical_path": "skills/ecc-go-test/SKILL.md",
+      "sha256": "96d1838c92b51c24f1a769201d2dbfa4cbfb9fbc0f8102aea575e07157481e94",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-gradle-build",
+      "name": "ecc-gradle-build",
+      "description": "",
+      "canonical_path": "skills/ecc-gradle-build/SKILL.md",
+      "sha256": "ea362bd3398087019eb2b2b768418cca6582e09de4ab3a87a86c2e226c0c73d4",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-growth-experiment-loop",
+      "name": "ecc-growth-experiment-loop",
+      "description": "Design, register, monitor, and evaluate bounded marketing or commercial experiments using explicit hypotheses, variants, metrics, guardrails, and decision rules. Use for A/B tests, outreach variants, landing-page experiments, campaign pacing, weekly scorecards, and evidence-backed growth playbooks.",
+      "canonical_path": "skills/ecc-growth-experiment-loop/SKILL.md",
+      "sha256": "278b256c275fc79c5e1732eb4cee4a9a7534af63f8faa6ad94877c74d246fe76",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-harness-audit",
+      "name": "ecc-harness-audit",
+      "description": "",
+      "canonical_path": "skills/ecc-harness-audit/SKILL.md",
+      "sha256": "4a626f1d23e2ee42fcc151edf3fd8b09fa1fc86ca8fb726c4d6038d88475a850",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-headroom",
+      "name": "ecc-headroom",
+      "description": "",
+      "canonical_path": "skills/ecc-headroom/SKILL.md",
+      "sha256": "5da1c536a52b16583026556837096851dcd12992b00557aa88387754d08e48e7",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-hormozi-funnel",
+      "name": "ecc-hormozi-funnel",
+      "description": "Build GTM execution assets from positioning audit outputs using Alex Hormozi's  $100M Funnel methodology. Five-prompt workflow: content batching machine,  value equation offer builder, hook generator, authority builder, and funnel  audit. Consumes positioning audit segments, hypotheses, and evidence",
+      "canonical_path": "skills/ecc-hormozi-funnel/SKILL.md",
+      "sha256": "0480d4e2c55eac3b98f91ee12bd2d72b7394ab4ee4bfee49d051a16d37b924e8",
+      "has_openai_yaml": true,
+      "has_validate_script": true,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-instinct-export",
+      "name": "ecc-instinct-export",
+      "description": "",
+      "canonical_path": "skills/ecc-instinct-export/SKILL.md",
+      "sha256": "abe27c31d78d534224a4b0e87a0d4a3b91649edfcaf9e592091389bfb06b1c18",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-instinct-import",
+      "name": "ecc-instinct-import",
+      "description": "",
+      "canonical_path": "skills/ecc-instinct-import/SKILL.md",
+      "sha256": "d801c6dc027e665120e7938c5e4c155ca979894f2e4030d57afb2c26c87576ba",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-instinct-status",
+      "name": "ecc-instinct-status",
+      "description": "",
+      "canonical_path": "skills/ecc-instinct-status/SKILL.md",
+      "sha256": "bdb95eac28b0eb29626a6343abefb1a8fda34cea9b712efed3160a2062e70861",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-integrations-catalog",
+      "name": "ecc-integrations-catalog",
+      "description": "",
+      "canonical_path": "skills/ecc-integrations-catalog/SKILL.md",
+      "sha256": "2bee021a00aeb31df5a833920c16ea4a3daffeab29fbfd65d42f0fd5dd22f5b8",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-kotlin-build",
+      "name": "ecc-kotlin-build",
+      "description": "",
+      "canonical_path": "skills/ecc-kotlin-build/SKILL.md",
+      "sha256": "90025af815f2f4fd47bc9ee35d286b81bf16118a5557a77f7158e6d5906c5a47",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-kotlin-review",
+      "name": "ecc-kotlin-review",
+      "description": "",
+      "canonical_path": "skills/ecc-kotlin-review/SKILL.md",
+      "sha256": "75ac70622b361a1ad7abe83d833e2e7b1a3d64985c283b8dec6e67f5fbe52273",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-kotlin-test",
+      "name": "ecc-kotlin-test",
+      "description": "",
+      "canonical_path": "skills/ecc-kotlin-test/SKILL.md",
+      "sha256": "0257ce1195a27b78a07d9118b9bf0c9dd8de57b090e8322f2e45e709e559454e",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-lead-dossier",
+      "name": "ecc-lead-dossier",
+      "description": "Build source-cited, privacy-bounded account and buyer dossiers from public or user-authorized evidence. Use for target-account research, ICP qualification, stakeholder mapping, account scoring, trigger monitoring, and preparation for personalized outreach drafts.",
+      "canonical_path": "skills/ecc-lead-dossier/SKILL.md",
+      "sha256": "4173a48000daa6e1a734563d2731897080f840d2ad9bcee252b265e94dffe666",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-learn",
+      "name": "ecc-learn",
+      "description": "",
+      "canonical_path": "skills/ecc-learn/SKILL.md",
+      "sha256": "498248c927556c9865d2ea9164cebf8c3fa7e60cfb3b508d955718465d6e06e1",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-learn-eval",
+      "name": "ecc-learn-eval",
+      "description": "",
+      "canonical_path": "skills/ecc-learn-eval/SKILL.md",
+      "sha256": "4f0d95f9c2c1ffecd5ac252ee2bb88d9a21b24db2a569c521ea7c40773df01d6",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-loop-start",
+      "name": "ecc-loop-start",
+      "description": "",
+      "canonical_path": "skills/ecc-loop-start/SKILL.md",
+      "sha256": "ced3ae96eb2c7869dc2333dc2b96d96df7216ed233807ec75db7203e439795cd",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-loop-status",
+      "name": "ecc-loop-status",
+      "description": "",
+      "canonical_path": "skills/ecc-loop-status/SKILL.md",
+      "sha256": "f6bced4192bcb5ac7d48a5c5374f572a4b84176b0fe5114f2da81dd21addc2a3",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-model-route",
+      "name": "ecc-model-route",
+      "description": "",
+      "canonical_path": "skills/ecc-model-route/SKILL.md",
+      "sha256": "e96ec3ca40a0186ea5b383391f7565cfc9b720c4f5f37d208e6bae71ebc0201a",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-multi-backend",
+      "name": "ecc-multi-backend",
+      "description": "",
+      "canonical_path": "skills/ecc-multi-backend/SKILL.md",
+      "sha256": "159e39bc8cd29209bd21a8c83ec6e0a2810f64903259d770513e7a34dcdc488b",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-multi-execute",
+      "name": "ecc-multi-execute",
+      "description": "",
+      "canonical_path": "skills/ecc-multi-execute/SKILL.md",
+      "sha256": "a80c4c4dcf8b3dded27d3e4c54ac0d0025ba5ee1c78d68f5f5e059292bb461b2",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-multi-frontend",
+      "name": "ecc-multi-frontend",
+      "description": "",
+      "canonical_path": "skills/ecc-multi-frontend/SKILL.md",
+      "sha256": "a3a8f7bd5a0972e0f8d3b61c77442f821c062d7672b45aa04e6b7109270aabf3",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-multi-plan",
+      "name": "ecc-multi-plan",
+      "description": "",
+      "canonical_path": "skills/ecc-multi-plan/SKILL.md",
+      "sha256": "4e26443523494979261a342ef9a8b89cbf0a17bcd6f04f5f3d8dd583efb5c096",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-multi-workflow",
+      "name": "ecc-multi-workflow",
+      "description": "",
+      "canonical_path": "skills/ecc-multi-workflow/SKILL.md",
+      "sha256": "74d72f82865b4d00080e5962b3696b06ece2eeaa5a1d59693c2af1edc68b4212",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-niche-positioning-audit",
+      "name": "ecc-niche-positioning-audit",
+      "description": "Identify high-potential customer segments, unmet needs, product-market gaps,  and defensible positioning through ultra-deep market research, customer/evidence  analysis, product evaluation, and optional codebase reconnaissance. Eight-phase  pipeline with approval gates, decision confidence (95% targ",
+      "canonical_path": "skills/ecc-niche-positioning-audit/SKILL.md",
+      "sha256": "b7682209d36d145a8987f3068ea2be10b1ad7f875fe4d00e82f6a3856f498df2",
+      "has_openai_yaml": false,
+      "has_validate_script": true,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-orchestrate",
+      "name": "ecc-orchestrate",
+      "description": "",
+      "canonical_path": "skills/ecc-orchestrate/SKILL.md",
+      "sha256": "535ae673835fa63f06e104896d46882f4ffbc0e85cca6897e3bbe7796769efe9",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-outbound-campaign",
+      "name": "ecc-outbound-campaign",
+      "description": "Design evidence-backed outbound campaign drafts from an approved ICP and source-cited dossiers, with claim checks, suppression rules, variants, and response logging. Use for cold or warm email, LinkedIn, or X outreach planning and optimization; never send or enroll contacts without explicit approval",
+      "canonical_path": "skills/ecc-outbound-campaign/SKILL.md",
+      "sha256": "6b9e34c7675b14aebd4481642fe72d1f5d569ed2adc9edbe5cc4b814945cee3e",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-plan",
+      "name": "ecc-plan",
+      "description": "",
+      "canonical_path": "skills/ecc-plan/SKILL.md",
+      "sha256": "0e4fe667cc3aa4d9bd722e7d0f5c20861265709ac4ab623dab122f6cb8972b67",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-pm2",
+      "name": "ecc-pm2",
+      "description": "",
+      "canonical_path": "skills/ecc-pm2/SKILL.md",
+      "sha256": "c1b8d9852dc6dcc5bac3d543086a1d2e6cddcb7711d5181bb6ae47e5faff21ec",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-projects",
+      "name": "ecc-projects",
+      "description": "",
+      "canonical_path": "skills/ecc-projects/SKILL.md",
+      "sha256": "0b05dd26a567d45939e2c9152f589e6d04dbf2370c9e22886879cd2b7e2685dd",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-promote",
+      "name": "ecc-promote",
+      "description": "",
+      "canonical_path": "skills/ecc-promote/SKILL.md",
+      "sha256": "8f07f29e7d22260519cb73c14d2f13f2afdc9b18ae409831bfdf686ea0f0820d",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-prompt-optimize",
+      "name": "ecc-prompt-optimize",
+      "description": "",
+      "canonical_path": "skills/ecc-prompt-optimize/SKILL.md",
+      "sha256": "fcf3f0376766fead07abb4054de6b148d577c224381f54e9e365a7300a1bfa0b",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-prune",
+      "name": "ecc-prune",
+      "description": "",
+      "canonical_path": "skills/ecc-prune/SKILL.md",
+      "sha256": "46b9b97b26873d4b65e37c8baf1b3ad1bcc55eb8494579f274dc0838d72aa8db",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-python-review",
+      "name": "ecc-python-review",
+      "description": "",
+      "canonical_path": "skills/ecc-python-review/SKILL.md",
+      "sha256": "171f32ac6979e8d1280ef33f5c937bfc2970418e9372cc04ebb5f15a4ff8f882",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-quality-gate",
+      "name": "ecc-quality-gate",
+      "description": "",
+      "canonical_path": "skills/ecc-quality-gate/SKILL.md",
+      "sha256": "05049d471202d0f9691abc4bb658e2276dcbd575a5bc169f7a09965a6f2d93bf",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-refactor-clean",
+      "name": "ecc-refactor-clean",
+      "description": "",
+      "canonical_path": "skills/ecc-refactor-clean/SKILL.md",
+      "sha256": "1bf4a02aeb7895f9ab676bd1fe9f491ab707dbe3759e6f04a6ca5aa819a0b252",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-resume-session",
+      "name": "ecc-resume-session",
+      "description": "",
+      "canonical_path": "skills/ecc-resume-session/SKILL.md",
+      "sha256": "e664faa090b8467ca2a6fa6a68c2e0d1ecc0d6301dcd41b5f0f2f04b08bd09b6",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-revenue-attribution",
+      "name": "ecc-revenue-attribution",
+      "description": "Trace content, outreach, calls, pilots, and conversion events to qualified pipeline or revenue evidence while preserving attribution uncertainty. Use for buyer-journey analysis, sales-call insight extraction, content ROI, pipeline reporting, and commercial evidence reconciliation.",
+      "canonical_path": "skills/ecc-revenue-attribution/SKILL.md",
+      "sha256": "9f5ce53c3f204897f160c35b2d9851341baf55b1101c52ab2edb7b7972e71fcd",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-role-catalog",
+      "name": "ecc-role-catalog",
+      "description": "",
+      "canonical_path": "skills/ecc-role-catalog/SKILL.md",
+      "sha256": "84a020e0dc26cf3f6d5cf2333d5c77c43194ecdc48e19f96439efdd1bacd7fca",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-router",
+      "name": "ecc-router",
+      "description": "",
+      "canonical_path": "skills/ecc-router/SKILL.md",
+      "sha256": "b2e93f81a663d0a8e647f3cc02373a22d7f8ab7e1cf3ec86c7602ed88cc1e473",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-rules-distill",
+      "name": "ecc-rules-distill",
+      "description": "",
+      "canonical_path": "skills/ecc-rules-distill/SKILL.md",
+      "sha256": "b7d3db432e771b8dcb11e55ceb62f506999fec25c34fbb734c4af2765d55a0a0",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-rust-build",
+      "name": "ecc-rust-build",
+      "description": "",
+      "canonical_path": "skills/ecc-rust-build/SKILL.md",
+      "sha256": "bfc3f69991fbdd37aa1e4d4af24f3cbcd17437602a188205ff82b3efbfb28f0c",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-rust-review",
+      "name": "ecc-rust-review",
+      "description": "",
+      "canonical_path": "skills/ecc-rust-review/SKILL.md",
+      "sha256": "4c61fb737e46806f82e10ce5e6a74be6ae4d6f54e1fafd88109b4938e8cd2989",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-rust-test",
+      "name": "ecc-rust-test",
+      "description": "",
+      "canonical_path": "skills/ecc-rust-test/SKILL.md",
+      "sha256": "dc92319ef516abc5e91b1c3af91d48cb7ab25864bc8b6dc1cfe2e4968fafc4b2",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-save-session",
+      "name": "ecc-save-session",
+      "description": "",
+      "canonical_path": "skills/ecc-save-session/SKILL.md",
+      "sha256": "63c2d06063bb1cda84686bc9bb5e408a09f67eefe2e8253447413981ab11e9b1",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-self-improve",
+      "name": "ecc-self-improve",
+      "description": "",
+      "canonical_path": "skills/ecc-self-improve/SKILL.md",
+      "sha256": "e412fc5abaf898526d156674962199824a93ff51b94bc1097a25ecaf6c8cdb17",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-seo-opportunity-loop",
+      "name": "ecc-seo-opportunity-loop",
+      "description": "Prioritize search opportunities from technical health, source-backed topic fit, competitor gaps, and verified search-performance data, then measure outcomes. Use for GSC analysis, keyword-to-route mapping, content decay, competitor gaps, trend review, and SEO experiment planning.",
+      "canonical_path": "skills/ecc-seo-opportunity-loop/SKILL.md",
+      "sha256": "0aaf0fa63d6a0b966c9e56ec3f0d1ba1552e12ea09417550e1a3f0fbbfe52432",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-sessions",
+      "name": "ecc-sessions",
+      "description": "",
+      "canonical_path": "skills/ecc-sessions/SKILL.md",
+      "sha256": "a1b1d99c466f6a13800b2f692fd5a0315e52723428ed17b3d3824634d13f3003",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-setup-pm",
+      "name": "ecc-setup-pm",
+      "description": "",
+      "canonical_path": "skills/ecc-setup-pm/SKILL.md",
+      "sha256": "c33bd30bd652ee26300b5f899d39e6959cebdb96c6739d84607f41db8e1f85a5",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-skill-create",
+      "name": "ecc-skill-create",
+      "description": "",
+      "canonical_path": "skills/ecc-skill-create/SKILL.md",
+      "sha256": "9178e7878a4131214f54a22ec6b8660d60a4bcb51570d5ba25cdc58f8e499cc6",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-skill-health",
+      "name": "ecc-skill-health",
+      "description": "",
+      "canonical_path": "skills/ecc-skill-health/SKILL.md",
+      "sha256": "08217e8b6e4f362f9d1d3574b4d7c645d4cdf994c50ea11154d669a3be4edb8e",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-tdd",
+      "name": "ecc-tdd",
+      "description": "",
+      "canonical_path": "skills/ecc-tdd/SKILL.md",
+      "sha256": "756472ae00855c968637dc03c4ca431f49f897dd81d3fcbf386674e758f4a117",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-test-coverage",
+      "name": "ecc-test-coverage",
+      "description": "",
+      "canonical_path": "skills/ecc-test-coverage/SKILL.md",
+      "sha256": "360e41283f1e320a81d35f03ac9301246aa7f6dac9fc3a53116ee82e9fcef8af",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-trace-wrap",
+      "name": "ecc-trace-wrap",
+      "description": "",
+      "canonical_path": "skills/ecc-trace-wrap/SKILL.md",
+      "sha256": "9a16bd1cbed08a6eb65c1aff9495f9b5bc3f85c43d2eb44d21d74ab86adb1038",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-update-codemaps",
+      "name": "ecc-update-codemaps",
+      "description": "",
+      "canonical_path": "skills/ecc-update-codemaps/SKILL.md",
+      "sha256": "1ec9f58614d410242013c662b05e15a314da976841c3e1d2a87f8113caf80b4c",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-update-docs",
+      "name": "ecc-update-docs",
+      "description": "",
+      "canonical_path": "skills/ecc-update-docs/SKILL.md",
+      "sha256": "f306701e937de1152e25c3d43b491777892656cfbbd81b4a80943ecc97e38953",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-value-pricing",
+      "name": "ecc-value-pricing",
+      "description": "Prepare proof-bounded value hypotheses, tiered offers, pricing briefs, and post-call analyses for complex B2B products. Use for pricing strategy, pilot packaging, pre-call preparation, proposal tiers, objection analysis, and willingness-to-pay experiments.",
+      "canonical_path": "skills/ecc-value-pricing/SKILL.md",
+      "sha256": "bd1c9831fcb6d1f6a788587df7f4a8c7fafc426f4de26c8f43cd616367671436",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-verify",
+      "name": "ecc-verify",
+      "description": "",
+      "canonical_path": "skills/ecc-verify/SKILL.md",
+      "sha256": "481bd8eb69799d1a2fcd442925f7b499801102424a612dccbb0ca873bf1655ad",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "ecc-weekly-marketing-flywheel",
+      "name": "ecc-weekly-marketing-flywheel",
+      "description": "Composite skill chaining three highest-leverage marketing skills into a single  weekly workflow: positioning-audit \u2192 hormozi-funnel \u2192 growth-experiment-loop.  Produces a seven-day evidence-backed marketing packet: 1 offer, 3 hooks,  7-day content slice, 3 funnel fixes, 1 experiment registration, 1 p",
+      "canonical_path": "skills/ecc-weekly-marketing-flywheel/SKILL.md",
+      "sha256": "76f17084c3a1ad848fbe1cc3e58bca4ed7bb7b48a2bbf6129fbc0146a0be4b66",
+      "has_openai_yaml": true,
+      "has_validate_script": true,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "invariant-registry",
+      "name": "invariant-registry",
+      "description": "Maintain a machine-readable invariant registry with stable IDs, CI enforcement  that every invariant has a live checker, and a hard rule that no subsystem ships  against an unenforced invariant. Use when building safety-critical, correctness-critical,  or compliance-critical systems where invariants",
+      "canonical_path": "skills/invariant-registry/SKILL.md",
+      "sha256": "7a793321d7a46b7335075839819211066bb7b0770eda19fc3160abeecae76c18",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "last30days",
+      "name": "last30days",
+      "description": "",
+      "canonical_path": "skills/last30days/SKILL.md",
+      "sha256": "45872e30c1df892c36e8dc55aa87d9f099aea68209dedbda8752c8b012b54f97",
+      "has_openai_yaml": false,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "plan-certificates",
+      "name": "plan-certificates",
+      "description": "Make every result an auditable, replayable artifact with plan hash, tie-break  policy, snapshot seq, per-operator observed-vs-bound counts, and a decision-path  hash. Use when results must be reproducible and auditable for regulated pipelines,  agent memory, compliance, or any system where \"same inp",
+      "canonical_path": "skills/plan-certificates/SKILL.md",
+      "sha256": "6950e0697183772de835c76583a584a5a2ad26d655728fb0f945fc1b3843922f",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "reference-oracle-testing",
+      "name": "reference-oracle-testing",
+      "description": "Build a deliberately simple, single-threaded, obviously-correct reference  implementation for differential testing against the optimized implementation.  \"What should this return\" is a program, not a debate. Use when building complex  algorithms where correctness must be proven through differential ",
+      "canonical_path": "skills/reference-oracle-testing/SKILL.md",
+      "sha256": "f8e2f6c970f9ff5fe3d13f09ec612c3ed70edc05fbdeba9b87dbcc86012b7d5c",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "slides",
+      "name": "slides",
+      "description": "",
+      "canonical_path": "skills/slides/SKILL.md",
+      "sha256": "57ee0941f872546029bc45b5b0bd58d4a02d88b84d4e8e4275c466da5451efa6",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    },
+    {
+      "skill_dir": "spec-first-doctrine",
+      "name": "spec-first-doctrine",
+      "description": "Enforce spec-first implementation: read the comprehensive plan before writing  any subsystem, implementation follows the plan not ad-hoc invention, and every  design assumption must be promoted to enforced only after the checker exists.  Use when starting work on a complex multi-subsystem project wh",
+      "canonical_path": "skills/spec-first-doctrine/SKILL.md",
+      "sha256": "a56cac0e54dbb6dfd3cb462e90e657448307de5697e75515a3994782c7607c19",
+      "has_openai_yaml": true,
+      "has_validate_script": false,
+      "source": "canonical"
+    }
+  ],
+  "total": 92
+}

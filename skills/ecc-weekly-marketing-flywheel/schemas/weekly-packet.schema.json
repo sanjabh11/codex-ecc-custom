@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly Marketing Packet",
+  "description": "Schema for the complete weekly marketing output packet",
+  "type": "object",
+  "required": ["packet_id", "run_id", "week", "outputs", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "packet_id": { "type": "string", "pattern": "^PKT-\\d{8}-\\d{3}$" },
+    "run_id": { "type": "string" },
+    "week": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "outputs": {
+      "type": "object",
+      "required": ["offer_count", "hook_count", "content_days", "funnel_fixes", "proof_updates", "experiment_count"],
+      "properties": {
+        "offer_count": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "hook_count": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "content_days": { "type": "integer", "minimum": 0, "maximum": 7 },
+        "funnel_fixes": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "proof_updates": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "experiment_count": { "type": "integer", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "evidence_ids_cited": { "type": "array", "items": { "type": "string" } },
+    "unavailable_components": { "type": "array", "items": { "type": "string" } },
+    "evidence_limited": { "type": "boolean", "default": false },
+    "approval_required": { "type": "boolean", "default": true },
+    "no_external_writes": { "type": "boolean", "const": true },
+    "created_at": { "type": "string", "description": "ISO timestamp" }
+  }
+}

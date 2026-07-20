@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly Marketing Flywheel Run Manifest",
+  "description": "Manifest tracking the composite skill execution across three stages",
+  "type": "object",
+  "required": ["run_id", "repository", "objective", "week", "mode", "stages", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "run_id": { "type": "string", "pattern": "^WMF-\\d{8}-\\d{3}$" },
+    "repository": { "type": "string", "description": "Absolute path to target repository" },
+    "objective": { "type": "string", "description": "One business question for the week" },
+    "week": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "mode": { "type": "string", "enum": ["dry-run", "draft-only"] },
+    "horizon_days": { "type": "integer", "minimum": 1, "maximum": 7, "default": 7 },
+    "research_depth": { "type": "string", "enum": ["quick", "standard"], "default": "quick" },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["stage", "skill", "status"],
+        "properties": {
+          "stage": { "type": "integer", "minimum": 1, "maximum": 3 },
+          "skill": { "type": "string" },
+          "status": { "type": "string", "enum": ["completed", "skipped", "failed", "unavailable"] },
+          "output_files": { "type": "array", "items": { "type": "string" } },
+          "evidence_limited": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "evidence_limited": { "type": "boolean", "default": false },
+    "approval_required": { "type": "boolean", "default": true },
+    "created_at": { "type": "string", "description": "ISO timestamp" }
+  }
+}

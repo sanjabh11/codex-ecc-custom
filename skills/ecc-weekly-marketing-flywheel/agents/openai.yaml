@@ -1,0 +1,8 @@
+display_name: ECC Weekly Marketing Flywheel
+short_description: Composite skill chaining positioning-audit → hormozi-funnel → growth-experiment-loop into a single weekly packet
+default_prompt: |
+  Run the weekly marketing flywheel for the specified repository.
+  Chain: positioning-audit → hormozi-funnel (weekly mode) → growth-experiment-loop.
+  Produce: 1 offer, 3 hooks, 7-day content slice, 3 funnel fixes, 1 experiment.
+  Default mode: draft-only. No external writes.
+allow_implicit_invocation: true
