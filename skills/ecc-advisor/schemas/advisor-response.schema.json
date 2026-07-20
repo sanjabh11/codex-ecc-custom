@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Advisor Response (JSON output mode)",
+  "description": "Structured response from the advisor CLI in --json mode",
+  "type": "object",
+  "required": ["status", "advice", "call_count", "calls_remaining"],
+  "properties": {
+    "status": { "type": "string", "enum": ["success", "cap_reached", "no_token", "error", "timeout", "dry_run"] },
+    "advice": { "type": "string", "description": "Advisor guidance text or fallback message" },
+    "call_count": { "type": "integer", "minimum": 0 },
+    "calls_remaining": { "type": "integer", "minimum": 0 },
+    "backend": { "type": "string", "enum": ["grok_cli", "claude_native", "codex_orchestration", "fallback"] },
+    "session_id": { "type": "string" },
+    "error": { "type": "string", "description": "Error details if status is error/timeout" }
+  }
+}

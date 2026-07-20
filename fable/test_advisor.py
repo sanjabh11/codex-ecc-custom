@@ -24,6 +24,7 @@ from fable.advisor_cli import (
     save_state,
     reset_state,
     get_advice,
+    detect_backend,
     ADVISOR_STATE,
     ADVISOR_CONFIG,
 )
@@ -256,6 +257,72 @@ def test_advisor_config_exists():
         ))
 
 
+def test_backend_detection():
+    section("Backend Detection")
+
+    backend = detect_backend()
+    check("detect_backend returns valid value", backend in ("grok_cli", "claude_native", "codex_orchestration", "fallback"), backend)
+
+    # Test claude_native detection
+    with patch.dict(os.environ, {"CLAUDE_ADVISOR_ENABLED": "true"}):
+        backend = detect_backend()
+        check("claude_native detected via env var", backend == "claude_native", backend)
+
+    # Test fallback when nothing available
+    with patch.dict(os.environ, {}, clear=True):
+        with patch.object(Path, "home", return_value=Path("/nonexistent")):
+            backend = detect_backend()
+            check("fallback when nothing available", backend == "fallback", backend)
+
+
+def test_dry_run_no_budget():
+    section("Dry Run — No Budget Consumption")
+
+    reset_state()
+    config = load_config()
+
+    result = get_advice("test context", config, dry_run=True)
+    check("dry run returns dry run message", "Dry run" in result, result[:80])
+
+    state = load_state()
+    check("dry run does not increment counter", state["call_count"] == 0, str(state["call_count"]))
+
+    # Dry run works even at cap
+    state["call_count"] = 3
+    save_state(state)
+    result = get_advice("test context", config, dry_run=True)
+    check("dry run works at cap", "Dry run" in result, result[:80])
+
+    reset_state()
+
+
+def test_session_isolation():
+    section("Session Isolation")
+
+    reset_state()
+    config = load_config()
+
+    with patch("fable.advisor_cli.GrokService") as MockGrok:
+        mock_instance = MagicMock()
+        mock_instance.api_key = "fake-key"
+        mock_instance.generate.return_value = "Advice text"
+        MockGrok.return_value = mock_instance
+
+        get_advice("session A question", config, session_id="task-A")
+        get_advice("session B question", config, session_id="task-B")
+
+        state = load_state()
+        check("global counter is 2", state["call_count"] == 2, str(state["call_count"]))
+
+        # History entries should have session_id
+        history_a = [h for h in state["history"] if h.get("session_id") == "task-A"]
+        history_b = [h for h in state["history"] if h.get("session_id") == "task-B"]
+        check("history has task-A entry", len(history_a) == 1)
+        check("history has task-B entry", len(history_b) == 1)
+
+    reset_state()
+
+
 def test_cli_flag_in_runner():
     section("CLI Flag in fable_runner.py")
 
@@ -310,6 +377,9 @@ def run_all_tests():
     test_no_token_fallback()
     test_multiple_calls_increment()
     test_history_tracking()
+    test_backend_detection()
+    test_dry_run_no_budget()
+    test_session_isolation()
     test_skill_md_exists()
     test_advisor_config_exists()
     test_cli_flag_in_runner()

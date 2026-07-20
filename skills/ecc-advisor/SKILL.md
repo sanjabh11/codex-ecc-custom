@@ -4,10 +4,11 @@ description: >-
   Multi-provider advisor pattern pairing the harness's native model (executor)
   with a stronger advisor model for cost-optimized multi-model orchestration.
   Supports three advisor backends: (1) Native Claude Advisor API (advisor_20260301)
-  server-side tool for Claude Code, (2) Grok 4.5 via Super Grok CLI token for
+  server-side tool for Claude Code, (2) Grok 4.5 via Super Grok CLI OAuth token for
   cross-harness use, (3) Claude Fable 5 via Codex-Orchestration plugin.
   The executor runs the task end-to-end; the advisor is consulted at decision
-  points. No API keys needed for Grok CLI path — uses Super Grok CLI token.
+  points. No separate API keys needed for Grok CLI path — uses Super Grok CLI
+  OAuth token (refreshed automatically).
   TRIGGER when: "advisor", "two-model", "cascade", "escalation",
   "consult stronger model", "cost optimization model", "Grok advisor",
   "second opinion", "advisor tool", "advisor strategy",
@@ -37,7 +38,7 @@ The skill automatically selects the best available advisor backend:
 |---|---|---|---|---|---|
 | 1 | **Native Claude Advisor API** | Claude Code | Opus 4.6 or Fable 5 | `advisor_20260301` server-side tool | No (uses Claude subscription) |
 | 2 | **Codex-Orchestration plugin** | Codex | Fable 5 via MCP | `codex-orchestration` plugin seats | No (uses Codex subscription) |
-| 3 | **Grok CLI** | Any harness | Grok 4.5 | `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py"` | No (Super Grok CLI token) |
+| 3 | **Grok CLI** | Any harness | Grok 4.5 | `python3 "$(git root)/fable/advisor_cli.py"` or `python3 "$ADVISOR_CLI_PATH"` | No (Super Grok CLI OAuth token) |
 | 4 | **Graceful fallback** | Any | None | Proceed without advisor | N/A |
 
 ### Backend 1: Native Claude Advisor API (preferred for Claude Code)
@@ -76,7 +77,7 @@ Works on any harness. The executor calls a CLI script that sends context to Grok
 1. Work on the task normally — read files, run commands, orient
 2. **Before substantive work** (writing code, committing to an approach), call the advisor:
    ```bash
-   python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
+   python3 fable/advisor_cli.py "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
    ```
 3. Read the advisor's response and give it serious weight
 4. If the advisor points out a flaw, adapt. If it confirms your approach, proceed with confidence
@@ -119,10 +120,16 @@ If you've already retrieved data pointing one way and the advisor points another
 - Advisor output is concise (200-700 tokens depending on backend)
 
 ### Grok CLI Backend
-- Max 3 advisor calls per session (configurable in `$HOME/codex-ecc-custom/fable/advisor_config.json`)
-- Check status: `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" --status`
-- Reset counter: `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" --reset`
+- Max 3 advisor calls per session (configurable in `fable/advisor_config.json`)
+- Check status: `python3 fable/advisor_cli.py --status`
+- Reset counter: `python3 fable/advisor_cli.py --reset`
 - Advisor output capped at 2048 tokens per call
+- Timeout: 120s per call (configurable via `timeout_seconds` in config)
+- Retry: 1 retry on failure (configurable via `retry_attempts` in config)
+- Dry run: `python3 fable/advisor_cli.py --dry-run "<context>"` (no call budget consumed)
+- JSON output: `python3 fable/advisor_cli.py --json "<context>"` (for programmatic use)
+- Context from file: `python3 fable/advisor_cli.py --context-file <path> "<question>"`
+- Session isolation: `python3 fable/advisor_cli.py --session <id> "<context>"`
 
 ### Native Claude Advisor API Backend
 - `max_uses` parameter caps calls per API request (primary cost control)
@@ -144,29 +151,65 @@ The advisor sees ONLY what you pass in the CLI argument, so include:
 
 Example:
 ```bash
-python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
+python3 fable/advisor_cli.py "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
 ```
 
 ## Dependency Gating
 
 ### Native Claude Advisor API
 - Requires Claude Code with advisor tool enabled (settings → advisor)
-- No API keys needed — uses Claude subscription
+- No separate API keys needed — uses Claude subscription
 - Supported pairings: Haiku/Sonnet/Opus executor → Opus/Fable 5 advisor
 
 ### Codex-Orchestration Plugin
 - Requires `codex-orchestration` plugin installed (`codex plugin list`)
-- No API keys needed — uses Codex subscription
+- No separate API keys needed — uses Codex subscription
 - Requires Python 3.11+ for plugin runtime
 
 ### Grok CLI
-- Requires Grok CLI token at `~/.grok/auth.json` (verified working with Super Grok)
+- Requires Grok CLI OAuth token at `~/.grok/auth.json` (verified working with Super Grok)
 - Requires Python3 + requests library (already installed)
-- No API keys needed
+- No separate API key needed — OAuth token is refreshed automatically by `grok login`
 - If no token is available, the advisor returns a graceful fallback message
 
 ### Fallback
 - If no backend is available, proceed without advisor — note this in the response
+
+## Backend Auto-Detection
+
+The CLI auto-detects the best available backend in priority order:
+1. `claude_native` — if `CLAUDE_ADVISOR_ENABLED=true` env var is set
+2. `codex_orchestration` — if `~/.codex/plugins/codex-orchestration/` exists
+3. `grok_cli` — if `~/.grok/auth.json` exists
+4. `fallback` — no backend available
+
+Override with `--backend <name>` flag. Only `grok_cli` is fully implemented in the CLI;
+other backends return an informative message and fall back.
+
+## Weekly Mode Integration
+
+When used as a backing skill in weekly marketing workflows (e.g., `ecc-hormozi-funnel`
+weekly mode), the advisor is consulted at three checkpoints:
+
+1. **Offer ranking** — advisor reviews the top offer candidates and confirms or reranks
+2. **Hook rewriting** — advisor reviews hook variants for persuasiveness and evidence alignment
+3. **Funnel audit** — advisor reviews the 3 prioritized fixes for impact and feasibility
+
+If the advisor is unavailable, the weekly workflow proceeds with `advisor_confirmed: false`
+in the decision confidence calculation. This reduces the composite confidence score
+but does not block artifact generation.
+
+## Decision Confidence Integration
+
+The `ecc-hormozi-funnel` skill computes a composite decision confidence from four subscores:
+- `evidence_quality` — strength of cited evidence
+- `source_coverage` — breadth of evidence sources
+- `adversarial_survival` — survival through skeptic/contrarian/missing-perspective passes
+- `advisor_confirmed` — whether the advisor confirmed the decision (this skill)
+
+When the advisor is unavailable, `advisor_confirmed` defaults to 0.5 (neutral),
+reducing the composite score by up to 12.5%. The workflow labels the output
+as `evidence_limited` in this case.
 
 ## Platform Compatibility
 

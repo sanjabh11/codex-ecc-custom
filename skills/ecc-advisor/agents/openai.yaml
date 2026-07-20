@@ -1,0 +1,7 @@
+interface:
+  display_name: "ECC Advisor"
+  short_description: "Multi-provider advisor pattern for cost-optimized intelligence"
+  default_prompt: "Use $ecc-advisor to consult a stronger model at key decision points."
+
+policy:
+  allow_implicit_invocation: true
