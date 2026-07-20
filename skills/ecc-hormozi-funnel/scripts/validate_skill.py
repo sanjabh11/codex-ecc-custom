@@ -63,7 +63,7 @@ def check_frontmatter(content):
     check("frontmatter_description", "description:" in fm, "description field missing")
     check("frontmatter_triggers", "TRIGGER" in fm, "trigger phrases missing")
     check("frontmatter_anti_triggers", "DO NOT TRIGGER" in fm, "anti-trigger missing")
-    check("frontmatter_implicit", "allow_implicit_invocation: true" in fm, "allow_implicit_invocation missing")
+    check("frontmatter_no_implicit", "allow_implicit_invocation" not in fm, "allow_implicit_invocation must NOT be in SKILL.md frontmatter (moved to agents/openai.yaml)")
 
 
 def check_body_length(content, max_lines):
@@ -207,9 +207,75 @@ def check_test_fixtures():
               "expected >= 1 evidence citation")
 
 
-def check_generate_artifact():
-    path = os.path.join(SKILL_DIR, "scripts", "generate_artifact.py")
-    check("generate_artifact_exists", os.path.exists(path), "generate_artifact.py missing")
+def check_generate_scripts():
+    fixtures_path = os.path.join(SKILL_DIR, "scripts", "generate_fixtures.py")
+    weekly_path = os.path.join(SKILL_DIR, "scripts", "generate_weekly_artifacts.py")
+    check("generate_fixtures_exists", os.path.exists(fixtures_path), "generate_fixtures.py missing")
+    check("generate_weekly_exists", os.path.exists(weekly_path), "generate_weekly_artifacts.py missing")
+
+
+def check_quick_validate():
+    """Run Codex quick_validate.py as a subprocess."""
+    import subprocess
+    quick_validate_path = os.path.expanduser(
+        "~/.codex/skills/.system/skill-creator/scripts/quick_validate.py"
+    )
+    if not os.path.exists(quick_validate_path):
+        check("quick_validate_available", False, f"quick_validate.py not found at {quick_validate_path}")
+        return
+    result = subprocess.run(
+        [sys.executable, quick_validate_path, SKILL_DIR],
+        capture_output=True, text=True,
+    )
+    check("quick_validate_pass", result.returncode == 0,
+          f"quick_validate.py failed: {result.stderr.strip() or result.stdout.strip()}")
+
+
+def check_jsonschema_validation():
+    """Validate test fixtures against their schemas using jsonschema."""
+    try:
+        import jsonschema
+    except ImportError:
+        check("jsonschema_available", False, "jsonschema not installed")
+        return
+    check("jsonschema_available", True)
+
+    schema_map = {
+        "offer_test.json": "offer.schema.json",
+        "hook_test.json": "hook.schema.json",
+        "content_calendar_test.json": "content-calendar.schema.json",
+        "funnel_audit_test.json": "funnel-audit.schema.json",
+    }
+    for fixture_name, schema_name in schema_map.items():
+        fixture_path = os.path.join(SKILL_DIR, "tests", fixture_name)
+        schema_path = os.path.join(SKILL_DIR, "schemas", schema_name)
+        if not os.path.exists(fixture_path) or not os.path.exists(schema_path):
+            check(f"jsonschema_{fixture_name}", False, "fixture or schema missing")
+            continue
+        fixture = read_json(fixture_path)
+        schema = read_json(schema_path)
+        if not fixture or not schema:
+            check(f"jsonschema_{fixture_name}", False, "invalid JSON")
+            continue
+        try:
+            jsonschema.validate(instance=fixture, schema=schema)
+            check(f"jsonschema_{fixture_name}", True)
+        except jsonschema.ValidationError as e:
+            check(f"jsonschema_{fixture_name}", False, str(e.message))
+
+
+def check_weekly_mode(content, rules):
+    """Verify weekly mode is present and output constraints are defined."""
+    check("weekly_mode_in_content", "weekly" in content.lower(), "weekly mode not mentioned in SKILL.md")
+    if rules:
+        weekly_outputs = rules.get("weekly_mode_outputs")
+        check("weekly_mode_outputs_defined", weekly_outputs is not None, "weekly_mode_outputs not in validation-rules.json")
+        if weekly_outputs:
+            check("weekly_offer_count", weekly_outputs.get("offer") == 1, f"expected 1 offer, got {weekly_outputs.get('offer')}")
+            check("weekly_hook_count", weekly_outputs.get("hooks") == 3, f"expected 3 hooks, got {weekly_outputs.get('hooks')}")
+            check("weekly_content_days", weekly_outputs.get("content_days") == 7, f"expected 7 days, got {weekly_outputs.get('content_days')}")
+        check("reject_synthetic_claims", rules.get("reject_synthetic_economic_claims") is True,
+              "reject_synthetic_economic_claims not set to true")
 
 
 def main():
@@ -250,7 +316,10 @@ def main():
     check_agents_file()
     check_validation_rules(rules)
     check_test_fixtures()
-    check_generate_artifact()
+    check_generate_scripts()
+    check_quick_validate()
+    check_jsonschema_validation()
+    check_weekly_mode(content, rules)
 
     print(f"\n{'ALL CHECKS PASSED' if checks_failed == 0 else f'{checks_failed} CHECK(S) FAILED'}")
     if checks_failed > 0:

@@ -8,7 +8,7 @@
     "schema_version": { "const": "v8" },
     "state_id": { "type": "string", "pattern": "^ST-\\d{3}$" },
     "audit_id": { "type": "string", "description": "Cites positioning audit ID" },
-    "scope_mode": { "type": "string", "enum": ["quick", "standard", "deep"] },
+    "scope_mode": { "type": "string", "enum": ["quick", "standard", "deep", "weekly"] },
     "prompts_completed": {
       "type": "array",
       "items": { "type": "string", "enum": ["content_batching", "offer_builder", "hook_generator", "authority_builder", "funnel_audit"] }
@@ -58,6 +58,22 @@
     "artifacts_produced": {
       "type": "array",
       "items": { "type": "string", "enum": ["content-calendar.json", "offers.json", "hooks.json", "proof-library.json", "funnel-audit.json"] }
+    },
+    "weekly_mode": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "outputs_produced": {
+          "type": "object",
+          "properties": {
+            "offer": { "type": "integer", "minimum": 0, "maximum": 1 },
+            "hooks": { "type": "integer", "minimum": 0, "maximum": 3 },
+            "content_days": { "type": "integer", "minimum": 0, "maximum": 7 },
+            "funnel_fixes": { "type": "integer", "minimum": 0, "maximum": 3 },
+            "proof_updates": { "type": "integer", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
     },
     "created_at": { "type": "string", "description": "ISO timestamp" },
     "updated_at": { "type": "string", "description": "ISO timestamp" }

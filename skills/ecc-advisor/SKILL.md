@@ -1,14 +1,19 @@
 ---
 name: ecc-advisor
 description: >-
-  Client-side advisor pattern pairing the harness's native model (executor)
-  with Grok 4.5 (advisor) for cost-optimized multi-model orchestration.
-  The executor runs the task end-to-end; Grok 4.5 is consulted at decision
-  points via a CLI helper script. No API keys needed — uses Super Grok CLI token.
+  Multi-provider advisor pattern pairing the harness's native model (executor)
+  with a stronger advisor model for cost-optimized multi-model orchestration.
+  Supports three advisor backends: (1) Native Claude Advisor API (advisor_20260301)
+  server-side tool for Claude Code, (2) Grok 4.5 via Super Grok CLI token for
+  cross-harness use, (3) Claude Fable 5 via Codex-Orchestration plugin.
+  The executor runs the task end-to-end; the advisor is consulted at decision
+  points. No API keys needed for Grok CLI path — uses Super Grok CLI token.
   TRIGGER when: "advisor", "two-model", "cascade", "escalation",
   "consult stronger model", "cost optimization model", "Grok advisor",
-  "second opinion", or when following the advisor pattern from the Claude API docs.
-  DO NOT TRIGGER when: task is trivially one-line, or no Grok CLI token exists.
+  "second opinion", "advisor tool", "advisor strategy",
+  "Sonnet Opus pairing", "Fable advisor", or when following the advisor
+  pattern from the Claude API docs.
+  DO NOT TRIGGER when: task is trivially one-line, or no advisor backend is available.
 ---
 
 # ecc-advisor
@@ -22,12 +27,56 @@ description: >-
 
 ## How It Works
 
-You (the harness model) are the **executor**. Grok 4.5 is your **advisor**.
+You (the harness model) are the **executor**. A stronger model is your **advisor**.
+
+### Advisor Backend Selection (auto-detected)
+
+The skill automatically selects the best available advisor backend:
+
+| Priority | Backend | Harness | Advisor Model | How | API Key Needed |
+|---|---|---|---|---|---|
+| 1 | **Native Claude Advisor API** | Claude Code | Opus 4.6 or Fable 5 | `advisor_20260301` server-side tool | No (uses Claude subscription) |
+| 2 | **Codex-Orchestration plugin** | Codex | Fable 5 via MCP | `codex-orchestration` plugin seats | No (uses Codex subscription) |
+| 3 | **Grok CLI** | Any harness | Grok 4.5 | `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py"` | No (Super Grok CLI token) |
+| 4 | **Graceful fallback** | Any | None | Proceed without advisor | N/A |
+
+### Backend 1: Native Claude Advisor API (preferred for Claude Code)
+
+The official advisor tool (`advisor_20260301`) runs server-side on Anthropic's infrastructure. The executor calls it like any other tool — no extra round-trips or context management.
+
+**Supported pairings:**
+- Haiku 4.5 (executor) → Opus 4.6 (advisor)
+- Sonnet 4.6 (executor) → Opus 4.6 (advisor)
+- Opus 4.6 (executor) → Opus 4.6 (advisor)
+- Any executor → Fable 5 (advisor, when available)
+
+**Key properties:**
+- Advisor receives the executor's full transcript as context
+- Advisor returns text guidance only (400-700 tokens typically)
+- Advisor's thinking blocks are dropped before result returns
+- Advisor never calls tools or produces user-facing output
+- `max_uses` caps advisor calls per request (primary cost control)
+
+**Usage in Claude Code:**
+The advisor tool is configured in Claude Code settings. When enabled, Claude automatically decides when to call it — at decision points, when stuck, or before declaring done.
+
+### Backend 2: Codex-Orchestration Plugin (preferred for Codex)
+
+When the `codex-orchestration` plugin is installed, it provides explicit seat assignment:
+- **Planner seat:** Creates the plan (Fable 5 or configured model)
+- **Advisor seat:** Reviews the plan (Fable 5 or configured model)
+- **Executor seat:** Implements the plan (harness native model)
+
+The PLAN_APPROVED/PLAN_REVISE protocol supports up to 5 review rounds. Use truthful route states from `ecc-model-route` to report which model actually ran.
+
+### Backend 3: Grok CLI (cross-harness fallback)
+
+Works on any harness. The executor calls a CLI script that sends context to Grok 4.5:
 
 1. Work on the task normally — read files, run commands, orient
 2. **Before substantive work** (writing code, committing to an approach), call the advisor:
    ```bash
-   python3 fable/advisor_cli.py "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
+   python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
    ```
 3. Read the advisor's response and give it serious weight
 4. If the advisor points out a flaw, adapt. If it confirms your approach, proceed with confidence
@@ -64,10 +113,26 @@ If you've already retrieved data pointing one way and the advisor points another
 
 ## Cost Controls
 
-- Max 3 advisor calls per session (configurable in `fable/advisor_config.json`)
-- Check status: `python3 fable/advisor_cli.py --status`
-- Reset counter: `python3 fable/advisor_cli.py --reset`
+### All Backends
+- Advisor calls are capped per session (configurable)
+- The executor decides when to call — not every turn, only at decision points
+- Advisor output is concise (200-700 tokens depending on backend)
+
+### Grok CLI Backend
+- Max 3 advisor calls per session (configurable in `$HOME/codex-ecc-custom/fable/advisor_config.json`)
+- Check status: `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" --status`
+- Reset counter: `python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" --reset`
 - Advisor output capped at 2048 tokens per call
+
+### Native Claude Advisor API Backend
+- `max_uses` parameter caps calls per API request (primary cost control)
+- Advisor usage counts toward session totals shown by `/usage`
+- No client-side tracking needed — server manages call counting
+
+### Codex-Orchestration Backend
+- Up to 5 plan review rounds (PLAN_APPROVED/PLAN_REVISE protocol)
+- Concurrency limits per provider (configured in plugin settings)
+- Model effort normalization via `ecc-model-route`
 
 ## Context to Pass the Advisor
 
@@ -79,25 +144,40 @@ The advisor sees ONLY what you pass in the CLI argument, so include:
 
 Example:
 ```bash
-python3 fable/advisor_cli.py "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
+python3 "$HOME/codex-ecc-custom/fable/advisor_cli.py" "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
 ```
 
 ## Dependency Gating
 
+### Native Claude Advisor API
+- Requires Claude Code with advisor tool enabled (settings → advisor)
+- No API keys needed — uses Claude subscription
+- Supported pairings: Haiku/Sonnet/Opus executor → Opus/Fable 5 advisor
+
+### Codex-Orchestration Plugin
+- Requires `codex-orchestration` plugin installed (`codex plugin list`)
+- No API keys needed — uses Codex subscription
+- Requires Python 3.11+ for plugin runtime
+
+### Grok CLI
 - Requires Grok CLI token at `~/.grok/auth.json` (verified working with Super Grok)
 - Requires Python3 + requests library (already installed)
-- No API keys needed for either model
-- If no token is available, the advisor returns a graceful fallback message and you proceed without it
+- No API keys needed
+- If no token is available, the advisor returns a graceful fallback message
+
+### Fallback
+- If no backend is available, proceed without advisor — note this in the response
 
 ## Platform Compatibility
 
-Works across all harnesses — the executor is always the harness's native model (free, no API key):
+Works across all harnesses with automatic backend selection:
 
-- **Cascade** → Claude as executor, Grok 4.5 as advisor
-- **Codex** → GPT-5.6 as executor, Grok 4.5 as advisor
-- **Anti-Gravity** → Gemini 3.5 as executor, Grok 4.5 as advisor
+- **Cascade / Claude Code** → Native Advisor API (Opus/Fable 5 advisor) — preferred
+- **Codex** → Codex-Orchestration plugin (Fable 5 advisor) — preferred, or Grok CLI fallback
+- **Windsurf / Devin** → Grok CLI (Grok 4.5 advisor) — cross-harness fallback
+- **Anti-Gravity** → Grok CLI (Grok 4.5 advisor) — cross-harness fallback
 
-The advisor is always Grok 4.5 via Super Grok CLI token (free, no API key).
+The advisor is always a stronger model than the executor. The specific pairing depends on which backend is available in the current harness.
 
 ## Backing Skills
 

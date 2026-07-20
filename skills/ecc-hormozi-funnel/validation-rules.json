@@ -25,7 +25,15 @@
   "proof_density_threshold": 0.50,
   "max_body_lines": 1200,
   "composite_score_cap": 100,
-  "expected_scope_modes": ["quick", "standard", "deep"],
+  "expected_scope_modes": ["quick", "standard", "deep", "weekly"],
+  "weekly_mode_outputs": {
+    "offer": 1,
+    "hooks": 3,
+    "content_days": 7,
+    "funnel_fixes": 3,
+    "proof_updates": 1
+  },
+  "reject_synthetic_economic_claims": true,
   "expected_advisor_checkpoints": ["offer_ranking", "hook_rewriting", "funnel_audit_finalization"],
   "expected_adversarial_passes": ["skeptic", "missing_perspective", "contrarian"],
   "decision_confidence_max": 100

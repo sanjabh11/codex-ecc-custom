@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Generate reproducible artifacts for ecc-hormozi-funnel skill.
+"""Generate deterministic test fixtures for ecc-hormozi-funnel skill.
 
-Produces deterministic test artifacts from a positioning audit export,
-ensuring all outputs are schema-valid and evidence-traceable.
+Produces synthetic test artifacts for schema validation and scenario testing.
+These are FIXTURES ONLY — not for production use. All economic claims
+(price, guarantee, scarcity, is_real) are synthetic placeholder values
+that exist solely to exercise schema validation paths.
 """
 
 import json

@@ -1,0 +1,43 @@
+{
+  "audit_id": "AUD-TEST-001",
+  "evidence_corpus": [
+    {"evidence_id": "E-001", "type": "customer_interview", "source": "interview-2026-07-15"},
+    {"evidence_id": "E-002", "type": "support_ticket", "source": "ticket-4821"},
+    {"evidence_id": "E-003", "type": "analytics", "source": "ga4-2026-07"},
+    {"evidence_id": "E-004", "type": "competitor_analysis", "source": "competitor-scan-2026-07"},
+    {"evidence_id": "E-005", "type": "pricing_survey", "source": "survey-2026-06"}
+  ],
+  "segments": [
+    {
+      "segment_id": "SEG-001",
+      "dream_outcome_score": 9,
+      "likelihood_score": 8,
+      "time_delay_score": 8,
+      "effort_score": 7,
+      "dream_outcome_statement": "Reduce weekly reporting time from 3 hours to 15 minutes",
+      "evidence_ids": ["E-001", "E-003"],
+      "bonus_stack": [
+        {"bonus_name": "Template Library", "solves": "speed", "dollar_value": 500, "description": "Pre-built report templates"},
+        {"bonus_name": "Automation Kit", "solves": "effort", "dollar_value": 300, "description": "Reduces manual work"}
+      ],
+      "guarantee_terms": "See pilot agreement terms",
+      "guarantee_duration_days": 30,
+      "scarcity_type": "cohort",
+      "scarcity_detail": "Quarterly pilot cohort",
+      "scarcity_evidence_ids": ["E-005"],
+      "hooks": [
+        {"formula_type": "pain", "text": "Spending 3 hours every Monday exporting reports?", "clarity": 9, "curiosity": 7, "pull": 8, "evidence_id": "E-002"},
+        {"formula_type": "desire", "text": "What if your weekly report took 15 minutes instead?", "clarity": 8, "curiosity": 8, "pull": 9, "evidence_id": "E-001"},
+        {"formula_type": "proof", "text": "Teams using this cut reporting time by 80%", "clarity": 7, "curiosity": 7, "pull": 8, "evidence_id": "E-003"}
+      ],
+      "funnel_fixes": [
+        {"defect": "No CTA on proof-pack page", "fix": "Add evidence-backed CTA", "impact": "high", "confidence": "high", "effort": "low"},
+        {"defect": "Form has 12 fields", "fix": "Reduce to 5 essential fields", "impact": "medium", "confidence": "high", "effort": "low"},
+        {"defect": "No mobile optimization", "fix": "Add responsive layout", "impact": "medium", "confidence": "medium", "effort": "medium"}
+      ]
+    }
+  ],
+  "pains": [
+    {"pain_id": "H-SEG1-001", "description": "Manual report assembly takes 3+ hours weekly"}
+  ]
+}

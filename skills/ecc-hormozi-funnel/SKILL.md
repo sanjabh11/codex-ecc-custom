@@ -13,7 +13,6 @@ description: >-
   rewrite" — especially after a positioning audit has been completed.
   DO NOT TRIGGER when: no positioning audit or product context is available,
   or the task is pure strategic positioning research without GTM/content intent.
-allow_implicit_invocation: true
 ---
 
 # ecc-hormozi-funnel
@@ -30,6 +29,7 @@ this skill produces the tactical execution layer.
 | **quick** | 1 prompt (user picks) | Need one asset fast (e.g., just offers or just hooks) |
 | **standard** | 3 prompts (1, 2, 3) | Content + offers + hooks for a GTM push |
 | **deep** | All 5 prompts in sequence | Full funnel build with audit |
+| **weekly** | All 5 prompts (compressed) | Seven-day output packet: 1 offer, 3 hooks, 7-day content slice, 3 funnel fixes, 1 proof-library update. Uses `generate_weekly_artifacts.py` with a real positioning export. Rejects fabricated scarcity, guarantees, prices, and `is_real: true` without evidence citation. |
 
 Default mode is `standard` unless the user specifies otherwise.
 
