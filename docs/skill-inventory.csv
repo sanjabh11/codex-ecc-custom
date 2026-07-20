@@ -1,0 +1,93 @@
+skill_dir,name,categories,has_openai_yaml,had_allow_implicit,description
+agents-md-generator,agents-md-generator,documentation,True,False,"Generate and maintain AGENTS.md files with engineering doctrine, verification  ladder, safety rules, branch policy, and spec-first workflow guidelines for  AI coding agents. Use when setting up a new "
+deterministic-simulation-testing,deterministic-simulation-testing,testing,True,False,"FoundationDB-class testing with virtual time, DPOR schedule exploration,  chaos injection, and seed-replayable failures. Use when building concurrent,  distributed, or stateful systems where concurren"
+ecc-advisor,ecc-advisor,,True,False,Multi-provider advisor pattern pairing the harness's native model (executor)  with a stronger advisor model for cost-optimized multi-model orchestration.  Supports three advisor backends: (1) Native C
+ecc-agent-reach,ecc-agent-reach,,False,False,
+ecc-aside,ecc-aside,,False,False,
+ecc-build-fix,ecc-build-fix,,False,False,
+ecc-buyer-pipeline,ecc-buyer-pipeline,revenue_attribution; code_review; lead_research; outbound_drafting; buyer_pipeline,True,False,"Govern a privacy-safe buyer pipeline from qualified account through discovery, evidence intake, pilot, review, and outcome, with explicit stage gates and dry-run integrations. Use for lead routing, de"
+ecc-checkpoint,ecc-checkpoint,,False,False,
+ecc-claw,ecc-claw,,False,False,
+ecc-closed-loop-analytics,ecc-closed-loop-analytics,revenue_attribution; analytics_readback; lead_research; funnel_audit; conversion_audit; outbound_drafting; testing; buyer_pipeline; seo,True,False,"Measure whether marketing, content, outreach, SEO, conversion, or revenue workflow changes improved real outcomes, then promote, hold, roll back, or retest them. Use for analytics readback, baseline-v"
+ecc-code-review,ecc-code-review,code_review,False,False,
+ecc-command-catalog,ecc-command-catalog,,False,False,
+ecc-content-quality-ops,ecc-content-quality-ops,content_quality; code_review,True,False,"Evaluate and improve evidence-heavy marketing, technical, scientific, or sales content against audience-specific rubrics and proof boundaries. Use for content quality gates, expert-panel review, edito"
+ecc-context-budget,ecc-context-budget,,False,False,
+ecc-conversion-audit,ecc-conversion-audit,analytics_readback; code_review; lead_research; content_quality; funnel_audit; buyer_pipeline; conversion_audit; outbound_drafting; pricing; offer_creation,True,False,"Audit landing pages, proof-pack routes, forms, pricing paths, and lead magnets for message match, friction, trust, accessibility, and measurement readiness. Use for CRO reviews and conversion remediat"
+ecc-cpp-build,ecc-cpp-build,,False,False,
+ecc-cpp-review,ecc-cpp-review,code_review,False,False,
+ecc-cpp-test,ecc-cpp-test,testing,False,False,
+ecc-devfleet,ecc-devfleet,,False,False,
+ecc-docs,ecc-docs,documentation,False,False,
+ecc-e2e,ecc-e2e,,False,False,
+ecc-eval,ecc-eval,,False,False,
+ecc-evolve,ecc-evolve,,False,False,
+ecc-fable-goal,ecc-fable-goal,,False,False,
+ecc-fable-loop,ecc-fable-loop,,False,False,
+ecc-go-build,ecc-go-build,,False,False,
+ecc-go-review,ecc-go-review,code_review,False,False,
+ecc-go-test,ecc-go-test,testing,False,False,
+ecc-gradle-build,ecc-gradle-build,,False,False,
+ecc-growth-experiment-loop,ecc-growth-experiment-loop,analytics_readback; lead_research; outbound_drafting; testing; buyer_pipeline; experiment_design,True,False,"Design, register, monitor, and evaluate bounded marketing or commercial experiments using explicit hypotheses, variants, metrics, guardrails, and decision rules. Use for A/B tests, outreach variants, "
+ecc-harness-audit,ecc-harness-audit,code_review,False,False,
+ecc-headroom,ecc-headroom,,False,False,
+ecc-hormozi-funnel,ecc-hormozi-funnel,content_calendar; code_review; funnel_audit; conversion_audit; pricing; positioning; hook_generation; offer_creation,True,False,"Build GTM execution assets from positioning audit outputs using Alex Hormozi's  $100M Funnel methodology. Five-prompt workflow: content batching machine,  value equation offer builder, hook generator,"
+ecc-instinct-export,ecc-instinct-export,,False,False,
+ecc-instinct-import,ecc-instinct-import,,False,False,
+ecc-instinct-status,ecc-instinct-status,,False,False,
+ecc-integrations-catalog,ecc-integrations-catalog,,False,False,
+ecc-kotlin-build,ecc-kotlin-build,,False,False,
+ecc-kotlin-review,ecc-kotlin-review,code_review,False,False,
+ecc-kotlin-test,ecc-kotlin-test,testing,False,False,
+ecc-lead-dossier,ecc-lead-dossier,positioning; lead_research; outbound_drafting; buyer_pipeline; seo,True,False,"Build source-cited, privacy-bounded account and buyer dossiers from public or user-authorized evidence. Use for target-account research, ICP qualification, stakeholder mapping, account scoring, trigge"
+ecc-learn,ecc-learn,,False,False,
+ecc-learn-eval,ecc-learn-eval,,False,False,
+ecc-loop-start,ecc-loop-start,,False,False,
+ecc-loop-status,ecc-loop-status,,False,False,
+ecc-model-route,ecc-model-route,,False,False,
+ecc-multi-backend,ecc-multi-backend,,False,False,
+ecc-multi-execute,ecc-multi-execute,,False,False,
+ecc-multi-frontend,ecc-multi-frontend,,False,False,
+ecc-multi-plan,ecc-multi-plan,,False,False,
+ecc-multi-workflow,ecc-multi-workflow,,False,False,
+ecc-niche-positioning-audit,ecc-niche-positioning-audit,positioning; seo; code_review,False,False,"Identify high-potential customer segments, unmet needs, product-market gaps,  and defensible positioning through ultra-deep market research, customer/evidence  analysis, product evaluation, and option"
+ecc-orchestrate,ecc-orchestrate,,False,False,
+ecc-outbound-campaign,ecc-outbound-campaign,positioning; lead_research; content_quality; outbound_drafting; buyer_pipeline; experiment_design,True,False,"Design evidence-backed outbound campaign drafts from an approved ICP and source-cited dossiers, with claim checks, suppression rules, variants, and response logging. Use for cold or warm email, Linked"
+ecc-plan,ecc-plan,,False,False,
+ecc-pm2,ecc-pm2,,False,False,
+ecc-projects,ecc-projects,,False,False,
+ecc-promote,ecc-promote,,False,False,
+ecc-prompt-optimize,ecc-prompt-optimize,,False,False,
+ecc-prune,ecc-prune,,False,False,
+ecc-python-review,ecc-python-review,code_review,False,False,
+ecc-quality-gate,ecc-quality-gate,,False,False,
+ecc-refactor-clean,ecc-refactor-clean,,False,False,
+ecc-resume-session,ecc-resume-session,,False,False,
+ecc-revenue-attribution,ecc-revenue-attribution,revenue_attribution; lead_research; funnel_audit; conversion_audit; outbound_drafting; buyer_pipeline,True,False,"Trace content, outreach, calls, pilots, and conversion events to qualified pipeline or revenue evidence while preserving attribution uncertainty. Use for buyer-journey analysis, sales-call insight ext"
+ecc-role-catalog,ecc-role-catalog,,False,False,
+ecc-router,ecc-router,,False,False,
+ecc-rules-distill,ecc-rules-distill,,False,False,
+ecc-rust-build,ecc-rust-build,,False,False,
+ecc-rust-review,ecc-rust-review,code_review,False,False,
+ecc-rust-test,ecc-rust-test,testing,False,False,
+ecc-save-session,ecc-save-session,,False,False,
+ecc-self-improve,ecc-self-improve,,False,False,
+ecc-seo-opportunity-loop,ecc-seo-opportunity-loop,seo,True,False,"Prioritize search opportunities from technical health, source-backed topic fit, competitor gaps, and verified search-performance data, then measure outcomes. Use for GSC analysis, keyword-to-route map"
+ecc-sessions,ecc-sessions,,False,False,
+ecc-setup-pm,ecc-setup-pm,,False,False,
+ecc-skill-create,ecc-skill-create,skill_maintenance,False,False,
+ecc-skill-health,ecc-skill-health,skill_maintenance,False,False,
+ecc-tdd,ecc-tdd,testing,False,False,
+ecc-test-coverage,ecc-test-coverage,testing,False,False,
+ecc-trace-wrap,ecc-trace-wrap,,False,False,
+ecc-update-codemaps,ecc-update-codemaps,,False,False,
+ecc-update-docs,ecc-update-docs,documentation,False,False,
+ecc-value-pricing,ecc-value-pricing,offer_creation; content_quality; pricing,True,False,"Prepare proof-bounded value hypotheses, tiered offers, pricing briefs, and post-call analyses for complex B2B products. Use for pricing strategy, pilot packaging, pre-call preparation, proposal tiers,"
+ecc-verify,ecc-verify,,False,False,
+ecc-weekly-marketing-flywheel,ecc-weekly-marketing-flywheel,code_review; skill_maintenance; funnel_audit; conversion_audit; positioning; experiment_design,True,False,Composite skill chaining three highest-leverage marketing skills into a single  weekly workflow: positioning-audit → hormozi-funnel → growth-experiment-loop.  Produces a seven-day evidence-backed mark
+invariant-registry,invariant-registry,experiment_design; deployment,True,False,"Maintain a machine-readable invariant registry with stable IDs, CI enforcement  that every invariant has a live checker, and a hard rule that no subsystem ships  against an unenforced invariant. Use w"
+last30days,last30days,,False,False,
+plan-certificates,plan-certificates,code_review,True,False,"Make every result an auditable, replayable artifact with plan hash, tie-break  policy, snapshot seq, per-operator observed-vs-bound counts, and a decision-path  hash. Use when results must be reproduc"
+reference-oracle-testing,reference-oracle-testing,testing,True,False,"Build a deliberately simple, single-threaded, obviously-correct reference  implementation for differential testing against the optimized implementation.  ""What should this return"" is a program, not a "
+slides,slides,,True,False,
+spec-first-doctrine,spec-first-doctrine,documentation,True,False,"Enforce spec-first implementation: read the comprehensive plan before writing  any subsystem, implementation follows the plan not ad-hoc invention, and every  design assumption must be promoted to enf"
