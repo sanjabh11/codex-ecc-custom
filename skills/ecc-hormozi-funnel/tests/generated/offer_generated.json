@@ -1,0 +1,64 @@
+{
+  "offer_id": "OFF-001",
+  "segment_id": "SEG-001",
+  "pain_id": "H-SEG1-001",
+  "dream_outcome": {
+    "statement": "Dream outcome for H-SEG1-001",
+    "specificity_score": 9
+  },
+  "value_equation_scores": {
+    "dream_outcome": 9,
+    "likelihood": 8,
+    "time_delay": 8,
+    "effort_sacrifice": 7,
+    "composite": 60.0
+  },
+  "bonus_stack": [
+    {
+      "bonus_name": "Fast-Start Guide",
+      "solves": "speed",
+      "dollar_value": 500,
+      "description": "Done-for-you templates"
+    },
+    {
+      "bonus_name": "Automation Kit",
+      "solves": "effort",
+      "dollar_value": 300,
+      "description": "Reduces manual work"
+    },
+    {
+      "bonus_name": "Community Access",
+      "solves": "likelihood",
+      "dollar_value": 1000,
+      "description": "Accountability and support"
+    },
+    {
+      "bonus_name": "Hiring Kit",
+      "solves": "adjacent",
+      "dollar_value": 400,
+      "description": "Solves related problem"
+    }
+  ],
+  "guarantee": {
+    "type": "conditional",
+    "terms": "Complete the program or get a full refund",
+    "duration_days": 60
+  },
+  "scarcity_urgency": {
+    "scarcity_type": "cohort",
+    "scarcity_detail": "Only 20 spots per quarter",
+    "urgency_type": "deadline",
+    "urgency_detail": "Closes Friday at midnight",
+    "is_real": true
+  },
+  "price": 2500,
+  "total_value_stack": 25000,
+  "value_ratio": 10.0,
+  "offer_name": "Offer 1",
+  "evidence_citations": [
+    "E-001",
+    "E-005"
+  ],
+  "rank": 1,
+  "schema_version": "v8"
+}

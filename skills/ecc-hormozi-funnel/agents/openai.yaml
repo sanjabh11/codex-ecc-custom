@@ -1,0 +1,7 @@
+interface:
+  display_name: "Hormozi Funnel"
+  short_description: "GTM execution assets from positioning audit using Hormozi $100M methodology"
+  default_prompt: "Use $ecc-hormozi-funnel to build content calendars, offers, hooks, proof assets, and funnel audits from positioning audit outputs."
+
+policy:
+  allow_implicit_invocation: true

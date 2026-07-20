@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hormozi Proof Library",
+  "description": "Schema for proof asset libraries built by the authority builder",
+  "type": "object",
+  "required": ["library_id", "audit_id", "assets", "proof_stories", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v8" },
+    "library_id": { "type": "string", "pattern": "^PL-\\d{3}$" },
+    "audit_id": { "type": "string", "description": "Cites positioning audit ID" },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "category", "evidence_id", "formats"],
+        "properties": {
+          "asset_id": { "type": "string", "pattern": "^PA-\\d{3}$" },
+          "category": { "type": "string", "enum": ["quantitative", "qualitative", "transformation", "authority"] },
+          "evidence_id": { "type": "string", "description": "Evidence ID from positioning audit corpus" },
+          "content_summary": { "type": "string" },
+          "formats": {
+            "type": "object",
+            "required": ["short", "mid", "long"],
+            "properties": {
+              "short": { "type": "string", "description": "1 sentence" },
+              "mid": { "type": "string", "description": "1 paragraph" },
+              "long": { "type": "string", "description": "1 page case study" }
+            }
+          }
+        }
+      }
+    },
+    "proof_stories": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["story_id", "narrative", "evidence_ids", "word_count"],
+        "properties": {
+          "story_id": { "type": "string", "pattern": "^PS-\\d{3}$" },
+          "narrative": { "type": "string", "description": "150-300 words combining logic and emotion" },
+          "evidence_ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "Evidence IDs supporting factual claims"
+          },
+          "word_count": { "type": "integer", "minimum": 100, "maximum": 400 },
+          "structure": { "type": "string", "enum": ["before_after_bridge", "problem_solution", "transformation_journey"] }
+        }
+      }
+    },
+    "evidence_citations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All evidence IDs cited across all assets and stories"
+    }
+  }
+}

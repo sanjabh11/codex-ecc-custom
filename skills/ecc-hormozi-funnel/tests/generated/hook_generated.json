@@ -1,0 +1,18 @@
+{
+  "hook_id": "HK-001",
+  "formula_type": "pain",
+  "pain_id": "H-SEG1-001",
+  "segment_id": "SEG-001",
+  "hook_text": "Spending 3 hours every Monday exporting reports?",
+  "word_count": 7,
+  "awareness_level": "problem_aware",
+  "ranking_score": {
+    "clarity": 9,
+    "curiosity": 7,
+    "pull": 8,
+    "composite": 8.0
+  },
+  "evidence_citation": "E-002",
+  "rank": 1,
+  "schema_version": "v8"
+}

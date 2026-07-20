@@ -1,0 +1,32 @@
+{
+  "schema_version": "v8",
+  "expected_tool_truth_rules": 20,
+  "expected_schemas": [
+    "offer.schema.json",
+    "hook.schema.json",
+    "content-calendar.schema.json",
+    "funnel-audit.schema.json",
+    "state.schema.json",
+    "proof-library.schema.json"
+  ],
+  "expected_references": [
+    "integration-contract.md",
+    "methodology-provenance.md"
+  ],
+  "expected_prompts": [
+    "Prompt 1: Content Batching",
+    "Prompt 2: Value Equation",
+    "Prompt 3: Hormozi Hook",
+    "Prompt 4: Hormozi Authority",
+    "Prompt 5: Funnel Audit"
+  ],
+  "expected_hook_formulas": ["pain", "desire", "proof", "curiosity"],
+  "expected_platforms": ["Twitter", "Instagram", "TikTok", "LinkedIn", "YouTube"],
+  "proof_density_threshold": 0.50,
+  "max_body_lines": 1200,
+  "composite_score_cap": 100,
+  "expected_scope_modes": ["quick", "standard", "deep"],
+  "expected_advisor_checkpoints": ["offer_ranking", "hook_rewriting", "funnel_audit_finalization"],
+  "expected_adversarial_passes": ["skeptic", "missing_perspective", "contrarian"],
+  "decision_confidence_max": 100
+}

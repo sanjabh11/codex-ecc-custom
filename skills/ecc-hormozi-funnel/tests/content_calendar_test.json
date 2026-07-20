@@ -1,0 +1,57 @@
+{
+  "calendar_id": "CAL-001",
+  "audit_id": "AUD-001",
+  "pillars": [
+    {
+      "pillar_name": "Time Freedom for Founders",
+      "pillar_source": "H-SEG1-001",
+      "subtopics": [
+        "Delegation mistakes founders make",
+        "The 4-hour workday myth",
+        "Systems vs hustle",
+        "Hiring your first VA",
+        "Calendar audit framework",
+        "Meeting reduction strategies",
+        "Async communication adoption",
+        "The leverage equation",
+        "Outsourcing vs in-house",
+        "Time-tracking case studies"
+      ]
+    },
+    {
+      "pillar_name": "MRR Growth Mechanics",
+      "pillar_source": "H-SEG1-002",
+      "subtopics": ["Pricing experiments", "Churn reduction", "Upsell frameworks", "Annual vs monthly", "MRR math basics", "SaaS metrics that matter", "Onboarding impact on retention", "Expansion revenue tactics", "Pricing page optimization", "Trial-to-paid conversion"]
+    },
+    {
+      "pillar_name": "Proof-Driven Marketing",
+      "pillar_source": "H-SEG1-003",
+      "subtopics": ["Case study structure", "Before-after-bridge format", "Testimonial collection", "Data-backed claims", "Social proof stacking", "ROI calculators", "Customer spotlight series", "Results-first content", "Proof in cold outreach", "Analytics dashboards as proof"]
+    },
+    {
+      "pillar_name": "The Positioning Gap",
+      "pillar_source": "H-SEG1-004",
+      "subtopics": ["Niche down to scale up", "ICP refinement", "Competitor blind spots", "Category creation", "Positioning statement frameworks", "Vertical vs horizontal", "The danger of being generic", "Evidence-based positioning", "Repositioning case studies", "Market gap discovery"]
+    },
+    {
+      "pillar_name": "Offer Engineering",
+      "pillar_source": "H-SEG1-005",
+      "subtopics": ["Value Equation breakdown", "Bonus stacking psychology", "Guarantee types compared", "Scarcity without manipulation", "Price anchoring tactics", "Offer rewrite case studies", "Grand Slam offer anatomy", "Risk reversal mechanics", "Urgency that works", "Value vs cost pricing"]
+    }
+  ],
+  "entries": [
+    { "day": 1, "pillar": "Time Freedom for Founders", "platform": "twitter", "content_type": "thread", "title": "5 delegation mistakes keeping you at 60 hrs/week", "has_proof": true, "evidence_citations": ["E-001"], "char_count": 2100 },
+    { "day": 2, "pillar": "MRR Growth Mechanics", "platform": "linkedin", "content_type": "post", "title": "Why your pricing page is leaving 40% on the table", "has_proof": true, "evidence_citations": ["E-005"], "char_count": 2800 },
+    { "day": 3, "pillar": "Proof-Driven Marketing", "platform": "tiktok", "content_type": "script", "title": "How Client X grew 3x in 60 days", "has_proof": true, "evidence_citations": ["E-012"], "char_count": 150 },
+    { "day": 4, "pillar": "The Positioning Gap", "platform": "twitter", "content_type": "thread", "title": "The danger of being a generalist", "has_proof": false, "char_count": 1800 },
+    { "day": 5, "pillar": "Offer Engineering", "platform": "instagram", "content_type": "carousel", "title": "Value Equation explained in 10 slides", "has_proof": true, "evidence_citations": ["E-008"], "char_count": 5000 },
+    { "day": 6, "pillar": "Time Freedom for Founders", "platform": "youtube", "content_type": "short", "title": "The 4-hour workday is real — here's how", "has_proof": true, "evidence_citations": ["E-003"], "char_count": 500 },
+    { "day": 7, "pillar": "MRR Growth Mechanics", "platform": "linkedin", "content_type": "post", "title": "The one metric that predicts churn", "has_proof": true, "evidence_citations": ["E-007"], "char_count": 2500 },
+    { "day": 8, "pillar": "Proof-Driven Marketing", "platform": "tiktok", "content_type": "script", "title": "Stop saying 'we help companies'. Say THIS.", "has_proof": false, "char_count": 120 },
+    { "day": 9, "pillar": "The Positioning Gap", "platform": "instagram", "content_type": "carousel", "title": "5 signs you need to reposition", "has_proof": true, "evidence_citations": ["E-010"], "char_count": 4500 },
+    { "day": 10, "pillar": "Offer Engineering", "platform": "twitter", "content_type": "thread", "title": "Anatomy of a Grand Slam offer", "has_proof": true, "evidence_citations": ["E-002"], "char_count": 2200 }
+  ],
+  "proof_density": 0.80,
+  "platform_distribution": { "twitter": 3, "instagram": 2, "tiktok": 2, "linkedin": 2, "youtube": 1 },
+  "schema_version": "v8"
+}

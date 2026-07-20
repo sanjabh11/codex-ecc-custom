@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hormozi Funnel State",
+  "description": "Schema for tracking skill execution state across prompts",
+  "type": "object",
+  "required": ["state_id", "audit_id", "scope_mode", "prompts_completed", "advisor_used", "decision_confidence", "schema_version"],
+  "properties": {
+    "schema_version": { "const": "v8" },
+    "state_id": { "type": "string", "pattern": "^ST-\\d{3}$" },
+    "audit_id": { "type": "string", "description": "Cites positioning audit ID" },
+    "scope_mode": { "type": "string", "enum": ["quick", "standard", "deep"] },
+    "prompts_completed": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["content_batching", "offer_builder", "hook_generator", "authority_builder", "funnel_audit"] }
+    },
+    "advisor_used": { "type": "boolean", "default": false },
+    "advisor_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "checkpoint": { "type": "string", "enum": ["offer_ranking", "hook_rewriting", "funnel_audit_finalization"] },
+          "called": { "type": "boolean" },
+          "response_summary": { "type": "string" },
+          "timestamp": { "type": "string" }
+        }
+      }
+    },
+    "adversarial_review": {
+      "type": "object",
+      "properties": {
+        "skeptic_pass": { "type": "string", "enum": ["pending", "completed", "blocked"] },
+        "missing_perspective_pass": { "type": "string", "enum": ["pending", "completed", "blocked"] },
+        "contrarian_pass": { "type": "string", "enum": ["pending", "completed", "blocked"] },
+        "unresolved_contradictions": { "type": "integer", "minimum": 0 },
+        "flagged_items": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "decision_confidence": {
+      "type": "object",
+      "required": ["evidence_quality", "source_coverage", "adversarial_survival", "advisor_confirmed", "composite"],
+      "properties": {
+        "evidence_quality": { "type": "integer", "minimum": 0, "maximum": 30 },
+        "source_coverage": { "type": "integer", "minimum": 0, "maximum": 25 },
+        "adversarial_survival": { "type": "integer", "minimum": 0, "maximum": 25 },
+        "advisor_confirmed": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "composite": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "tool_health": {
+      "type": "object",
+      "properties": {
+        "advisor_available": { "type": "boolean" },
+        "validator_available": { "type": "boolean" },
+        "schema_validation_passed": { "type": "boolean" }
+      }
+    },
+    "artifacts_produced": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["content-calendar.json", "offers.json", "hooks.json", "proof-library.json", "funnel-audit.json"] }
+    },
+    "created_at": { "type": "string", "description": "ISO timestamp" },
+    "updated_at": { "type": "string", "description": "ISO timestamp" }
+  }
+}

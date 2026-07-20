@@ -1,0 +1,45 @@
+{
+  "audit_id": "FA-001",
+  "positioning_audit_id": "AUD-001",
+  "awareness_audit": {
+    "hook_score": 4,
+    "messaging_score": 6,
+    "proof_upfront_score": 3,
+    "attention_leaks": [
+      { "leak_id": "LK-01", "description": "Hook opens with feature list, not pain", "severity": "critical", "location": "hook" },
+      { "leak_id": "LK-02", "description": "No proof above the fold on landing page", "severity": "major", "location": "landing_page" },
+      { "leak_id": "LK-03", "description": "60-second intro before value proposition", "severity": "major", "location": "ad_creative" }
+    ],
+    "hooks_tested": 15,
+    "best_performing_hook_id": "HK-001"
+  },
+  "lead_capture_audit": {
+    "opt_in_score": 3,
+    "value_equation_score": {
+      "dream_outcome": 4,
+      "likelihood": 3,
+      "time_delay": 5,
+      "effort": 2
+    },
+    "friction_items": [
+      { "friction_id": "FR-01", "description": "7 form fields including phone number", "type": "form_field", "fix": "Reduce to 2 fields: name and email" },
+      { "friction_id": "FR-02", "description": "No proof on opt-in page", "type": "no_proof", "fix": "Add 3 testimonials above the form" },
+      { "friction_id": "FR-03", "description": "CTA says 'Submit' instead of value-driven text", "type": "weak_cta", "fix": "Change to 'Get My Free Audit'" }
+    ],
+    "weakest_magnet": {
+      "current_text": "Subscribe to our newsletter for updates",
+      "rewrite": "Get a free 5-minute positioning audit — see your top 3 market gaps instantly",
+      "rewrite_rationale": "Newsletter is vague; free audit is specific, time-bound, and proof-driven"
+    }
+  },
+  "overall_score": 4.0,
+  "fixes": [
+    { "fix_id": "FX-01", "priority": "P0", "description": "Rewrite hook to lead with pain, not features", "expected_impact": "Stop scroll rate +40%", "evidence_citation": "E-002" },
+    { "fix_id": "FX-02", "priority": "P0", "description": "Add 3 testimonials above the fold", "expected_impact": "Opt-in rate +25%", "evidence_citation": "E-005" },
+    { "fix_id": "FX-03", "priority": "P1", "description": "Reduce form from 7 fields to 2", "expected_impact": "Friction reduction +15% completion", "evidence_citation": "E-008" },
+    { "fix_id": "FX-04", "priority": "P1", "description": "Rewrite lead magnet from newsletter to free audit", "expected_impact": "Opt-in rate +35%", "evidence_citation": "E-010" },
+    { "fix_id": "FX-05", "priority": "P2", "description": "Trim intro from 60s to 10s in ad creative", "expected_impact": "Watch-through +20%", "evidence_citation": "E-012" }
+  ],
+  "evidence_citations": ["E-002", "E-005", "E-008", "E-010", "E-012"],
+  "schema_version": "v8"
+}

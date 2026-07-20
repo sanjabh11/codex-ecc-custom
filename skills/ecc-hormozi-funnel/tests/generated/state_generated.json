@@ -1,0 +1,35 @@
+{
+  "state_id": "ST-001",
+  "audit_id": "AUD-001",
+  "scope_mode": "deep",
+  "prompts_completed": [
+    "content_batching",
+    "offer_builder",
+    "hook_generator",
+    "authority_builder",
+    "funnel_audit"
+  ],
+  "advisor_used": true,
+  "advisor_calls": [],
+  "adversarial_review": {
+    "skeptic_pass": "completed",
+    "missing_perspective_pass": "completed",
+    "contrarian_pass": "completed",
+    "unresolved_contradictions": 0,
+    "flagged_items": []
+  },
+  "decision_confidence": {
+    "evidence_quality": 25,
+    "source_coverage": 20,
+    "adversarial_survival": 22,
+    "advisor_confirmed": 20,
+    "composite": 87
+  },
+  "tool_health": {
+    "advisor_available": true,
+    "validator_available": true,
+    "schema_validation_passed": true
+  },
+  "artifacts_produced": [],
+  "schema_version": "v8"
+}
