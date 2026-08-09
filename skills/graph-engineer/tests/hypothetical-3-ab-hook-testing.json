@@ -1,0 +1,98 @@
+{
+  "schema_version": "v1",
+  "name": "ab-hook-testing",
+  "description": "Generate parallel A/B hook variants for the ecc-hormozi-funnel skill, review each independently for compliance and evidence, and gate human approval before sending to outreach",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-campaign] --> VA[generate-variant-a]\n  Plan --> VB[generate-variant-b]\n  Plan --> VC[generate-variant-c]\n  VA --> RevComp[review-compliance]\n  VB --> RevComp\n  VC --> RevComp\n  VA --> RevBrand[review-brand-fit]\n  VB --> RevBrand\n  VC --> RevBrand\n  RevComp --> Syn[synthesize-variants]\n  RevBrand --> Syn\n  RevComp -.->|failure| VA\n  RevComp -.->|failure| VB\n  RevComp -.->|failure| VC\n  Syn --> Gate[human-gate-send]\n```",
+  "nodes": [
+    {
+      "id": "plan-campaign",
+      "type": "planner",
+      "responsibility": "Define the outreach campaign objective and creative constraints for hook generation",
+      "inputs": [],
+      "outputs": ["campaign-brief.json", "creative-constraints.json"]
+    },
+    {
+      "id": "generate-variant-a",
+      "type": "worker",
+      "responsibility": "Generate hook variant A using a bold value-proposition angle",
+      "inputs": ["plan-campaign"],
+      "outputs": ["variant-a.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "generate-variant-b",
+      "type": "worker",
+      "responsibility": "Generate hook variant B using an emotional pain-point angle",
+      "inputs": ["plan-campaign"],
+      "outputs": ["variant-b.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "generate-variant-c",
+      "type": "worker",
+      "responsibility": "Generate hook variant C using a data-driven evidence angle",
+      "inputs": ["plan-campaign"],
+      "outputs": ["variant-c.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "review-compliance",
+      "type": "reviewer",
+      "responsibility": "Check whether all hook variants comply with outreach platform policies and avoid fabricated claims",
+      "inputs": ["generate-variant-a", "generate-variant-b", "generate-variant-c"],
+      "outputs": ["compliance-review.json"],
+      "review_questions": ["Do all hook variants avoid fabricated scarcity, guarantees, prices, and unverified claims per ECC safety rules?"]
+    },
+    {
+      "id": "review-brand-fit",
+      "type": "reviewer",
+      "responsibility": "Check whether all hook variants align with the ECC brand voice and positioning",
+      "inputs": ["generate-variant-a", "generate-variant-b", "generate-variant-c"],
+      "outputs": ["brand-fit-review.json"],
+      "review_questions": ["Do all hook variants align with the established ECC brand voice and avoid generic AI writing tropes?"]
+    },
+    {
+      "id": "synthesize-variants",
+      "type": "synthesizer",
+      "responsibility": "Merge the surviving hook variants into a final ranked test plan",
+      "inputs": ["review-compliance", "review-brand-fit"],
+      "outputs": ["test-plan.json"]
+    },
+    {
+      "id": "human-gate-send",
+      "type": "human-gate",
+      "responsibility": "Human reviews the test plan and approves outreach before any messages are sent",
+      "inputs": ["synthesize-variants"],
+      "outputs": ["budget-approval.json"],
+      "human_gate_action": "send"
+    }
+  ],
+  "edges": [
+    {"from": "plan-campaign", "to": "generate-variant-a", "dependency_reason": "Variant generator needs the campaign brief and constraints to produce a hook", "type": "data"},
+    {"from": "plan-campaign", "to": "generate-variant-b", "dependency_reason": "Variant generator needs the campaign brief and constraints to produce a hook", "type": "data"},
+    {"from": "plan-campaign", "to": "generate-variant-c", "dependency_reason": "Variant generator needs the campaign brief and constraints to produce a hook", "type": "data"},
+    {"from": "generate-variant-a", "to": "review-compliance", "dependency_reason": "Compliance reviewer needs all variants to check for fabricated claims", "type": "data"},
+    {"from": "generate-variant-b", "to": "review-compliance", "dependency_reason": "Compliance reviewer needs all variants to check for fabricated claims", "type": "data"},
+    {"from": "generate-variant-c", "to": "review-compliance", "dependency_reason": "Compliance reviewer needs all variants to check for fabricated claims", "type": "data"},
+    {"from": "generate-variant-a", "to": "review-brand-fit", "dependency_reason": "Brand-fit reviewer needs all variants to check voice alignment", "type": "data"},
+    {"from": "generate-variant-b", "to": "review-brand-fit", "dependency_reason": "Brand-fit reviewer needs all variants to check voice alignment", "type": "data"},
+    {"from": "generate-variant-c", "to": "review-brand-fit", "dependency_reason": "Brand-fit reviewer needs all variants to check voice alignment", "type": "data"},
+    {"from": "review-compliance", "to": "synthesize-variants", "dependency_reason": "Synthesizer needs both review results to determine which variants survived", "type": "data"},
+    {"from": "review-brand-fit", "to": "synthesize-variants", "dependency_reason": "Synthesizer needs both review results to determine which variants survived", "type": "data"},
+    {"from": "review-compliance", "to": "generate-variant-a", "dependency_reason": "Failed compliance review routes feedback back to variant A for revision", "type": "failure"},
+    {"from": "review-compliance", "to": "generate-variant-b", "dependency_reason": "Failed compliance review routes feedback back to variant B for revision", "type": "failure"},
+    {"from": "review-compliance", "to": "generate-variant-c", "dependency_reason": "Failed compliance review routes feedback back to variant C for revision", "type": "failure"},
+    {"from": "review-brand-fit", "to": "generate-variant-a", "dependency_reason": "Failed brand-fit review routes feedback back to variant A for revision", "type": "failure"},
+    {"from": "review-brand-fit", "to": "generate-variant-b", "dependency_reason": "Failed brand-fit review routes feedback back to variant B for revision", "type": "failure"},
+    {"from": "review-brand-fit", "to": "generate-variant-c", "dependency_reason": "Failed brand-fit review routes feedback back to variant C for revision", "type": "failure"},
+    {"from": "synthesize-variants", "to": "human-gate-send", "dependency_reason": "Human needs the test plan to approve outreach before messages are sent", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 2,
+    "max_spawned_agents": 5,
+    "max_total_agents": 10
+  },
+  "human_gates": [
+    {"position": "human-gate-send", "action": "send"}
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": "v1",
+  "name": "codex-ecc-repo-audit",
+  "description": "Parallel audit of the codex-ecc-custom repository across security, architecture, and skill-consistency dimensions with a human gate before deploying fixes",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-audit] --> Sec[audit-security]\n  Plan --> Arch[audit-architecture]\n  Plan --> Skill[audit-skill-consistency]\n  Sec --> Syn[synthesize-findings]\n  Arch --> Syn\n  Skill --> Syn\n  Syn --> Gate[human-gate-deploy]\n```",
+  "nodes": [
+    {
+      "id": "plan-audit",
+      "type": "planner",
+      "responsibility": "Map the codex-ecc-custom repository structure and define audit scope for each dimension",
+      "inputs": [],
+      "outputs": ["repo-map.json", "audit-scope.json"]
+    },
+    {
+      "id": "audit-security",
+      "type": "worker",
+      "responsibility": "Audit the repository for hardcoded secrets, exposed API keys, and insecure file permissions",
+      "inputs": ["plan-audit"],
+      "outputs": ["security-findings.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "audit-architecture",
+      "type": "worker",
+      "responsibility": "Audit the skill directory structure for consistency, missing schemas, and broken references",
+      "inputs": ["plan-audit"],
+      "outputs": ["architecture-findings.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "audit-skill-consistency",
+      "type": "worker",
+      "responsibility": "Audit all skills for cross-IDE compatibility metadata and validation-rules.json presence",
+      "inputs": ["plan-audit"],
+      "outputs": ["consistency-findings.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "review-audit-completeness",
+      "type": "reviewer",
+      "responsibility": "Check whether all three audit outputs cover their stated scope without missing critical areas",
+      "inputs": ["audit-security", "audit-architecture", "audit-skill-consistency"],
+      "outputs": ["completeness-review.json"],
+      "review_questions": ["Do all three audit outputs cover their stated scope completely without missing critical areas?"]
+    },
+    {
+      "id": "synthesize-findings",
+      "type": "synthesizer",
+      "responsibility": "Merge the three audit dimension findings into one prioritized remediation report",
+      "inputs": ["audit-security", "audit-architecture", "audit-skill-consistency", "review-audit-completeness"],
+      "outputs": ["audit-report-merged.json"]
+    },
+    {
+      "id": "human-gate-deploy",
+      "type": "human-gate",
+      "responsibility": "Human reviews the merged audit report and approves which fixes to deploy",
+      "inputs": ["synthesize-findings"],
+      "outputs": ["approval-decision.json"],
+      "human_gate_action": "deploy"
+    }
+  ],
+  "edges": [
+    {"from": "plan-audit", "to": "audit-security", "dependency_reason": "Security auditor needs the repo map to know which files to scan for secrets", "type": "data"},
+    {"from": "plan-audit", "to": "audit-architecture", "dependency_reason": "Architecture auditor needs the repo map to know which skill directories to inspect", "type": "data"},
+    {"from": "plan-audit", "to": "audit-skill-consistency", "dependency_reason": "Consistency auditor needs the repo map to know which skills to check for IDE metadata", "type": "data"},
+    {"from": "audit-security", "to": "synthesize-findings", "dependency_reason": "Synthesizer needs all three dimension findings to produce a merged report", "type": "data"},
+    {"from": "audit-architecture", "to": "synthesize-findings", "dependency_reason": "Synthesizer needs all three dimension findings to produce a merged report", "type": "data"},
+    {"from": "audit-skill-consistency", "to": "synthesize-findings", "dependency_reason": "Synthesizer needs all three dimension findings to produce a merged report", "type": "data"},
+    {"from": "audit-security", "to": "review-audit-completeness", "dependency_reason": "Reviewer needs all audit outputs to check scope coverage", "type": "data"},
+    {"from": "audit-architecture", "to": "review-audit-completeness", "dependency_reason": "Reviewer needs all audit outputs to check scope coverage", "type": "data"},
+    {"from": "audit-skill-consistency", "to": "review-audit-completeness", "dependency_reason": "Reviewer needs all audit outputs to check scope coverage", "type": "data"},
+    {"from": "review-audit-completeness", "to": "synthesize-findings", "dependency_reason": "Synthesizer needs the completeness review report before prioritizing remediation findings", "type": "data"},
+    {"from": "review-audit-completeness", "to": "audit-security", "dependency_reason": "Failed completeness review routes feedback back to the security auditor for re-investigation", "type": "failure"},
+    {"from": "review-audit-completeness", "to": "audit-architecture", "dependency_reason": "Failed completeness review routes feedback back to the architecture auditor for re-investigation", "type": "failure"},
+    {"from": "review-audit-completeness", "to": "audit-skill-consistency", "dependency_reason": "Failed completeness review routes feedback back to the consistency auditor for re-investigation", "type": "failure"},
+    {"from": "synthesize-findings", "to": "human-gate-deploy", "dependency_reason": "Human needs the merged report to decide which fixes to approve for deployment", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 2,
+    "max_spawned_agents": 5,
+    "max_total_agents": 10
+  },
+  "human_gates": [
+    {"position": "human-gate-deploy", "action": "deploy"}
+  ]
+}

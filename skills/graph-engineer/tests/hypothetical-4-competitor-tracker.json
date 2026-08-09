@@ -1,0 +1,98 @@
+{
+  "schema_version": "v1",
+  "name": "competitor-release-tracker",
+  "description": "Track competitor AI coding skill releases in parallel, verify findings independently, and gate human approval before updating the tracking database",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-tracking] --> TC[track-cursor-skills]\n  Plan --> TClaude[track-claude-code-skills]\n  Plan --> TCodex[track-codex-skills]\n  TC --> RevReal[review-realness]\n  TClaude --> RevReal\n  TCodex --> RevReal\n  TC --> RevFresh[review-freshness]\n  TClaude --> RevFresh\n  TCodex --> RevFresh\n  RevReal --> Syn[synthesize-tracking]\n  RevFresh --> Syn\n  RevReal -.->|failure| TC\n  RevReal -.->|failure| TClaude\n  RevReal -.->|failure| TCodex\n  Syn --> Gate[human-gate-update-db]\n```",
+  "nodes": [
+    {
+      "id": "plan-tracking",
+      "type": "planner",
+      "responsibility": "Define which competitors to track and what release signals to monitor",
+      "inputs": [],
+      "outputs": ["tracking-config.json", "competitor-list.json"]
+    },
+    {
+      "id": "track-cursor-skills",
+      "type": "worker",
+      "responsibility": "Track new Cursor skill releases and changelog updates from the last 7 days",
+      "inputs": ["plan-tracking"],
+      "outputs": ["cursor-skills.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "track-claude-code-skills",
+      "type": "worker",
+      "responsibility": "Track new Claude Code skill releases and marketplace additions from the last 7 days",
+      "inputs": ["plan-tracking"],
+      "outputs": ["claude-code-skills.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "track-codex-skills",
+      "type": "worker",
+      "responsibility": "Track new Codex skill releases and plugin updates from the last 7 days",
+      "inputs": ["plan-tracking"],
+      "outputs": ["codex-skills.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "review-realness",
+      "type": "reviewer",
+      "responsibility": "Check whether every tracked release is a real, verifiable release and not a hallucinated entry",
+      "inputs": ["track-cursor-skills", "track-claude-code-skills", "track-codex-skills"],
+      "outputs": ["realness-review.json"],
+      "review_questions": ["Is every tracked competitor release a real, verifiable release with a public URL or changelog entry?"]
+    },
+    {
+      "id": "review-freshness",
+      "type": "reviewer",
+      "responsibility": "Check whether all tracked releases are from the last 7 days and not stale entries",
+      "inputs": ["track-cursor-skills", "track-claude-code-skills", "track-codex-skills"],
+      "outputs": ["freshness-review.json"],
+      "review_questions": ["Are all tracked releases dated within the last 7 days and not duplicates of older entries?"]
+    },
+    {
+      "id": "synthesize-tracking",
+      "type": "synthesizer",
+      "responsibility": "Merge verified tracking data into a single competitor intelligence update",
+      "inputs": ["review-realness", "review-freshness"],
+      "outputs": ["competitor-intel-update.json"]
+    },
+    {
+      "id": "human-gate-update-db",
+      "type": "human-gate",
+      "responsibility": "Human reviews the competitor intelligence update before writing to the tracking database",
+      "inputs": ["synthesize-tracking"],
+      "outputs": ["db-update-approval.json"],
+      "human_gate_action": "deploy"
+    }
+  ],
+  "edges": [
+    {"from": "plan-tracking", "to": "track-cursor-skills", "dependency_reason": "Tracker needs the tracking config to know which Cursor signals to monitor", "type": "data"},
+    {"from": "plan-tracking", "to": "track-claude-code-skills", "dependency_reason": "Tracker needs the tracking config to know which Claude Code signals to monitor", "type": "data"},
+    {"from": "plan-tracking", "to": "track-codex-skills", "dependency_reason": "Tracker needs the tracking config to know which Codex signals to monitor", "type": "data"},
+    {"from": "track-cursor-skills", "to": "review-realness", "dependency_reason": "Reviewer needs all tracking outputs to verify they are real releases", "type": "data"},
+    {"from": "track-claude-code-skills", "to": "review-realness", "dependency_reason": "Reviewer needs all tracking outputs to verify they are real releases", "type": "data"},
+    {"from": "track-codex-skills", "to": "review-realness", "dependency_reason": "Reviewer needs all tracking outputs to verify they are real releases", "type": "data"},
+    {"from": "track-cursor-skills", "to": "review-freshness", "dependency_reason": "Reviewer needs all tracking outputs to check release dates", "type": "data"},
+    {"from": "track-claude-code-skills", "to": "review-freshness", "dependency_reason": "Reviewer needs all tracking outputs to check release dates", "type": "data"},
+    {"from": "track-codex-skills", "to": "review-freshness", "dependency_reason": "Reviewer needs all tracking outputs to check release dates", "type": "data"},
+    {"from": "review-realness", "to": "synthesize-tracking", "dependency_reason": "Synthesizer needs both review results to determine which entries are verified", "type": "data"},
+    {"from": "review-freshness", "to": "synthesize-tracking", "dependency_reason": "Synthesizer needs both review results to determine which entries are verified", "type": "data"},
+    {"from": "review-realness", "to": "track-cursor-skills", "dependency_reason": "Failed realness review routes feedback back to the Cursor tracker for re-verification", "type": "failure"},
+    {"from": "review-realness", "to": "track-claude-code-skills", "dependency_reason": "Failed realness review routes feedback back to the Claude Code tracker for re-verification", "type": "failure"},
+    {"from": "review-realness", "to": "track-codex-skills", "dependency_reason": "Failed realness review routes feedback back to the Codex tracker for re-verification", "type": "failure"},
+    {"from": "review-freshness", "to": "track-cursor-skills", "dependency_reason": "Failed freshness review routes feedback back to the Cursor tracker for re-checking dates", "type": "failure"},
+    {"from": "review-freshness", "to": "track-claude-code-skills", "dependency_reason": "Failed freshness review routes feedback back to the Claude Code tracker for re-checking dates", "type": "failure"},
+    {"from": "review-freshness", "to": "track-codex-skills", "dependency_reason": "Failed freshness review routes feedback back to the Codex tracker for re-checking dates", "type": "failure"},
+    {"from": "synthesize-tracking", "to": "human-gate-update-db", "dependency_reason": "Human needs the verified intelligence update to approve database write", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 2,
+    "max_spawned_agents": 5,
+    "max_total_agents": 12
+  },
+  "human_gates": [
+    {"position": "human-gate-update-db", "action": "deploy"}
+  ]
+}

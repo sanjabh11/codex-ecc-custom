@@ -1,0 +1,81 @@
+{
+  "schema_version": "v1",
+  "name": "test-valid-graph",
+  "description": "A minimal valid graph for testing the validator",
+  "diagram": "Planner → [Worker-A, Worker-B] → Synthesizer → Reviewer → Human-Gate → Publish",
+  "nodes": [
+    {
+      "id": "planner",
+      "type": "planner",
+      "responsibility": "Decompose the objective into two independent sub-tasks",
+      "inputs": [],
+      "outputs": ["task-brief.json"]
+    },
+    {
+      "id": "worker-a",
+      "type": "worker",
+      "responsibility": "Execute sub-task A independently",
+      "inputs": ["planner"],
+      "outputs": ["result-a.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "worker-b",
+      "type": "worker",
+      "responsibility": "Execute sub-task B independently",
+      "inputs": ["planner"],
+      "outputs": ["result-b.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "reviewer-a",
+      "type": "reviewer",
+      "responsibility": "Check whether worker A's output is correct",
+      "inputs": ["worker-a"],
+      "outputs": ["review-a.json"],
+      "review_questions": ["Is the output factually correct?"]
+    },
+    {
+      "id": "reviewer-b",
+      "type": "reviewer",
+      "responsibility": "Check whether worker B's output is correct",
+      "inputs": ["worker-b"],
+      "outputs": ["review-b.json"],
+      "review_questions": ["Is the output complete?"]
+    },
+    {
+      "id": "synthesizer",
+      "type": "synthesizer",
+      "responsibility": "Merge the two reviewed outputs into one final result",
+      "inputs": ["reviewer-a", "reviewer-b"],
+      "outputs": ["final-result.json"]
+    },
+    {
+      "id": "human-gate-publish",
+      "type": "human-gate",
+      "responsibility": "Human reviews the final result before publishing",
+      "inputs": ["synthesizer"],
+      "outputs": ["approval.json"],
+      "human_gate_action": "publish"
+    }
+  ],
+  "edges": [
+    {"from": "planner", "to": "worker-a", "dependency_reason": "Worker A needs the task brief to know what to execute", "type": "data"},
+    {"from": "planner", "to": "worker-b", "dependency_reason": "Worker B needs the task brief to know what to execute", "type": "data"},
+    {"from": "worker-a", "to": "reviewer-a", "dependency_reason": "Reviewer needs the worker output to check correctness", "type": "data"},
+    {"from": "worker-b", "to": "reviewer-b", "dependency_reason": "Reviewer needs the worker output to check completeness", "type": "data"},
+    {"from": "reviewer-a", "to": "worker-a", "dependency_reason": "Failed review routes feedback back to worker A for revision", "type": "failure"},
+    {"from": "reviewer-b", "to": "worker-b", "dependency_reason": "Failed review routes feedback back to worker B for revision", "type": "failure"},
+    {"from": "reviewer-a", "to": "synthesizer", "dependency_reason": "Synthesizer needs reviewed outputs to merge", "type": "data"},
+    {"from": "reviewer-b", "to": "synthesizer", "dependency_reason": "Synthesizer needs reviewed outputs to merge", "type": "data"},
+    {"from": "synthesizer", "to": "human-gate-publish", "dependency_reason": "Human needs the final result to make an approval decision", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 3,
+    "max_spawned_agents": 8,
+    "max_total_agents": 20
+  },
+  "human_gates": [
+    {"position": "human-gate-publish", "action": "publish"}
+  ]
+}

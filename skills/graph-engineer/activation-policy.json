@@ -1,0 +1,43 @@
+{
+  "schema_version": "v1",
+  "logical_host_families": ["Codex", "Claude Code", "Devin", "Agents", "Windsurf", "Gemini"],
+  "discovery_surfaces": [
+    {"id": "codex", "family": "Codex", "path": "~/.codex/skills/graph-engineer"},
+    {"id": "claude", "family": "Claude Code", "path": "~/.claude/skills/graph-engineer"},
+    {"id": "devin", "family": "Devin", "path": "~/.devin/skills/graph-engineer"},
+    {"id": "agents", "family": "Agents", "path": "~/.agents/skills/graph-engineer"},
+    {"id": "codeium-windsurf", "family": "Windsurf", "path": "~/.codeium/windsurf/skills/graph-engineer"},
+    {"id": "windsurf", "family": "Windsurf", "path": "~/.windsurf/skills/graph-engineer"},
+    {"id": "gemini", "family": "Gemini", "path": "~/.gemini/config/skills/graph-engineer"}
+  ],
+  "trigger_phrases": [
+    "agent graph",
+    "graph engineer",
+    "diamond pattern",
+    "agent pipeline design",
+    "multi-agent workflow",
+    "parallel agents",
+    "agent review graph",
+    "job-based nodes",
+    "graph validation",
+    "design an agent graph",
+    "build a reliable agent pipeline"
+  ],
+  "anti_trigger_phrases": [
+    "single-agent",
+    "single agent",
+    "no graph",
+    "linear chain",
+    "no parallelism",
+    "no review",
+    "no planning",
+    "just write",
+    "one-off",
+    "single function",
+    "one line"
+  ],
+  "clarification_phrases": [
+    "not sure whether to use a multi-agent workflow",
+    "should i use a graph or a single agent"
+  ]
+}

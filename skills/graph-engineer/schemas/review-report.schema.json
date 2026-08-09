@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Review Report",
+  "description": "Validates the output of a reviewer node in an agent graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reviewer_id", "reviewed_node_id", "question", "result", "feedback"],
+  "properties": {
+    "reviewer_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ID of the reviewer node that produced this report"
+    },
+    "reviewed_node_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "ID of the node whose output was reviewed"
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The single question this reviewer was asked to evaluate"
+    },
+    "result": {
+      "type": "string",
+      "enum": ["pass", "fail"],
+      "description": "Whether the output passed or failed this review"
+    },
+    "feedback": {
+      "type": "string",
+      "minLength": 1,
+      "description": "If fail: what failed, where, and what to fix. If pass: confirmation."
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "verdict", "source"],
+        "properties": {
+          "claim": { "type": "string" },
+          "verdict": { "type": "string", "enum": ["verified", "unverified", "false"] },
+          "source": { "type": "string" }
+        }
+      },
+      "description": "Optional: evidence checked during review"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the review was performed"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node Definition",
+  "description": "Canonical node definition shared with graph-definition.schema.json",
+  "$ref": "graph-definition.schema.json#/definitions/node"
+}

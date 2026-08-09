@@ -1,0 +1,53 @@
+{
+  "schema_version": "v1",
+  "name": "test-exceeded-cap",
+  "description": "A graph with loop_cap exceeding max_review_rounds — should fail validation",
+  "diagram": "Planner → Worker (loop_cap=10) → Reviewer → Human-Gate → Deploy",
+  "nodes": [
+    {
+      "id": "planner",
+      "type": "planner",
+      "responsibility": "Plan the deployment task",
+      "inputs": [],
+      "outputs": ["deploy-plan.json"]
+    },
+    {
+      "id": "worker",
+      "type": "worker",
+      "responsibility": "Execute the deployment preparation",
+      "inputs": ["planner"],
+      "outputs": ["deployment-package.json"],
+      "loop_cap": 10
+    },
+    {
+      "id": "reviewer",
+      "type": "reviewer",
+      "responsibility": "Check the deployment package for errors",
+      "inputs": ["worker"],
+      "outputs": ["review.json"],
+      "review_questions": ["Is the deployment package error-free?"]
+    },
+    {
+      "id": "human-gate-deploy",
+      "type": "human-gate",
+      "responsibility": "Human reviews before deploying",
+      "inputs": ["reviewer"],
+      "outputs": ["approval.json"],
+      "human_gate_action": "deploy"
+    }
+  ],
+  "edges": [
+    {"from": "planner", "to": "worker", "dependency_reason": "Worker needs the plan to execute", "type": "data"},
+    {"from": "worker", "to": "reviewer", "dependency_reason": "Reviewer needs the output to check it", "type": "data"},
+    {"from": "reviewer", "to": "worker", "dependency_reason": "Failed review routes back to worker", "type": "failure"},
+    {"from": "reviewer", "to": "human-gate-deploy", "dependency_reason": "Human needs the review to decide", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 3,
+    "max_spawned_agents": 8,
+    "max_total_agents": 20
+  },
+  "human_gates": [
+    {"position": "human-gate-deploy", "action": "deploy"}
+  ]
+}

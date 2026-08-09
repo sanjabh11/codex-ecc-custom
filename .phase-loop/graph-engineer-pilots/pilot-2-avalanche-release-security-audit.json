@@ -1,0 +1,27 @@
+{
+  "schema_version": "v1.1",
+  "name": "avalanche-release-security-audit-pilot",
+  "description": "Read-only planning pilot for an Avalanche release/security subgraph",
+  "objective": "Produce a reviewed release-security finding set without deployment authority",
+  "success_criteria": [{"id": "review-pass", "metric": "review_result", "threshold": "pass", "evidence": ["review-report", "source-ledger"]}],
+  "budget": {"max_model_calls": 8, "max_spawned_agents": 2, "max_concurrency": 2, "max_tool_calls": 12, "max_wall_clock_seconds": 300, "max_tokens": 12000, "max_retries": 2, "max_graph_writes": 2},
+  "evidence_policy": {"required_anchors": true, "required_sources": true, "required_evaluator_outputs": true, "min_evidence_count": 1},
+  "diagram": "Planner → Security Worker → Reviewer → Synthesizer → Human Gate; failure → retry; exhaustion → Human Gate",
+  "nodes": [
+    {"id": "plan", "type": "planner", "responsibility": "Define the bounded Avalanche release-security audit brief", "inputs": [], "outputs": ["brief.json"], "input_ports": [], "output_ports": [{"name": "brief", "schema": {"type": "object"}}]},
+    {"id": "worker", "type": "worker", "responsibility": "Inspect release-security evidence without write access", "inputs": ["plan"], "outputs": ["findings.json"], "loop_cap": 2, "input_ports": [{"name": "brief", "from_node": "plan", "from_port": "brief", "schema": {"type": "object"}}], "output_ports": [{"name": "findings", "schema": {"type": "object"}}], "resources": {"writes": ["pilot-2:findings.json"], "locks": ["pilot-2:findings.json"], "isolation": "isolated"}},
+    {"id": "reviewer", "type": "reviewer", "responsibility": "Check whether release-security findings stay evidence-bounded", "reviewed_node_id": "worker", "inputs": ["worker"], "outputs": ["review-report.json"], "review_questions": ["Does every finding preserve the no-deployment-authority boundary?"], "review_report_schema": "schemas/review-report.schema.json", "input_ports": [{"name": "findings", "from_node": "worker", "from_port": "findings", "schema": {"type": "object"}}], "output_ports": [{"name": "review_report", "schema": {"$ref": "schemas/review-report.schema.json"}}]},
+    {"id": "synthesizer", "type": "synthesizer", "responsibility": "Package the reviewed release-security findings", "inputs": ["reviewer"], "outputs": ["final.json"], "input_ports": [{"name": "review", "from_node": "reviewer", "from_port": "review_report", "schema": {"$ref": "schemas/review-report.schema.json"}}], "output_ports": [{"name": "final", "schema": {"type": "object"}}], "resources": {"writes": ["pilot-2:final.json"], "locks": ["pilot-2:final.json"], "isolation": "shared"}},
+    {"id": "human-gate-publish", "type": "human-gate", "responsibility": "Approve the release-security report for sharing", "inputs": ["synthesizer"], "outputs": ["approval.json"], "human_gate_action": "publish", "input_ports": [{"name": "final", "from_node": "synthesizer", "from_port": "final", "schema": {"type": "object"}}], "output_ports": [{"name": "approval", "schema": {"type": "object"}}]}
+  ],
+  "edges": [
+    {"from": "plan", "to": "worker", "from_port": "brief", "to_port": "brief", "dependency_reason": "Worker needs the bounded security brief", "type": "data"},
+    {"from": "worker", "to": "reviewer", "from_port": "findings", "to_port": "findings", "dependency_reason": "Reviewer needs the security findings", "type": "data"},
+    {"from": "reviewer", "to": "worker", "condition": "review_failed", "dependency_reason": "Failed review returns boundary feedback to the worker", "type": "failure"},
+    {"from": "reviewer", "to": "synthesizer", "from_port": "review_report", "to_port": "review", "condition": "review_passed", "dependency_reason": "Synthesizer needs the passing review report", "type": "data"},
+    {"from": "worker", "to": "human-gate-publish", "condition": "retry_exhausted", "dependency_reason": "Exhaustion requires human disposition", "type": "exhaustion"},
+    {"from": "synthesizer", "to": "human-gate-publish", "from_port": "final", "to_port": "final", "dependency_reason": "Human needs the final release-security report", "type": "data"}
+  ],
+  "caps": {"max_review_rounds": 3, "max_spawned_agents": 2, "max_total_agents": 5},
+  "human_gates": [{"position": "human-gate-publish", "action": "publish"}]
+}

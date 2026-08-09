@@ -1,0 +1,98 @@
+{
+  "schema_version": "v1",
+  "name": "vendor-spending-monitor",
+  "description": "Audit vendor spending across API providers, cloud infrastructure, and SaaS subscriptions in parallel, review for anomalies independently, and gate human approval before processing refunds",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-audit] --> AuditAPI[audit-api-costs]\n  Plan --> AuditCloud[audit-cloud-costs]\n  Plan --> AuditSaaS[audit-saas-costs]\n  AuditAPI --> RevAnom[review-anomalies]\n  AuditCloud --> RevAnom\n  AuditSaaS --> RevAnom\n  AuditAPI --> RevBudget[review-budget]\n  AuditCloud --> RevBudget\n  AuditSaaS --> RevBudget\n  RevAnom --> Syn[synthesize-audit]\n  RevBudget --> Syn\n  RevAnom -.->|failure| AuditAPI\n  RevAnom -.->|failure| AuditCloud\n  RevAnom -.->|failure| AuditSaaS\n  Syn --> Gate[human-gate-refund]\n```",
+  "nodes": [
+    {
+      "id": "plan-audit",
+      "type": "planner",
+      "responsibility": "Define the vendor spending audit scope across API, cloud, and SaaS categories",
+      "inputs": [],
+      "outputs": ["audit-scope.json", "budget-thresholds.json"]
+    },
+    {
+      "id": "audit-api-costs",
+      "type": "worker",
+      "responsibility": "Audit API provider spending (xAI, Anthropic, OpenAI) for the current billing period",
+      "inputs": ["plan-audit"],
+      "outputs": ["api-costs.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "audit-cloud-costs",
+      "type": "worker",
+      "responsibility": "Audit cloud infrastructure spending (AWS, GCP) for the current billing period",
+      "inputs": ["plan-audit"],
+      "outputs": ["cloud-costs.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "audit-saas-costs",
+      "type": "worker",
+      "responsibility": "Audit SaaS subscription spending (GitHub, monitoring tools) for the current billing period",
+      "inputs": ["plan-audit"],
+      "outputs": ["saas-costs.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "review-anomalies",
+      "type": "reviewer",
+      "responsibility": "Check whether any vendor spending line item shows an anomalous spike exceeding 2x the prior period",
+      "inputs": ["audit-api-costs", "audit-cloud-costs", "audit-saas-costs"],
+      "outputs": ["anomaly-review.json"],
+      "review_questions": ["Does any vendor spending line item show a spike exceeding 2x the prior billing period that warrants investigation?"]
+    },
+    {
+      "id": "review-budget",
+      "type": "reviewer",
+      "responsibility": "Check whether total vendor spending is within the defined budget thresholds",
+      "inputs": ["audit-api-costs", "audit-cloud-costs", "audit-saas-costs"],
+      "outputs": ["budget-review.json"],
+      "review_questions": ["Is total vendor spending within the defined budget thresholds for each category?"]
+    },
+    {
+      "id": "synthesize-audit",
+      "type": "synthesizer",
+      "responsibility": "Merge the anomaly and budget reviews into a single spending report with refund recommendations",
+      "inputs": ["review-anomalies", "review-budget"],
+      "outputs": ["spending-report.json"]
+    },
+    {
+      "id": "human-gate-refund",
+      "type": "human-gate",
+      "responsibility": "Human reviews the spending report and approves any refund actions before processing",
+      "inputs": ["synthesize-audit"],
+      "outputs": ["refund-approval.json"],
+      "human_gate_action": "refund"
+    }
+  ],
+  "edges": [
+    {"from": "plan-audit", "to": "audit-api-costs", "dependency_reason": "API auditor needs the audit scope and budget thresholds to know what to check", "type": "data"},
+    {"from": "plan-audit", "to": "audit-cloud-costs", "dependency_reason": "Cloud auditor needs the audit scope and budget thresholds to know what to check", "type": "data"},
+    {"from": "plan-audit", "to": "audit-saas-costs", "dependency_reason": "SaaS auditor needs the audit scope and budget thresholds to know what to check", "type": "data"},
+    {"from": "audit-api-costs", "to": "review-anomalies", "dependency_reason": "Anomaly reviewer needs all cost data to identify spending spikes", "type": "data"},
+    {"from": "audit-cloud-costs", "to": "review-anomalies", "dependency_reason": "Anomaly reviewer needs all cost data to identify spending spikes", "type": "data"},
+    {"from": "audit-saas-costs", "to": "review-anomalies", "dependency_reason": "Anomaly reviewer needs all cost data to identify spending spikes", "type": "data"},
+    {"from": "audit-api-costs", "to": "review-budget", "dependency_reason": "Budget reviewer needs all cost data to check threshold compliance", "type": "data"},
+    {"from": "audit-cloud-costs", "to": "review-budget", "dependency_reason": "Budget reviewer needs all cost data to check threshold compliance", "type": "data"},
+    {"from": "audit-saas-costs", "to": "review-budget", "dependency_reason": "Budget reviewer needs all cost data to check threshold compliance", "type": "data"},
+    {"from": "review-anomalies", "to": "synthesize-audit", "dependency_reason": "Synthesizer needs both review results to produce a combined spending report", "type": "data"},
+    {"from": "review-budget", "to": "synthesize-audit", "dependency_reason": "Synthesizer needs both review results to produce a combined spending report", "type": "data"},
+    {"from": "review-anomalies", "to": "audit-api-costs", "dependency_reason": "Failed anomaly review routes feedback back to the API auditor for re-investigation", "type": "failure"},
+    {"from": "review-anomalies", "to": "audit-cloud-costs", "dependency_reason": "Failed anomaly review routes feedback back to the cloud auditor for re-investigation", "type": "failure"},
+    {"from": "review-anomalies", "to": "audit-saas-costs", "dependency_reason": "Failed anomaly review routes feedback back to the SaaS auditor for re-investigation", "type": "failure"},
+    {"from": "review-budget", "to": "audit-api-costs", "dependency_reason": "Failed budget review routes feedback back to the API auditor for re-checking thresholds", "type": "failure"},
+    {"from": "review-budget", "to": "audit-cloud-costs", "dependency_reason": "Failed budget review routes feedback back to the cloud auditor for re-checking thresholds", "type": "failure"},
+    {"from": "review-budget", "to": "audit-saas-costs", "dependency_reason": "Failed budget review routes feedback back to the SaaS auditor for re-checking thresholds", "type": "failure"},
+    {"from": "synthesize-audit", "to": "human-gate-refund", "dependency_reason": "Human needs the spending report to approve any refund actions before money is moved", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 2,
+    "max_spawned_agents": 5,
+    "max_total_agents": 12
+  },
+  "human_gates": [
+    {"position": "human-gate-refund", "action": "refund"}
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Graph Engineer Runtime Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "graph_sha256",
+    "runtime_sha256",
+    "issued_at",
+    "expires_at",
+    "revoked",
+    "runtime_profile",
+    "runtime_identity",
+    "tool_snapshot",
+    "approval_binding"
+  ],
+  "properties": {
+    "manifest_version": { "type": "string", "const": "v1" },
+    "graph_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "runtime_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "issued_at": { "type": "string", "minLength": 1 },
+    "expires_at": { "type": "string", "minLength": 1 },
+    "revoked": { "type": "boolean" },
+    "revocation_reason": { "type": "string" },
+    "runtime_profile": { "type": "string", "minLength": 1 },
+    "runtime_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "python", "executable"],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1 },
+        "python": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+        "executable": { "type": "string", "minLength": 1 }
+      }
+    },
+    "tool_snapshot": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "available", "version"],
+        "properties": {
+          "category": { "type": "string", "enum": ["core", "workflow", "advisory", "unknown"] },
+          "available": { "type": "boolean" },
+          "version": { "type": ["array", "null"], "items": { "type": "integer", "minimum": 0 }, "minItems": 1, "maxItems": 4 }
+        }
+      }
+    },
+    "approval_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "graph_sha256", "artifact_digest", "action", "target", "approver", "decision", "approved_at", "expires_at"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "graph_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "artifact_digest": { "type": "string", "minLength": 1 },
+        "action": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "approver": { "type": "string", "minLength": 1 },
+        "decision": { "type": "string", "enum": ["approved", "rejected", "aborted"] },
+        "approved_at": { "type": "string", "minLength": 1 },
+        "expires_at": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

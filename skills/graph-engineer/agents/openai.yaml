@@ -1,0 +1,7 @@
+interface:
+  display_name: "Graph Engineer"
+  short_description: "Implements reliable AI agent graphs with job-based nodes, diamond parallelism, independent reviews, explicit failure paths, and human gates"
+  default_prompt: "Use $graph-engineer to preflight whether a graph is justified, draw the graph, validate explicit input/output contracts and topology, route bounded failures, map truthful runtime dependencies, and gate irreversible actions."
+
+policy:
+  allow_implicit_invocation: true

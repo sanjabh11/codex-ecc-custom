@@ -1,0 +1,31 @@
+{
+  "schema_version": "v1",
+  "description": "Machine-readable validation rules for graph-engineer skill validator",
+  "rules": {
+    "max_review_rounds": 3,
+    "max_spawned_agents": 8,
+    "max_total_agents": 20,
+    "one_writer_per_file": true,
+    "require_diagram": true,
+    "require_dependency_reason": true,
+    "require_reviewer_for_worker": true,
+    "require_failure_path_for_reviewer": true,
+    "require_human_gate_for_actions": ["publish", "send", "refund", "invoice", "deploy", "delete"],
+    "fake_edge_patterns": ["related", "flows naturally", "next step", "sequential", "just because"],
+    "valid_node_types": ["planner", "worker", "reviewer", "synthesizer", "human-gate"],
+    "valid_edge_types": ["data", "control", "failure", "exhaustion"],
+    "max_responsibility_length": 200,
+    "max_reviewers_per_node": 5,
+    "min_reviewers_per_worker": 1,
+    "require_one_question_per_reviewer": true,
+    "require_structural_reachability": true,
+    "require_data_control_acyclic": true,
+    "runtime_refs_require_explicit_root": true,
+    "require_explicit_exhaustion_for_v11": true,
+    "tool_policy": {
+      "core": ["python3", "python", "cat", "git", "ls", "grep", "find", "head", "tail", "wc", "sort", "diff", "test", "mkdir", "cp", "mv", "echo"],
+      "workflow": ["pytest", "cargo", "npm", "docker", "go", "gradle", "dotnet", "ruby"],
+      "advisory": ["cass", "cm", "dcg", "ubs", "gh", "br", "bv", "graphify"]
+    }
+  }
+}

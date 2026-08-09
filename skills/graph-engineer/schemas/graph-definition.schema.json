@@ -1,0 +1,313 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Graph Definition",
+  "description": "Validates an AI agent graph definition following the Graph Engineer principles",
+  "type": "object",
+  "required": ["schema_version", "name", "description", "diagram", "nodes", "edges", "caps", "human_gates"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable graph name"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What this graph accomplishes"
+    },
+    "diagram": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Mermaid or ASCII diagram of the graph. Must not be empty."
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["v1", "v1.1"],
+      "description": "Graph contract version. v1.1 adds objective, success_criteria, budget, and evidence_policy."
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "description": "v1.1: The measurable objective this graph accomplishes"
+    },
+    "success_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "metric", "threshold", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "metric": { "type": "string", "minLength": 1 },
+          "threshold": { "type": "string", "minLength": 1 },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "description": "v1.1: Measurable success criteria — each must be a concrete, verifiable statement"
+    },
+    "budget": {
+      "type": "object",
+      "description": "v1.1: Resource budget caps for graph execution",
+      "properties": {
+        "max_model_calls": { "type": "integer", "minimum": 1 },
+        "max_spawned_agents": { "type": "integer", "minimum": 1 },
+        "max_concurrency": { "type": "integer", "minimum": 1 },
+        "max_tool_calls": { "type": "integer", "minimum": 1 },
+        "max_wall_clock_seconds": { "type": "integer", "minimum": 1 },
+        "max_tokens": { "type": "integer", "minimum": 1 },
+        "max_cost_usd": { "type": "number", "minimum": 0 },
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "max_graph_writes": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "evidence_policy": {
+      "type": "object",
+      "description": "v1.1: What evidence must be captured for auditability",
+      "minProperties": 1,
+      "properties": {
+        "required_anchors": { "type": "boolean" },
+        "required_sources": { "type": "boolean" },
+        "required_evaluator_outputs": { "type": "boolean" },
+        "min_evidence_count": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/edge" }
+    },
+    "caps": {
+      "type": "object",
+      "required": ["max_review_rounds", "max_spawned_agents", "max_total_agents"],
+      "additionalProperties": false,
+      "properties": {
+        "max_review_rounds": { "type": "integer", "minimum": 1, "default": 3 },
+        "max_spawned_agents": { "type": "integer", "minimum": 1, "default": 8 },
+        "max_total_agents": { "type": "integer", "minimum": 1, "default": 20 }
+      }
+    },
+    "joins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "expected_count", "partial_failure"],
+        "additionalProperties": false,
+        "properties": {
+          "node_id": { "type": "string", "minLength": 1 },
+          "expected_count": { "type": "integer", "minimum": 1 },
+          "partial_failure": { "type": "string", "enum": ["block", "human_gate", "continue_with_warning"] },
+          "human_gate_id": { "type": "string", "minLength": 1 }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "partial_failure": { "const": "human_gate" } } },
+            "then": { "required": ["human_gate_id"] }
+          }
+        ]
+      }
+    },
+    "entry_node": {
+      "type": "string",
+      "description": "Optional explicit data/control entry node; otherwise planner roots are inferred"
+    },
+    "runtime_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]+$"
+      },
+      "description": "Optional local skill directory names to verify with --runtime-root"
+    },
+    "human_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["position", "action"],
+        "properties": {
+          "position": { "type": "string", "description": "Node ID where the gate is placed" },
+          "action": { "type": "string", "description": "What action requires approval" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "schema_version": { "const": "v1.1" } } },
+      "then": {
+        "required": ["objective", "success_criteria", "budget", "evidence_policy"],
+        "properties": {
+          "budget": {
+            "required": ["max_model_calls", "max_spawned_agents", "max_concurrency", "max_tool_calls", "max_wall_clock_seconds", "max_tokens", "max_retries", "max_graph_writes"]
+          },
+          "nodes": {
+            "items": { "$ref": "#/definitions/node_v11" }
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "responsibility", "inputs", "outputs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": ["planner", "worker", "reviewer", "synthesizer", "human-gate"]
+        },
+        "responsibility": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One sentence describing the single job this node performs"
+        },
+        "inputs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Node IDs whose outputs this node consumes"
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Description of what this node produces — must not be empty"
+        },
+        "review_questions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Only for reviewer nodes — the single question this reviewer asks"
+        },
+        "loop_cap": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Only for worker nodes with review loops — max retries"
+        },
+        "human_gate_action": {
+          "type": "string",
+          "description": "Only for human-gate nodes — what action this gate precedes"
+        },
+        "reviewed_node_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "v1.1 reviewer binding to the exact worker under review"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              {
+                "type": "object",
+                "required": ["name", "required"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "required": { "type": "boolean" },
+                  "health_command": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+                  "min_version": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          },
+          "description": "Runtime tools this node depends on — gated by auto-revocation taxonomy"
+        },
+        "input_ports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "from_node", "schema"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "from_node": { "type": "string", "minLength": 1 },
+              "from_port": { "type": "string", "minLength": 1 },
+              "schema": { "type": "object" }
+            }
+          }
+        },
+        "output_ports": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "schema"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "schema": { "type": "object" }
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "reads": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+            "writes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+            "locks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+            "isolation": { "type": "string", "enum": ["shared", "isolated"] }
+          }
+        },
+        "review_report_schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract": {
+          "type": "object",
+          "description": "Optional precondition, postcondition, and failure-output contract for the node",
+          "properties": {
+            "preconditions": { "type": "string", "minLength": 1 },
+            "postconditions": { "type": "string", "minLength": 1 },
+            "failure_output": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to", "dependency_reason", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string", "description": "Source node ID" },
+        "to": { "type": "string", "description": "Target node ID" },
+        "dependency_reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "WHY the downstream node needs the upstream output"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["data", "control", "failure", "exhaustion"]
+        },
+        "from_port": { "type": "string", "minLength": 1 },
+        "to_port": { "type": "string", "minLength": 1 },
+        "condition": { "type": "string", "minLength": 1 }
+      }
+    },
+    "node_v11": {
+      "allOf": [
+        { "$ref": "#/definitions/node" },
+        { "required": ["input_ports", "output_ports"] },
+        {
+          "if": { "properties": { "type": { "const": "reviewer" } } },
+          "then": { "required": ["reviewed_node_id"] }
+        }
+      ]
+    }
+  }
+}

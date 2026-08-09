@@ -1,0 +1,15 @@
+{
+  "name": "graph-engineer",
+  "owner": {
+    "name": "sanjayb"
+  },
+  "metadata": {
+    "description": "Design and validate reliable AI agent graphs with diamond parallelism, independent reviews, and human gates"
+  },
+  "plugins": [
+    {
+      "name": "graph-engineer",
+      "source": "."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "reviewer_id": "reviewer",
+  "reviewed_node_id": "worker",
+  "question": "Does the surface ledger avoid treating symlink discovery as host runtime proof?",
+  "result": "pass",
+  "feedback": "Pilot harness review confirms physical discovery and logical host mapping are treated separately from authenticated loader execution.",
+  "evidence": [{"claim": "The graph's objective is discovery reporting, not host execution proof.", "verdict": "verified", "source": "pilot-3-cross-surface-discovery-audit.json"}],
+  "timestamp": "2026-08-09T00:00:00Z"
+}

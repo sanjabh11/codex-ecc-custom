@@ -1,0 +1,41 @@
+{
+  "decision": "available",
+  "graph_sha256": "a5e1c325080a085d686934810434bbf4082fa55614aed1ddf103b1872d51c35c",
+  "runtime_sha256": "a451a25424ee154eb8d6d36be1f6cce37f9874422251947972a4e073eb661ca5",
+  "runtime_identity": {
+    "platform": "darwin",
+    "python": "3.14",
+    "executable": "python3.14"
+  },
+  "tool_snapshot": {},
+  "timestamp": "2026-08-09T13:54:29.127950Z",
+  "tool_checks": [],
+  "blocked_tools": [],
+  "degraded_tools": [],
+  "runtime_refs_check": {
+    "status": "ok",
+    "missing": [],
+    "checked": 0,
+    "targets": []
+  },
+  "manifest_check": {
+    "status": "ok",
+    "manifest_version": "v1",
+    "approval": {
+      "run_id": "pilot-1-ecc",
+      "graph_sha256": "a5e1c325080a085d686934810434bbf4082fa55614aed1ddf103b1872d51c35c",
+      "artifact_digest": "sha256:pilot-1-final",
+      "action": "publish",
+      "target": "human-gate-publish",
+      "approver": "synthetic-pilot-harness",
+      "decision": "approved",
+      "approved_at": "2026-08-09T13:54:13.450704Z",
+      "expires_at": "2026-08-09T14:54:13.450704Z"
+    }
+  },
+  "limitations": [
+    "This gate cannot terminate already-running processes or bypassed invocations.",
+    "This gate is a pre-run decision boundary, not a graph executor or process supervisor.",
+    "Host-specific loader execution remains unproven until a supported host smoke test runs."
+  ]
+}

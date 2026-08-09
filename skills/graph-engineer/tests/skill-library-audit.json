@@ -1,0 +1,104 @@
+{
+  "schema_version": "v1",
+  "name": "skill-library-consistency-audit",
+  "description": "Audit an ECC skill library across activation, runtime compatibility, and evidence-contract dimensions before approving deployment of fixes",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-skill-audit] --> Activation[audit-skill-activation]\n  Plan --> Runtime[audit-runtime-compatibility]\n  Plan --> Evidence[audit-evidence-contract]\n  Activation --> Review[review-audit-completeness]\n  Runtime --> Review\n  Evidence --> Review\n  Review --> Synthesize[synthesize-audit-findings]\n  Synthesize --> Gate[human-gate-deploy]\n  Review -.->|failure| Activation\n  Review -.->|failure| Runtime\n  Review -.->|failure| Evidence\n```",
+  "runtime_refs": ["ecc-skill-health", "ecc-code-review", "ecc-eval"],
+  "nodes": [
+    {
+      "id": "plan-skill-audit",
+      "type": "planner",
+      "responsibility": "Define the skill-library audit scope and acceptance criteria for each independent dimension",
+      "inputs": [],
+      "outputs": ["skill-audit-scope.json"],
+      "contract": {
+        "preconditions": "Repository root and target skill set are known",
+        "postconditions": "Each audit worker has one bounded dimension and shared scope",
+        "failure_output": "Unresolved scope questions for the human"
+      }
+    },
+    {
+      "id": "audit-skill-activation",
+      "type": "worker",
+      "responsibility": "Audit skill frontmatter and trigger boundaries for false negatives and false positives",
+      "inputs": ["plan-skill-audit"],
+      "outputs": ["activation-findings.json"],
+      "loop_cap": 2,
+      "contract": {
+        "preconditions": "Audit scope identifies target skill metadata",
+        "postconditions": "Every finding cites a skill path and trigger decision",
+        "failure_output": "Structured missing-evidence list"
+      }
+    },
+    {
+      "id": "audit-runtime-compatibility",
+      "type": "worker",
+      "responsibility": "Audit runtime metadata and referenced skills for cross-IDE compatibility and availability",
+      "inputs": ["plan-skill-audit"],
+      "outputs": ["runtime-findings.json"],
+      "loop_cap": 2,
+      "contract": {
+        "preconditions": "Local runtime root and supported platforms are declared",
+        "postconditions": "Each dependency is classified as available, optional, or unavailable",
+        "failure_output": "Structured dependency-resolution failures"
+      }
+    },
+    {
+      "id": "audit-evidence-contract",
+      "type": "worker",
+      "responsibility": "Audit skill tests and evidence artifacts for reproducible acceptance criteria",
+      "inputs": ["plan-skill-audit"],
+      "outputs": ["evidence-findings.json"],
+      "loop_cap": 2,
+      "contract": {
+        "preconditions": "Target skill test and evidence surfaces are readable",
+        "postconditions": "Every gap maps to a command, fixture, or artifact",
+        "failure_output": "Structured proof-boundary gaps"
+      }
+    },
+    {
+      "id": "review-audit-completeness",
+      "type": "reviewer",
+      "responsibility": "Check whether all three audit outputs cover their assigned scope with evidence",
+      "inputs": ["audit-skill-activation", "audit-runtime-compatibility", "audit-evidence-contract"],
+      "outputs": ["completeness-review.json"],
+      "review_questions": ["Does every audit dimension contain complete, path-cited findings and explicit unavailable-state handling?"]
+    },
+    {
+      "id": "synthesize-audit-findings",
+      "type": "synthesizer",
+      "responsibility": "Merge verified audit findings into a prioritized remediation report",
+      "inputs": ["review-audit-completeness"],
+      "outputs": ["skill-audit-report.json"]
+    },
+    {
+      "id": "human-gate-deploy",
+      "type": "human-gate",
+      "responsibility": "Human reviews the remediation report and approves deployment of selected fixes",
+      "inputs": ["synthesize-audit-findings"],
+      "outputs": ["deployment-approval.json"],
+      "human_gate_action": "deploy"
+    }
+  ],
+  "edges": [
+    {"from": "plan-skill-audit", "to": "audit-skill-activation", "dependency_reason": "Activation auditor needs the bounded scope and target skill list", "type": "data"},
+    {"from": "plan-skill-audit", "to": "audit-runtime-compatibility", "dependency_reason": "Runtime auditor needs the declared platforms and dependency scope", "type": "data"},
+    {"from": "plan-skill-audit", "to": "audit-evidence-contract", "dependency_reason": "Evidence auditor needs the acceptance criteria and target test surfaces", "type": "data"},
+    {"from": "audit-skill-activation", "to": "review-audit-completeness", "dependency_reason": "Completeness reviewer needs activation findings to verify metadata coverage", "type": "data"},
+    {"from": "audit-runtime-compatibility", "to": "review-audit-completeness", "dependency_reason": "Completeness reviewer needs runtime findings to verify dependency coverage", "type": "data"},
+    {"from": "audit-evidence-contract", "to": "review-audit-completeness", "dependency_reason": "Completeness reviewer needs evidence findings to verify proof coverage", "type": "data"},
+    {"from": "review-audit-completeness", "to": "synthesize-audit-findings", "dependency_reason": "Synthesizer needs the completeness decision before merging findings", "type": "data"},
+    {"from": "review-audit-completeness", "to": "audit-skill-activation", "dependency_reason": "Failed completeness review routes activation gaps back for bounded revision", "type": "failure"},
+    {"from": "review-audit-completeness", "to": "audit-runtime-compatibility", "dependency_reason": "Failed completeness review routes runtime gaps back for bounded revision", "type": "failure"},
+    {"from": "review-audit-completeness", "to": "audit-evidence-contract", "dependency_reason": "Failed completeness review routes proof gaps back for bounded revision", "type": "failure"},
+    {"from": "synthesize-audit-findings", "to": "human-gate-deploy", "dependency_reason": "Human gate needs the prioritized report before deployment approval", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 2,
+    "max_spawned_agents": 5,
+    "max_total_agents": 10
+  },
+  "human_gates": [
+    {"position": "human-gate-deploy", "action": "deploy"}
+  ]
+}

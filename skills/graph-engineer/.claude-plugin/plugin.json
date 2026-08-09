@@ -1,0 +1,11 @@
+{
+  "name": "graph-engineer",
+  "description": "Design and validate reliable AI agent graphs with diamond parallelism, independent reviews, and human gates",
+  "version": "1.1.0",
+  "author": {
+    "name": "sanjayb"
+  },
+  "license": "MIT",
+  "keywords": ["agent-graph", "diamond-pattern", "parallelism", "reviewers", "human-gate", "reliability"],
+  "skills": ["./"]
+}

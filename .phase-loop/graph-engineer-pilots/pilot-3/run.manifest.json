@@ -1,0 +1,26 @@
+{
+  "manifest_version": "v1",
+  "graph_sha256": "8da2d6e70586aef1970f4180b0a1ad3d8d17bf282552a5b01f5cf8ceafcb9c89",
+  "runtime_sha256": "a451a25424ee154eb8d6d36be1f6cce37f9874422251947972a4e073eb661ca5",
+  "issued_at": "2026-08-09T13:54:13.450022Z",
+  "expires_at": "2026-08-09T14:54:13.450022Z",
+  "revoked": false,
+  "runtime_profile": "pilot-local",
+  "runtime_identity": {
+    "platform": "darwin",
+    "python": "3.14",
+    "executable": "python3.14"
+  },
+  "tool_snapshot": {},
+  "approval_binding": {
+    "run_id": "pilot-3-surfaces",
+    "graph_sha256": "8da2d6e70586aef1970f4180b0a1ad3d8d17bf282552a5b01f5cf8ceafcb9c89",
+    "artifact_digest": "sha256:pilot-3-final",
+    "action": "publish",
+    "target": "human-gate-publish",
+    "approver": "synthetic-pilot-harness",
+    "decision": "approved",
+    "approved_at": "2026-08-09T13:54:13.450022Z",
+    "expires_at": "2026-08-09T14:54:13.450022Z"
+  }
+}

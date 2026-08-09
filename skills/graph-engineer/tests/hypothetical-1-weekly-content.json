@@ -1,0 +1,135 @@
+{
+  "schema_version": "v1",
+  "name": "weekly-content-pipeline",
+  "description": "Research, draft, review, and publish a weekly marketing blog post for the codex-ecc-custom repo using diamond parallelism for research and independent reviewers",
+  "diagram": "```mermaid\ngraph TD\n  Plan[plan-content] --> RC[research-competitors]\n  Plan --> RA[research-audience]\n  Plan --> RT[research-trends]\n  RC --> Syn[synthesize-research]\n  RA --> Syn\n  RT --> Syn\n  Syn --> Draft[draft-post]\n  Draft --> RevC[review-correctness]\n  Draft --> RevCur[review-currency]\n  Draft --> RevSrc[review-source]\n  RevC --> SynRev[synthesize-reviews]\n  RevCur --> SynRev\n  RevSrc --> SynRev\n  RevC -.->|failure| Draft\n  RevCur -.->|failure| Draft\n  RevSrc -.->|failure| Draft\n  SynRev --> Gate[human-gate-publish]\n```",
+  "nodes": [
+    {
+      "id": "plan-content",
+      "type": "planner",
+      "responsibility": "Decompose the weekly blog post objective into research angles targeting ECC skill users",
+      "inputs": [],
+      "outputs": ["research-brief.json", "draft-spec.json", "review-criteria.json"]
+    },
+    {
+      "id": "research-competitors",
+      "type": "worker",
+      "responsibility": "Research competitor AI coding skill marketplaces and their positioning",
+      "inputs": ["plan-content"],
+      "outputs": ["competitor-research.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "research-audience",
+      "type": "worker",
+      "responsibility": "Research target audience pain points around multi-IDE skill compatibility",
+      "inputs": ["plan-content"],
+      "outputs": ["audience-research.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "research-trends",
+      "type": "worker",
+      "responsibility": "Research current AI agent graph trends and news from the last 30 days",
+      "inputs": ["plan-content"],
+      "outputs": ["trends-research.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "review-research-quality",
+      "type": "reviewer",
+      "responsibility": "Check whether all three research outputs contain verifiable data with real sources",
+      "inputs": ["research-competitors", "research-audience", "research-trends"],
+      "outputs": ["research-quality-review.json"],
+      "review_questions": ["Do all three research outputs contain verifiable data with real, accessible sources?"]
+    },
+    {
+      "id": "synthesize-research",
+      "type": "synthesizer",
+      "responsibility": "Merge the three research outputs into one research brief for the drafter",
+      "inputs": ["research-competitors", "research-audience", "research-trends", "review-research-quality"],
+      "outputs": ["research-brief-merged.json"]
+    },
+    {
+      "id": "draft-post",
+      "type": "worker",
+      "responsibility": "Write the blog post draft using the merged research brief",
+      "inputs": ["synthesize-research"],
+      "outputs": ["draft-post.md"],
+      "loop_cap": 3
+    },
+    {
+      "id": "review-correctness",
+      "type": "reviewer",
+      "responsibility": "Check whether every factual claim about ECC skills in the draft is verifiable",
+      "inputs": ["draft-post"],
+      "outputs": ["correctness-review.json"],
+      "review_questions": ["Is every factual claim about ECC skills, features, and compatibility verifiable with a cited source?"]
+    },
+    {
+      "id": "review-currency",
+      "type": "reviewer",
+      "responsibility": "Check whether all information about IDE compatibility is current as of July 2026",
+      "inputs": ["draft-post"],
+      "outputs": ["currency-review.json"],
+      "review_questions": ["Is all IDE compatibility information current as of July 2026 (Windsurf, Devin, Autogravity, Codex)?"]
+    },
+    {
+      "id": "review-source",
+      "type": "reviewer",
+      "responsibility": "Check whether every cited URL and X thread reference in the draft is real and accessible",
+      "inputs": ["draft-post"],
+      "outputs": ["source-review.json"],
+      "review_questions": ["Is every cited URL, X thread, and documentation link in the draft a real, accessible resource?"]
+    },
+    {
+      "id": "synthesize-reviews",
+      "type": "synthesizer",
+      "responsibility": "Merge the three review results into a single pass-or-fail decision with structured feedback",
+      "inputs": ["review-correctness", "review-currency", "review-source"],
+      "outputs": ["review-summary.json"]
+    },
+    {
+      "id": "human-gate-publish",
+      "type": "human-gate",
+      "responsibility": "Human reviews the final draft and review summary before publishing to the blog",
+      "inputs": ["synthesize-reviews"],
+      "outputs": ["approval-decision.json"],
+      "human_gate_action": "publish"
+    }
+  ],
+  "edges": [
+    {"from": "plan-content", "to": "research-competitors", "dependency_reason": "Workers need the research brief to know what competitor angles to research", "type": "data"},
+    {"from": "plan-content", "to": "research-audience", "dependency_reason": "Workers need the research brief to know what audience pain points to research", "type": "data"},
+    {"from": "plan-content", "to": "research-trends", "dependency_reason": "Workers need the research brief to know what trend topics to research", "type": "data"},
+    {"from": "research-competitors", "to": "synthesize-research", "dependency_reason": "Synthesizer needs all three research outputs to merge into one brief", "type": "data"},
+    {"from": "research-audience", "to": "synthesize-research", "dependency_reason": "Synthesizer needs all three research outputs to merge into one brief", "type": "data"},
+    {"from": "research-trends", "to": "synthesize-research", "dependency_reason": "Synthesizer needs all three research outputs to merge into one brief", "type": "data"},
+    {"from": "research-competitors", "to": "review-research-quality", "dependency_reason": "Reviewer needs all research outputs to check source verifiability", "type": "data"},
+    {"from": "research-audience", "to": "review-research-quality", "dependency_reason": "Reviewer needs all research outputs to check source verifiability", "type": "data"},
+    {"from": "research-trends", "to": "review-research-quality", "dependency_reason": "Reviewer needs all research outputs to check source verifiability", "type": "data"},
+    {"from": "review-research-quality", "to": "synthesize-research", "dependency_reason": "Synthesizer needs the quality review report before accepting the merged research brief", "type": "data"},
+    {"from": "review-research-quality", "to": "research-competitors", "dependency_reason": "Failed quality review routes feedback back to the competitor researcher for revision", "type": "failure"},
+    {"from": "review-research-quality", "to": "research-audience", "dependency_reason": "Failed quality review routes feedback back to the audience researcher for revision", "type": "failure"},
+    {"from": "review-research-quality", "to": "research-trends", "dependency_reason": "Failed quality review routes feedback back to the trends researcher for revision", "type": "failure"},
+    {"from": "synthesize-research", "to": "draft-post", "dependency_reason": "Drafter needs the merged research brief to write an informed post", "type": "data"},
+    {"from": "draft-post", "to": "review-correctness", "dependency_reason": "Reviewer needs the draft to verify factual claims", "type": "data"},
+    {"from": "draft-post", "to": "review-currency", "dependency_reason": "Reviewer needs the draft to check information freshness", "type": "data"},
+    {"from": "draft-post", "to": "review-source", "dependency_reason": "Reviewer needs the draft to check source validity", "type": "data"},
+    {"from": "review-correctness", "to": "synthesize-reviews", "dependency_reason": "Synthesizer needs all review results to make a pass/fail decision", "type": "data"},
+    {"from": "review-currency", "to": "synthesize-reviews", "dependency_reason": "Synthesizer needs all review results to make a pass/fail decision", "type": "data"},
+    {"from": "review-source", "to": "synthesize-reviews", "dependency_reason": "Synthesizer needs all review results to make a pass/fail decision", "type": "data"},
+    {"from": "review-correctness", "to": "draft-post", "dependency_reason": "Failed correctness review routes structured feedback back to the drafter for revision", "type": "failure"},
+    {"from": "review-currency", "to": "draft-post", "dependency_reason": "Failed currency review routes structured feedback back to the drafter for revision", "type": "failure"},
+    {"from": "review-source", "to": "draft-post", "dependency_reason": "Failed source review routes structured feedback back to the drafter for revision", "type": "failure"},
+    {"from": "synthesize-reviews", "to": "human-gate-publish", "dependency_reason": "Human needs the review summary to make an informed approval decision", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 3,
+    "max_spawned_agents": 8,
+    "max_total_agents": 20
+  },
+  "human_gates": [
+    {"position": "human-gate-publish", "action": "publish"}
+  ]
+}

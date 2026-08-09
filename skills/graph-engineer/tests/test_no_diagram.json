@@ -1,0 +1,53 @@
+{
+  "schema_version": "v1",
+  "name": "test-no-diagram",
+  "description": "A graph with no diagram field — should fail validation",
+  "diagram": "",
+  "nodes": [
+    {
+      "id": "planner",
+      "type": "planner",
+      "responsibility": "Plan the task",
+      "inputs": [],
+      "outputs": ["plan.json"]
+    },
+    {
+      "id": "worker",
+      "type": "worker",
+      "responsibility": "Execute the task",
+      "inputs": ["planner"],
+      "outputs": ["result.json"],
+      "loop_cap": 2
+    },
+    {
+      "id": "reviewer",
+      "type": "reviewer",
+      "responsibility": "Check the result",
+      "inputs": ["worker"],
+      "outputs": ["review.json"],
+      "review_questions": ["Is the result correct?"]
+    },
+    {
+      "id": "human-gate-publish",
+      "type": "human-gate",
+      "responsibility": "Human reviews before publishing",
+      "inputs": ["reviewer"],
+      "outputs": ["approval.json"],
+      "human_gate_action": "publish"
+    }
+  ],
+  "edges": [
+    {"from": "planner", "to": "worker", "dependency_reason": "Worker needs the plan to execute", "type": "data"},
+    {"from": "worker", "to": "reviewer", "dependency_reason": "Reviewer needs the result to check it", "type": "data"},
+    {"from": "reviewer", "to": "worker", "dependency_reason": "Failed review routes back to worker", "type": "failure"},
+    {"from": "reviewer", "to": "human-gate-publish", "dependency_reason": "Human needs the review to decide", "type": "data"}
+  ],
+  "caps": {
+    "max_review_rounds": 3,
+    "max_spawned_agents": 8,
+    "max_total_agents": 20
+  },
+  "human_gates": [
+    {"position": "human-gate-publish", "action": "publish"}
+  ]
+}
