@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-engineer.local/schemas/evidence-record.schema.json",
   "title": "Graph Engineer Evidence Record",
   "type": "object",
   "additionalProperties": false,
@@ -51,7 +52,10 @@
   "allOf": [
     {
       "if": { "properties": { "event_type": { "enum": ["node_attempt", "review", "gate_decision"] } } },
-      "then": { "required": ["node_id"] }
+      "then": {
+        "required": ["node_id"],
+        "properties": { "node_id": { "type": "string", "minLength": 1 } }
+      }
     },
     {
       "if": { "properties": { "event_type": { "const": "run_started" } } },

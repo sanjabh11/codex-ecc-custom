@@ -33,13 +33,43 @@ class TestEvidenceRecorder(unittest.TestCase):
             root = Path(directory)
             started = self.run_recorder(root, "run-1", "run_started")
             self.assertEqual(started.returncode, 0, started.stderr)
-            attempt = self.run_recorder(root, "run-1", "node_attempt", "--node", "worker-a", "--status", "pass", "--note", "api_key=do-not-store")
-            self.assertEqual(attempt.returncode, 0, attempt.stderr)
+            for node in ("planner", "worker-a", "worker-b"):
+                attempt = self.run_recorder(
+                    root, "run-1", "node_attempt", "--node", node,
+                    "--status", "pass",
+                    *(("--note", "api_key=do-not-store") if node == "worker-a" else ()),
+                )
+                self.assertEqual(attempt.returncode, 0, attempt.stderr)
+            for reviewer in ("reviewer-a", "reviewer-b"):
+                review = self.run_recorder(root, "run-1", "review", "--node", reviewer, "--status", "pass")
+                self.assertEqual(review.returncode, 0, review.stderr)
+            synthesizer = self.run_recorder(root, "run-1", "node_attempt", "--node", "synthesizer", "--status", "pass")
+            self.assertEqual(synthesizer.returncode, 0, synthesizer.stderr)
+            binding = json.dumps({
+                "run_id": "run-1",
+                "graph_sha256": json.loads(started.stdout)["graph_sha256"],
+                "artifact_digest": "sha256:run-1",
+                "action": "publish",
+                "target": "human-gate-publish",
+                "approver": "test",
+                "decision": "approved",
+                "approved_at": "2026-08-09T00:00:00Z",
+                "expires_at": "2026-08-10T00:00:00Z",
+            })
+            gate = self.run_recorder(
+                root, "run-1", "gate_decision", "--node", "human-gate-publish",
+                "--status", "pass", "--artifact-digest", "sha256:run-1",
+                "--approval-binding", binding,
+            )
+            self.assertEqual(gate.returncode, 0, gate.stderr)
             finished = self.run_recorder(root, "run-1", "run_finished")
             self.assertEqual(finished.returncode, 0, finished.stderr)
             records = [json.loads(line) for line in (root / "run.jsonl").read_text().splitlines()]
-            self.assertEqual([record["event_type"] for record in records], ["run_started", "node_attempt", "run_finished"])
-            self.assertIn("[REDACTED]", records[1]["note"])
+            self.assertEqual(
+                [record["event_type"] for record in records],
+                ["run_started", "node_attempt", "node_attempt", "node_attempt", "review", "review", "node_attempt", "gate_decision", "run_finished"],
+            )
+            self.assertIn("[REDACTED]", records[2]["note"])
             self.assertNotIn("do-not-store", (root / "run.jsonl").read_text())
             self.assertTrue((root / "run.jsonl.lock").exists())
 
@@ -59,8 +89,13 @@ class TestEvidenceRecorder(unittest.TestCase):
             root = Path(directory)
             started = self.run_recorder(root, "run-3", "run_started")
             self.assertEqual(started.returncode, 0)
+            # G12: gate_decision requires prior node_attempt or review
+            attempt = self.run_recorder(root, "run-3", "node_attempt", "--node", "worker-a", "--status", "pass")
+            self.assertEqual(attempt.returncode, 0, attempt.stderr)
             missing = self.run_recorder(root, "run-3", "gate_decision", "--node", "human-gate-publish", "--status", "pass")
             self.assertNotEqual(missing.returncode, 0)
+            synthesis = self.run_recorder(root, "run-3", "node_attempt", "--node", "synthesizer", "--status", "pass")
+            self.assertEqual(synthesis.returncode, 0, synthesis.stderr)
             binding = json.dumps({
                 "run_id": "run-3",
                 "graph_sha256": json.loads(started.stdout)["graph_sha256"],

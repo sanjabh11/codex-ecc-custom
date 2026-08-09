@@ -14,19 +14,49 @@ DEFAULT_POLICY = {
 
 
 def load_tool_policy(rules_path):
-    """Load the single taxonomy source, falling back only for diagnostics."""
+    """Load the single taxonomy source.
+
+    G14: Fail closed when the policy file is missing, malformed, or incomplete.
+    Previously, this function fell back to DEFAULT_POLICY silently, which is
+    fail-open. Now it raises a ValueError so callers can block execution.
+    """
     try:
         with open(rules_path, encoding="utf-8") as handle:
-            policy = json.load(handle).get("rules", {}).get("tool_policy", {})
-        result = {
-            key: {str(value).strip().lower() for value in policy.get(key, [])}
-            for key in DEFAULT_POLICY
-        }
-        if all(result.values()):
-            return result
-    except (OSError, ValueError, TypeError):
-        pass
-    return DEFAULT_POLICY
+            document = json.load(handle)
+        if not isinstance(document, dict):
+            raise ValueError("policy root must be an object")
+        rules = document.get("rules")
+        if not isinstance(rules, dict):
+            raise ValueError("policy rules must be an object")
+        policy = rules.get("tool_policy")
+        if not isinstance(policy, dict):
+            raise ValueError("rules.tool_policy must be an object")
+
+        result = {}
+        for key in DEFAULT_POLICY:
+            values = policy.get(key)
+            if (
+                not isinstance(values, list)
+                or not values
+                or not all(type(value) is str and value.strip() for value in values)
+            ):
+                raise ValueError(
+                    f"rules.tool_policy.{key} must be a non-empty list of strings"
+                )
+            result[key] = {value.strip().lower() for value in values}
+        return result
+    except (OSError, UnicodeDecodeError) as exc:
+        # G14: File missing or invalid UTF-8 — fail closed.
+        raise ValueError(
+            f"tool policy at {rules_path} could not be loaded: {exc}. "
+            f"refusing to fall back to defaults."
+        ) from exc
+    except (json.JSONDecodeError, TypeError) as exc:
+        # G14: Malformed JSON — fail closed.
+        raise ValueError(
+            f"tool policy at {rules_path} is malformed: {exc}. "
+            f"refusing to fall back to defaults."
+        ) from exc
 
 
 def normalize_tool(value):

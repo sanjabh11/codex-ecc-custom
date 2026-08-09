@@ -298,7 +298,7 @@ pre-run gate use the same taxonomy from `validation-rules.json`:
 | **Core** | python3, git, cat, grep, find, and basic shell tools | Validator does not revoke; runtime still records resolution. |
 | **Workflow** | pytest, cargo, npm, docker, go, gradle, dotnet, ruby | Missing or unhealthy required tools block. |
 | **Advisory** | cass, cm, dcg, ubs, gh, br, bv, graphify | Missing tools may produce `degraded` only when optional. |
-| **Unknown** | Anything else | Required unknown tools block; optional ones degrade. |
+| **Unknown** | Anything else | Blocked by default; an exception requires an explicit policy entry and must be visible in the runtime manifest. |
 
 If a workflow tool is missing, the validator exits 1 with a message naming
 the tool and node. Install the tool or remove the node dependency; never

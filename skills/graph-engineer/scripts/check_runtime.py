@@ -10,6 +10,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import platform as host_platform
 import re
 import subprocess
 import sys
@@ -27,18 +28,78 @@ try:
 except ImportError:  # pragma: no cover - supports package-style imports
     from scripts.runtime_policy import classify_tool, executable_available, load_tool_policy, normalize_tool
 
+try:
+    from schema_utils import strict_format_checker
+except ImportError:  # pragma: no cover - supports package-style imports
+    try:
+        from scripts.schema_utils import strict_format_checker
+    except ImportError:  # pragma: no cover - dependency-gate path
+        strict_format_checker = None
+
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 VALIDATOR = SKILL_DIR / "scripts" / "validate_graph.py"
 MANIFEST_SCHEMA = SKILL_DIR / "schemas" / "runtime-manifest.schema.json"
 RULES_PATH = SKILL_DIR / "validation-rules.json"
+REQUIRED_RUNTIME_FILES = (
+    "SKILL.md",
+    "activation-policy.json",
+    "requirements.txt",
+    "validation-rules.json",
+    "scripts/validate_graph.py",
+    "scripts/check_runtime.py",
+    "scripts/record_evidence.py",
+    "scripts/runtime_policy.py",
+    "scripts/schema_utils.py",
+    "schemas/activation-policy.schema.json",
+    "schemas/evidence-record.schema.json",
+    "schemas/graph-definition.schema.json",
+    "schemas/node-definition.schema.json",
+    "schemas/review-report.schema.json",
+    "schemas/runtime-manifest.schema.json",
+)
 
 
-def runtime_identity():
+def runtime_package(runtime_root):
+    if not runtime_root:
+        return None
+    root = Path(runtime_root).resolve()
+    package = (root / "skills" / "graph-engineer").resolve()
+    if not package.is_dir():
+        return None
+    try:
+        package.relative_to(root)
+    except ValueError:
+        return None
+    return package
+
+
+def file_sha256(path):
+    try:
+        resolved = Path(path).resolve()
+        if not resolved.is_file():
+            return None
+        return hashlib.sha256(resolved.read_bytes()).hexdigest()
+    except (OSError, UnicodeError):
+        return None
+
+
+def decode_process_output(value):
+    if isinstance(value, bytes):
+        return value.decode("utf-8")
+    return value if isinstance(value, str) else ""
+
+
+def runtime_identity(policy_path=None):
+    policy_path = Path(policy_path) if policy_path else RULES_PATH
     return {
         "platform": sys.platform,
         "python": f"{sys.version_info.major}.{sys.version_info.minor}",
         "executable": Path(sys.executable).name,
+        "interpreter_path": str(Path(sys.executable).resolve()),
+        "host_profile": f"{sys.platform}:{host_platform.machine()}",
+        "hostname": os.uname().nodename if hasattr(os, 'uname') else 'unknown',
+        "policy_sha256": file_sha256(policy_path),
     }
 
 
@@ -52,21 +113,33 @@ def graph_hash(graph):
 
 
 def runtime_hash(runtime_root):
-    """Hash package paths and contents, excluding generated Python caches."""
+    """Hash package paths and contents, excluding generated Python caches.
+
+    G8: When runtime_root is missing or invalid, return None instead of a
+    sentinel hash. Callers must check for None and fail closed.
+    """
     if not runtime_root:
-        return hashlib.sha256(b"missing-runtime-root").hexdigest()
-    package = Path(runtime_root).resolve() / "skills" / "graph-engineer"
-    if not package.is_dir():
-        return hashlib.sha256(b"missing-graph-engineer-package").hexdigest()
+        return None
+    package = runtime_package(runtime_root)
+    if package is None:
+        return None
+    for relative in REQUIRED_RUNTIME_FILES:
+        required = package / relative
+        try:
+            required.resolve().relative_to(package)
+        except ValueError:
+            return None
+        if not required.is_file():
+            return None
     digest = hashlib.sha256()
     for path in sorted(package.rglob("*")):
         relative_path = path.relative_to(package)
-        if not path.is_file() or "__pycache__" in path.parts or path.suffix == ".pyc" or relative_path.parts[0] == "evidence":
+        if not path.is_file() or "__pycache__" in path.parts or path.suffix == ".pyc" or (relative_path.parts and relative_path.parts[0] == "evidence"):
             continue
         try:
             path.resolve().relative_to(package.resolve())
         except ValueError:
-            return hashlib.sha256(b"unsafe-runtime-symlink").hexdigest()
+            return None  # G8: unsafe symlink — fail closed
         relative = relative_path.as_posix().encode("utf-8")
         digest.update(relative + b"\0")
         digest.update(path.read_bytes())
@@ -76,7 +149,7 @@ def runtime_hash(runtime_root):
 def load_graph(path):
     try:
         value = json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         return None, f"graph could not be parsed: {exc}"
     if not isinstance(value, dict):
         return None, f"graph root must be an object, got {type(value).__name__}"
@@ -84,15 +157,25 @@ def load_graph(path):
 
 
 def validate_graph(graph_path, runtime_root):
-    command = [sys.executable, str(VALIDATOR)]
+    validator = VALIDATOR
+    if runtime_root:
+        package = runtime_package(runtime_root)
+        if package is None:
+            return False, "runtime package is missing or incomplete"
+        validator = package / "scripts" / "validate_graph.py"
+    command = [sys.executable, str(validator)]
     if runtime_root:
         command.extend(["--runtime-root", str(runtime_root)])
     command.append(str(graph_path))
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=30)
-    except (OSError, subprocess.TimeoutExpired) as exc:
+        result = subprocess.run(command, capture_output=True, text=False, timeout=30)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError) as exc:
         return False, f"validator could not run: {exc}"
-    return result.returncode == 0, (result.stdout + result.stderr)[-3000:]
+    try:
+        output = decode_process_output(result.stdout) + decode_process_output(result.stderr)
+    except UnicodeDecodeError as exc:
+        return False, f"validator output was not valid UTF-8: {exc}"
+    return result.returncode == 0, output[-3000:]
 
 
 def parse_timestamp(value):
@@ -136,10 +219,14 @@ def check_runtime_refs(graph, runtime_root):
 
 def run_health_command(command):
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=10)
-    except (OSError, subprocess.TimeoutExpired) as exc:
+        result = subprocess.run(command, capture_output=True, text=False, timeout=10)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError) as exc:
         return False, str(exc)
-    return result.returncode == 0, (result.stdout + result.stderr).strip()[-500:]
+    try:
+        output = decode_process_output(result.stdout) + decode_process_output(result.stderr)
+    except UnicodeDecodeError as exc:
+        return False, f"health command output was not valid UTF-8: {exc}"
+    return result.returncode == 0, output.strip()[-500:]
 
 
 def version_tuple(value):
@@ -147,8 +234,13 @@ def version_tuple(value):
     return tuple(int(part) for part in match.group(0).split(".")) if match else None
 
 
-def check_tools(graph):
-    policy = load_tool_policy(str(RULES_PATH))
+def check_tools(graph, rules_path=None):
+    # G14: load_tool_policy now raises ValueError on malformed/missing policy
+    # instead of falling back to defaults. Catch and block.
+    try:
+        policy = load_tool_policy(str(rules_path or RULES_PATH))
+    except ValueError as exc:
+        return [], [{"node": None, "reason": f"tool policy load failed: {exc}"}], []
     checks = []
     blocked = []
     degraded = []
@@ -169,6 +261,15 @@ def check_tools(graph):
             category = classify_tool(name, policy)
             available = executable_available(name)
             record = {"node": node.get("id"), "tool": name, "category": category, "available": available}
+            # G9: Block unknown tools by default — even if installed, they are
+            # not in the policy taxonomy and could be arbitrary executables.
+            # Only allow unknown tools if explicitly marked optional AND the
+            # policy has an "allow_unknown" flag set to True.
+            if category == "unknown" and not policy.get("allow_unknown", False):
+                record["status"] = "blocked"
+                blocked.append({"node": node.get("id"), "tool": name, "reason": "unknown tool not in policy taxonomy — blocked by default"})
+                checks.append(record)
+                continue
             if not available:
                 if category == "advisory" or not declaration["required"]:
                     record["status"] = "degraded"
@@ -187,9 +288,16 @@ def check_tools(graph):
                     else:
                         degraded.append({"node": node.get("id"), "tool": name, "reason": "optional health command failed"})
             try:
-                version_result = subprocess.run([name, "--version"], capture_output=True, text=True, timeout=10)
-                actual_version = version_tuple(version_result.stdout + version_result.stderr)
-            except (OSError, subprocess.TimeoutExpired) as exc:
+                version_result = subprocess.run([name, "--version"], capture_output=True, text=False, timeout=10)
+                try:
+                    version_output = (
+                        decode_process_output(version_result.stdout)
+                        + decode_process_output(version_result.stderr)
+                    )
+                except UnicodeDecodeError as exc:
+                    raise UnicodeDecodeError(exc.encoding, exc.object, exc.start, exc.end, str(exc)) from exc
+                actual_version = version_tuple(version_output)
+            except (OSError, subprocess.TimeoutExpired, UnicodeError) as exc:
                 actual_version = None
                 record["version_error"] = str(exc)
             record["version"] = {"actual": list(actual_version) if actual_version else None}
@@ -215,19 +323,34 @@ def tool_snapshot(checks):
     return snapshot
 
 
-def check_manifest(manifest_path, graph, graph_sha, runtime_sha, run_id, artifact_digest, tool_checks):
+def check_manifest(
+    manifest_path,
+    graph,
+    graph_sha,
+    runtime_sha,
+    run_id,
+    artifact_digest,
+    tool_checks,
+    runtime_root,
+):
     if not manifest_path:
         return {"status": "blocked", "reason": "--manifest is required for a pre-run decision"}
     try:
         manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         return {"status": "blocked", "reason": f"manifest could not be parsed: {exc}"}
-    if jsonschema is None:
-        return {"status": "blocked", "reason": "jsonschema is required to validate the runtime manifest"}
+    if jsonschema is None or strict_format_checker is None:
+        return {"status": "blocked", "reason": "jsonschema and the strict format checker are required to validate the runtime manifest"}
     try:
-        schema = json.loads(MANIFEST_SCHEMA.read_text(encoding="utf-8"))
-        jsonschema.validate(instance=manifest, schema=schema)
-    except (OSError, json.JSONDecodeError, jsonschema.ValidationError, jsonschema.SchemaError) as exc:
+        package = runtime_package(runtime_root)
+        schema_path = package / "schemas" / "runtime-manifest.schema.json" if package else MANIFEST_SCHEMA
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        jsonschema.validate(
+            instance=manifest,
+            schema=schema,
+            format_checker=strict_format_checker(),
+        )
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError, jsonschema.ValidationError, jsonschema.SchemaError) as exc:
         return {"status": "blocked", "reason": f"manifest schema validation failed: {exc}"}
     try:
         issued_at = parse_timestamp(manifest["issued_at"])
@@ -249,8 +372,15 @@ def check_manifest(manifest_path, graph, graph_sha, runtime_sha, run_id, artifac
         return {"status": "blocked", "reason": "manifest graph hash does not match graph"}
     if manifest["runtime_sha256"] != runtime_sha:
         return {"status": "blocked", "reason": "manifest runtime hash does not match runtime package"}
-    if manifest["runtime_identity"] != runtime_identity():
+    policy_path = runtime_package(runtime_root) / "validation-rules.json"
+    current_identity = runtime_identity(policy_path)
+    if manifest["runtime_identity"] != current_identity:
         return {"status": "blocked", "reason": "manifest runtime identity does not match this host runtime"}
+    if manifest["policy_sha256"] != current_identity["policy_sha256"]:
+        return {"status": "blocked", "reason": "manifest policy hash does not match runtime policy"}
+    validator_sha = file_sha256(runtime_package(runtime_root) / "scripts" / "validate_graph.py")
+    if manifest["validator_sha256"] != validator_sha:
+        return {"status": "blocked", "reason": "manifest validator hash does not match runtime validator"}
     if manifest["tool_snapshot"] != tool_snapshot(tool_checks):
         return {"status": "blocked", "reason": "manifest tool snapshot does not match current tool health/version results"}
     approval = manifest["approval_binding"]
@@ -291,9 +421,39 @@ def main():
 
     graph_sha = graph_hash(graph)
     runtime_sha = runtime_hash(args.runtime_root)
-    tool_checks, blocked_tools, degraded_tools = check_tools(graph)
+    # G8: If runtime_hash returned None, the runtime root is missing or unsafe.
+    # Fail closed — do not report available.
+    if runtime_sha is None:
+        print(json.dumps({
+            "decision": "blocked",
+            "reason": "runtime root is missing, invalid, or contains unsafe symlinks — cannot produce a runtime hash",
+            "graph_sha256": graph_sha,
+        }, indent=2))
+        return 1
+    package = runtime_package(args.runtime_root)
+    policy_path = package / "validation-rules.json" if package else None
+    validator_sha = file_sha256(package / "scripts" / "validate_graph.py") if package else None
+    policy_sha = file_sha256(policy_path) if policy_path else None
+    if package is None or validator_sha is None or policy_sha is None:
+        print(json.dumps({
+            "decision": "blocked",
+            "reason": "runtime package, validator, or policy digest is unavailable",
+            "graph_sha256": graph_sha,
+            "runtime_sha256": runtime_sha,
+        }, indent=2))
+        return 1
+    tool_checks, blocked_tools, degraded_tools = check_tools(graph, rules_path=policy_path)
     refs_result = check_runtime_refs(graph, args.runtime_root)
-    manifest_result = check_manifest(args.manifest, graph, graph_sha, runtime_sha, args.run_id, args.artifact_digest, tool_checks)
+    manifest_result = check_manifest(
+        args.manifest,
+        graph,
+        graph_sha,
+        runtime_sha,
+        args.run_id,
+        args.artifact_digest,
+        tool_checks,
+        args.runtime_root,
+    )
     decision = "available"
     if blocked_tools or refs_result["status"] == "blocked" or manifest_result["status"] == "blocked":
         decision = "blocked"
@@ -306,7 +466,9 @@ def main():
         "decision": decision,
         "graph_sha256": graph_sha,
         "runtime_sha256": runtime_sha,
-        "runtime_identity": runtime_identity(),
+        "runtime_identity": runtime_identity(policy_path),
+        "validator_sha256": validator_sha,
+        "policy_sha256": policy_sha,
         "tool_snapshot": tool_snapshot(tool_checks),
         "timestamp": dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z"),
         "tool_checks": tool_checks,

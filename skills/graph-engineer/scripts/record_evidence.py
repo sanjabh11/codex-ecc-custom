@@ -28,12 +28,22 @@ try:
 except ImportError:  # pragma: no cover - exercised with python -S
     jsonschema = None
 
+try:
+    from schema_utils import strict_format_checker
+except ImportError:  # pragma: no cover - supports package-style imports
+    try:
+        from scripts.schema_utils import strict_format_checker
+    except ImportError:  # pragma: no cover - dependency-gate path
+        strict_format_checker = None
+
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 VALIDATOR = SKILL_DIR / "scripts" / "validate_graph.py"
 EVIDENCE_SCHEMA = SKILL_DIR / "schemas" / "evidence-record.schema.json"
 DEFAULT_ROOT = SKILL_DIR / "evidence"
 DEFAULT_OUTPUT = DEFAULT_ROOT / "evidence.jsonl"
+TERMINAL_NODE_ATTEMPT_STATUSES = {"pass", "fail", "skip"}
+TERMINAL_REVIEW_STATUSES = {"pass", "fail"}
 
 
 def canonical_graph_hash(graph):
@@ -73,15 +83,29 @@ def parse_bound_timestamp(value):
 
 
 def validate_graph(graph_path, runtime_root):
-    command = [sys.executable, str(VALIDATOR)]
+    validator = VALIDATOR
+    if runtime_root:
+        package = (Path(runtime_root).resolve() / "skills" / "graph-engineer").resolve()
+        try:
+            package.relative_to(Path(runtime_root).resolve())
+        except ValueError:
+            return False, "runtime package escapes the supplied runtime root"
+        validator = package / "scripts" / "validate_graph.py"
+        if not validator.is_file():
+            return False, "runtime validator is missing"
+    command = [sys.executable, str(validator)]
     if runtime_root:
         command.extend(["--runtime-root", str(runtime_root)])
     command.append(str(graph_path))
     try:
-        result = subprocess.run(command, capture_output=True, text=True, timeout=30)
-    except (OSError, subprocess.TimeoutExpired) as exc:
+        result = subprocess.run(command, capture_output=True, text=False, timeout=30)
+    except (OSError, subprocess.TimeoutExpired, UnicodeError) as exc:
         return False, f"validator could not run: {exc}"
-    return result.returncode == 0, (result.stdout + result.stderr)[-2000:]
+    try:
+        output = result.stdout.decode("utf-8") + result.stderr.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        return False, f"validator output was not valid UTF-8: {exc}"
+    return result.returncode == 0, output[-2000:]
 
 
 def existing_records(output, run_id):
@@ -90,7 +114,7 @@ def existing_records(output, run_id):
     records = []
     try:
         schema = json.loads(EVIDENCE_SCHEMA.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ValueError(f"evidence schema could not be loaded: {exc}") from exc
     for line in output.read_text(encoding="utf-8").splitlines():
         if not line.strip():
@@ -102,7 +126,11 @@ def existing_records(output, run_id):
         if jsonschema is None:
             raise ValueError("jsonschema is required to validate existing evidence")
         try:
-            jsonschema.validate(instance=value, schema=schema)
+            jsonschema.validate(
+                instance=value,
+                schema=schema,
+                format_checker=strict_format_checker(),
+            )
         except (jsonschema.ValidationError, jsonschema.SchemaError) as exc:
             raise ValueError(f"existing evidence record is not schema-valid: {exc}") from exc
         if value.get("run_id") == run_id:
@@ -110,7 +138,55 @@ def existing_records(output, run_id):
     return records
 
 
-def ensure_lifecycle(event_type, run_records, node_id, attempt):
+def _node_by_id(graph, node_id):
+    return next(
+        (node for node in graph.get("nodes", [])
+         if isinstance(node, dict) and node.get("id") == node_id),
+        None,
+    )
+
+
+def _has_terminal_node_attempt(run_records, node_id):
+    return any(
+        record.get("event_type") == "node_attempt"
+        and record.get("node_id") == node_id
+        and record.get("status") in TERMINAL_NODE_ATTEMPT_STATUSES
+        for record in run_records
+    )
+
+
+def _has_terminal_review(run_records, node_id):
+    return any(
+        record.get("event_type") == "review"
+        and record.get("node_id") == node_id
+        and record.get("status") in TERMINAL_REVIEW_STATUSES
+        for record in run_records
+    )
+
+
+def _completion_errors(graph, run_records):
+    errors = []
+    for node in graph.get("nodes", []):
+        if not isinstance(node, dict):
+            continue
+        node_id = node.get("id")
+        node_type = node.get("type")
+        if node_type in ("planner", "worker", "synthesizer") and not _has_terminal_node_attempt(run_records, node_id):
+            errors.append(f"node '{node_id}' has no terminal node_attempt")
+        elif node_type == "reviewer" and not _has_terminal_review(run_records, node_id):
+            errors.append(f"reviewer '{node_id}' has no terminal review")
+        elif node_type == "human-gate":
+            if not any(
+                record.get("event_type") == "gate_decision"
+                and record.get("node_id") == node_id
+                and record.get("status") == "pass"
+                for record in run_records
+            ):
+                errors.append(f"human gate '{node_id}' has no passing gate_decision")
+    return errors
+
+
+def ensure_lifecycle(event_type, run_records, node_id, attempt, graph):
     terminal = any(record.get("event_type") in ("run_finished", "run_aborted") for record in run_records)
     if terminal:
         raise ValueError("run has already reached a terminal state")
@@ -126,6 +202,81 @@ def ensure_lifecycle(event_type, run_records, node_id, attempt):
         ]
         if prior_attempts and attempt != max(prior_attempts) + 1:
             raise ValueError(f"node '{node_id}' attempt must be {max(prior_attempts) + 1}")
+    # G12: Enforce lifecycle ordering — review events require prior node_attempt
+    if event_type == "review":
+        reviewer = _node_by_id(graph, node_id)
+        reviewed_node_id = reviewer.get("reviewed_node_id") if reviewer else None
+        if reviewed_node_id is None and reviewer is not None:
+            incoming_workers = [
+                edge.get("from")
+                for edge in graph.get("edges", [])
+                if isinstance(edge, dict)
+                and edge.get("to") == node_id
+                and edge.get("type") in ("data", "control")
+                and _node_by_id(graph, edge.get("from"))
+                and _node_by_id(graph, edge.get("from")).get("type") == "worker"
+            ]
+            if len(incoming_workers) == 1:
+                reviewed_node_id = incoming_workers[0]
+        if reviewed_node_id is None:
+            raise ValueError(f"reviewer '{node_id}' has no reviewed_node_id binding")
+        if not _has_terminal_node_attempt(run_records, reviewed_node_id):
+            raise ValueError(
+                f"review on reviewer '{node_id}' requires a prior terminal node_attempt "
+                f"on reviewed node '{reviewed_node_id}'"
+            )
+    # G12: Enforce lifecycle ordering — gate_decision requires prior work
+    # (either a node_attempt or a review must exist before gating)
+    if event_type == "gate_decision":
+        gate = _node_by_id(graph, node_id)
+        predecessors = {
+            edge.get("from")
+            for edge in graph.get("edges", [])
+            if isinstance(edge, dict)
+            and edge.get("to") == node_id
+            and edge.get("type") in ("data", "control")
+        }
+        if not predecessors:
+            raise ValueError(f"gate_decision target '{node_id}' has no data/control predecessor")
+        if not all(
+            _has_terminal_node_attempt(run_records, predecessor)
+            or _has_terminal_review(run_records, predecessor)
+            for predecessor in predecessors
+        ):
+            raise ValueError(
+                f"gate_decision on '{node_id}' requires terminal evidence for every direct predecessor"
+            )
+    # G12: Enforce completion check before run_finished
+    if event_type == "run_finished":
+        errors = _completion_errors(graph, run_records)
+        if errors:
+            raise ValueError("run_finished requires complete graph evidence: " + "; ".join(errors))
+
+
+def check_node_type_compatibility(event_type, node_id, graph):
+    """G11: Enforce event-type/node-type compatibility.
+
+    - review events only on reviewer nodes
+    - node_attempt events only on worker/planner/synthesizer nodes
+    - gate_decision events only on human-gate nodes
+    """
+    if event_type in ("run_started", "run_finished", "run_aborted"):
+        if node_id is not None:
+            raise ValueError(f"{event_type} events must not be bound to a node")
+        return
+    if node_id is None:
+        return
+    nodes = graph.get("nodes", [])
+    node = next((n for n in nodes if isinstance(n, dict) and n.get("id") == node_id), None)
+    if node is None:
+        raise ValueError(f"node '{node_id}' is not declared by the graph")
+    node_type = node.get("type", "")
+    if event_type == "review" and node_type != "reviewer":
+        raise ValueError(f"review events can only be recorded on reviewer nodes, got type '{node_type}'")
+    if event_type == "node_attempt" and node_type not in ("worker", "planner", "synthesizer"):
+        raise ValueError(f"node_attempt events can only be recorded on executable nodes (worker/planner/synthesizer), got type '{node_type}'")
+    if event_type == "gate_decision" and node_type != "human-gate":
+        raise ValueError(f"gate_decision events can only be recorded on human-gate nodes, got type '{node_type}'")
 
 
 @contextlib.contextmanager
@@ -176,10 +327,9 @@ def main():
     parser.add_argument("--runtime-root", default=None)
     args = parser.parse_args()
 
-    if not args.run_id.strip():
-        print("ERROR: --run-id must be non-empty", file=sys.stderr)
+    if not isinstance(args.run_id, str) or not args.run_id or args.run_id != args.run_id.strip():
+        print("ERROR: --run-id must be a non-empty string without surrounding whitespace", file=sys.stderr)
         return 1
-    args.run_id = args.run_id.strip()
     if args.event_type in ("node_attempt", "review", "gate_decision") and not args.node:
         print("ERROR: --node is required for execution, review, and gate events", file=sys.stderr)
         return 1
@@ -198,7 +348,7 @@ def main():
 
     try:
         graph = json.loads(Path(args.graph).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         print(f"ERROR: graph could not be parsed: {exc}", file=sys.stderr)
         return 1
     if not isinstance(graph, dict):
@@ -208,7 +358,7 @@ def main():
     if not valid:
         print(f"ERROR: graph validation failed before evidence recording:\n{validation_output}", file=sys.stderr)
         return 1
-    if jsonschema is None:
+    if jsonschema is None or strict_format_checker is None:
         print("ERROR: jsonschema is required to record evidence", file=sys.stderr)
         return 1
 
@@ -232,7 +382,7 @@ def main():
             approval_binding = manifest_binding
         if approval_binding is not None and not isinstance(approval_binding, dict):
             raise ValueError("--approval-binding must be a JSON object")
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         print(f"ERROR: approval binding is invalid: {exc}", file=sys.stderr)
         return 1
 
@@ -288,8 +438,12 @@ def main():
     }
     try:
         schema = json.loads(EVIDENCE_SCHEMA.read_text(encoding="utf-8"))
-        jsonschema.validate(instance=record, schema=schema)
-    except (OSError, json.JSONDecodeError, jsonschema.ValidationError, jsonschema.SchemaError) as exc:
+        jsonschema.validate(
+            instance=record,
+            schema=schema,
+            format_checker=strict_format_checker(),
+        )
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError, jsonschema.ValidationError, jsonschema.SchemaError) as exc:
         print(f"ERROR: evidence schema validation failed: {exc}", file=sys.stderr)
         return 1
 
@@ -300,7 +454,9 @@ def main():
             node_ids = {node.get("id") for node in graph.get("nodes", []) if isinstance(node, dict)}
             if args.node and args.node not in node_ids:
                 raise ValueError(f"node '{args.node}' is not declared by the graph")
-            ensure_lifecycle(args.event_type, records, args.node, args.attempt)
+            # G11: Check event-type/node-type compatibility
+            check_node_type_compatibility(args.event_type, args.node, graph)
+            ensure_lifecycle(args.event_type, records, args.node, args.attempt, graph)
             with output.open("a", encoding="utf-8") as handle:
                 handle.write(line)
                 handle.flush()

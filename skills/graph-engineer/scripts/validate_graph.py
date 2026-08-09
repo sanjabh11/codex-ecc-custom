@@ -14,6 +14,7 @@ import os
 import re
 import shutil
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,9 +25,26 @@ except ImportError:
     HAS_JSONSCHEMA = False
 
 try:
+    from referencing import Registry, Resource
+    from referencing.exceptions import Unresolvable
+    HAS_REFERENCING = True
+except ImportError:  # pragma: no cover - covered by dependency gate
+    Registry = Resource = None
+    Unresolvable = RuntimeError
+    HAS_REFERENCING = False
+
+try:
     from runtime_policy import classify_tool, load_tool_policy, normalize_tool, executable_available
 except ImportError:  # pragma: no cover - supports package-style imports
     from scripts.runtime_policy import classify_tool, load_tool_policy, normalize_tool, executable_available
+
+try:
+    from schema_utils import strict_format_checker
+except ImportError:  # pragma: no cover - supports package-style imports
+    try:
+        from scripts.schema_utils import strict_format_checker
+    except ImportError:  # pragma: no cover - dependency-gate path
+        strict_format_checker = None
 
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_RULES_PATH = os.path.join(SKILL_DIR, "validation-rules.json")
@@ -59,10 +77,45 @@ def warn(name, detail):
 
 
 def load_rules(path):
-    if not os.path.exists(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            value = json.load(f)
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        print(f"ERROR: Validation rules could not be loaded from {path}: {exc}")
         return None
-    with open(path, "r") as f:
-        return json.load(f)
+    if not isinstance(value, dict):
+        print(f"ERROR: Validation rules root must be an object, got {type(value).__name__}")
+        return None
+    return value
+
+
+def load_schema_bundle(schema_path):
+    """Load local schemas and resolve references without network access."""
+    if not HAS_REFERENCING:
+        raise ValueError("referencing package is required for local schema resolution")
+    schema_path = os.path.abspath(schema_path)
+    schema_dir = os.path.dirname(schema_path)
+    documents = {}
+    resources = []
+    for filename in (
+        "graph-definition.schema.json",
+        "node-definition.schema.json",
+        "review-report.schema.json",
+        "evidence-record.schema.json",
+    ):
+        path = os.path.join(schema_dir, filename)
+        with open(path, "r", encoding="utf-8") as handle:
+            document = json.load(handle)
+        documents[filename] = document
+        documents[os.path.abspath(path)] = document
+        documents[Path(path).as_uri()] = document
+        if isinstance(document.get("$id"), str):
+            documents[document["$id"]] = document
+            resources.append((document["$id"], Resource.from_contents(document)))
+    schema = documents.get(os.path.basename(schema_path))
+    if schema is None:
+        raise ValueError(f"schema not present in local bundle: {schema_path}")
+    return schema, Registry().with_resources(resources)
 
 
 def load_graph(path):
@@ -75,7 +128,7 @@ def load_graph(path):
             sys.exit(1)
         with open(path, "r", encoding="utf-8") as f:
             graph = json.load(f)
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         print(f"ERROR: Could not parse graph definition {path}: {exc}")
         sys.exit(1)
     if not isinstance(graph, dict):
@@ -108,7 +161,7 @@ def check_graph_shape(graph):
 
 def check_json_schema(graph, schema_path=None):
     """Invoke JSON Schema validation and fail closed when unavailable."""
-    if not HAS_JSONSCHEMA:
+    if not HAS_JSONSCHEMA or strict_format_checker is None:
         check(
             "jsonschema_available",
             False,
@@ -121,30 +174,85 @@ def check_json_schema(graph, schema_path=None):
         check("schema_file_present", False, f"Schema file not found at {schema_path} — validation is fail-closed")
         return
     try:
-        with open(schema_path, "r", encoding="utf-8") as f:
-            schema = json.load(f)
-        jsonschema.validate(instance=graph, schema=schema)
+        schema, registry = load_schema_bundle(schema_path)
+        # G13: Use a FormatChecker to enforce date-time and other format
+        # constraints. Without this, jsonschema accepts "not-a-date" as valid.
+        format_checker = strict_format_checker()
+        validator = jsonschema.Draft7Validator(
+            schema,
+            registry=registry,
+            format_checker=format_checker,
+        )
+        validator.validate(graph)
         check("json_schema_valid", True, "JSON Schema validation passed")
     except jsonschema.ValidationError as e:
         check("json_schema_valid", False, f"JSON Schema violation: {e.message} at path {list(e.absolute_path)}")
     except jsonschema.SchemaError as e:
         check("json_schema_valid", False, f"The graph schema itself is invalid: {e.message}")
-    except (OSError, json.JSONDecodeError) as e:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError, ValueError, Unresolvable) as e:
         check("json_schema_valid", False, f"The graph schema could not be loaded: {e}")
+
+
+def reviewed_worker_id(graph, reviewer_id):
+    """Return the one exact worker bound to a reviewer.
+
+    v1.1 requires reviewed_node_id. Legacy v1 graphs remain supported only
+    when their topology identifies exactly one incoming worker.
+    """
+    nodes = {
+        node.get("id"): node
+        for node in graph.get("nodes", [])
+        if isinstance(node, dict)
+    }
+    reviewer = nodes.get(reviewer_id)
+    if not reviewer or reviewer.get("type") != "reviewer":
+        return None
+    explicit = reviewer.get("reviewed_node_id")
+    if isinstance(explicit, str) and nodes.get(explicit, {}).get("type") == "worker":
+        return explicit
+    incoming_workers = sorted({
+        edge.get("from")
+        for edge in graph.get("edges", [])
+        if isinstance(edge, dict)
+        and edge.get("to") == reviewer_id
+        and edge.get("type") in ("data", "control")
+        and nodes.get(edge.get("from"), {}).get("type") == "worker"
+    })
+    return incoming_workers[0] if len(incoming_workers) == 1 else None
+
+
+def reviewed_worker_ids(graph, reviewer_id):
+    """Return all workers a reviewer explicitly or topologically covers."""
+    exact = reviewed_worker_id(graph, reviewer_id)
+    if exact is not None:
+        return {exact}
+    nodes = {
+        node.get("id"): node
+        for node in graph.get("nodes", [])
+        if isinstance(node, dict)
+    }
+    return {
+        edge.get("from")
+        for edge in graph.get("edges", [])
+        if isinstance(edge, dict)
+        and edge.get("to") == reviewer_id
+        and edge.get("type") in ("data", "control")
+        and nodes.get(edge.get("from"), {}).get("type") == "worker"
+    }
 
 
 def check_review_reports(graph, report_paths):
     """Validate supplied reviewer artifacts and bind them to graph ownership."""
     if not report_paths:
         return
-    if not HAS_JSONSCHEMA:
+    if not HAS_JSONSCHEMA or strict_format_checker is None:
         check("review_report_jsonschema_available", False, "jsonschema is required to validate reviewer artifacts")
         return
     schema_path = os.path.join(SKILL_DIR, "schemas", "review-report.schema.json")
     try:
         with open(schema_path, encoding="utf-8") as handle:
             schema = json.load(handle)
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         check("review_report_schema_loads", False, f"Review report schema could not be loaded: {exc}")
         return
 
@@ -157,7 +265,11 @@ def check_review_reports(graph, report_paths):
             check(f"review_report_{index}_parses", False, f"Could not parse reviewer report '{report_path}': {exc}")
             continue
         try:
-            jsonschema.validate(instance=report, schema=schema)
+            jsonschema.validate(
+                instance=report,
+                schema=schema,
+                format_checker=strict_format_checker(),
+            )
             schema_valid = True
         except (jsonschema.ValidationError, jsonschema.SchemaError) as exc:
             schema_valid = False
@@ -172,16 +284,16 @@ def check_review_reports(graph, report_paths):
             reviewer.get("type") == "reviewer",
             f"Reviewer report '{report_path}' names non-reviewer '{reviewer_id}'",
         )
+        expected_reviewed_id = reviewed_worker_id(graph, reviewer_id)
+        expected_reviewed_ids = reviewed_worker_ids(graph, reviewer_id)
         check(
             f"review_report_{index}_reviewed_node_matches",
-            reviewer.get("reviewed_node_id") == reviewed_id
-            or any(
-                edge.get("from") == reviewed_id
-                and edge.get("to") == reviewer_id
-                and edge.get("type") in ("data", "control")
-                for edge in graph.get("edges", [])
+            (
+                expected_reviewed_id == reviewed_id
+                if graph.get("schema_version") == "v1.1"
+                else reviewed_id in expected_reviewed_ids
             ),
-            f"Reviewer report '{report_path}' is not bound to the worker reviewed by '{reviewer_id}'",
+            f"Reviewer report '{report_path}' is not bound to the exact worker reviewed by '{reviewer_id}'",
         )
         questions = reviewer.get("review_questions", [])
         check(
@@ -357,10 +469,13 @@ def check_v11_typed_contracts(graph):
                 and edge.get("type") in ("data", "control")
                 and nodes.get(edge.get("from"), {}).get("type") == "worker"
             }
+            expected_reviewed_worker = reviewed_worker_id(graph, node_id)
             check(
                 f"reviewer_{node_id}_reviewed_node_bound",
-                node.get("reviewed_node_id") in reviewed_workers,
-                f"Reviewer '{node_id}' must bind reviewed_node_id to an incoming worker; found {reviewed_workers}",
+                expected_reviewed_worker is not None
+                and node.get("reviewed_node_id") == expected_reviewed_worker
+                and len(reviewed_workers) == 1,
+                f"Reviewer '{node_id}' must bind exactly one reviewed worker; found {reviewed_workers}",
             )
             check(
                 f"reviewer_{node_id}_report_port_present",
@@ -416,6 +531,29 @@ def check_v11_typed_contracts(graph):
                     destination_port.get("from_node") == source
                     and destination_port.get("from_port", from_port) == from_port,
                     f"Edge {index} input port '{to_port}' does not bind to {source}.{from_port}",
+                )
+                source_port = next(
+                    (
+                        port for port in nodes.get(source, {}).get("output_ports", [])
+                        if isinstance(port, dict) and port.get("name") == from_port
+                    ),
+                    None,
+                )
+                source_schema = source_port.get("schema") if source_port else None
+                destination_schema = destination_port.get("schema")
+                compatible = False
+                if isinstance(source_schema, dict) and isinstance(destination_schema, dict):
+                    compatible = source_schema == destination_schema
+                    if not compatible and source_schema.get("$ref") and destination_schema.get("$ref"):
+                        compatible = source_schema["$ref"] == destination_schema["$ref"]
+                    if not compatible and source_schema.get("$ref") and destination_schema.get("type") == "object":
+                        compatible = True
+                    if not compatible and source_schema.get("type") == destination_schema.get("type"):
+                        compatible = True
+                check(
+                    f"edge_{index}_port_schema_compatible",
+                    compatible,
+                    f"Edge {index} source and destination port schemas are incompatible",
                 )
 
 
@@ -603,24 +741,21 @@ def check_v11_budgets(graph):
 def check_failure_edge_targets_reviewed_worker(graph):
     """Failure edges must route back to the same worker the reviewer reviewed."""
     nodes = {n.get("id"): n for n in graph.get("nodes", [])}
-    # Build a map: reviewer_id -> set of worker_ids it reviews
-    reviewer_workers = {}
-    for edge in graph.get("edges", []):
-        if edge.get("type") == "data":
-            from_node = nodes.get(edge.get("from"), {})
-            to_node = nodes.get(edge.get("to"), {})
-            if from_node.get("type") == "worker" and to_node.get("type") == "reviewer":
-                reviewer_workers.setdefault(edge["to"], set()).add(edge["from"])
     for index, edge in enumerate(graph.get("edges", [])):
         if edge.get("type") != "failure":
             continue
         reviewer_id = edge.get("from")
         target_id = edge.get("to")
-        reviewed_workers = reviewer_workers.get(reviewer_id, set())
+        if graph.get("schema_version") == "v1.1":
+            reviewed_worker = reviewed_worker_id(graph, reviewer_id)
+            valid_targets = {reviewed_worker} if reviewed_worker is not None else set()
+        else:
+            reviewed_worker = None
+            valid_targets = reviewed_worker_ids(graph, reviewer_id)
         check(
             f"failure_edge_{index}_targets_reviewed_worker",
-            target_id in reviewed_workers,
-            f"Failure edge {index} from reviewer '{reviewer_id}' targets worker '{target_id}' but reviewer only reviews {reviewed_workers} — failure feedback must route to the reviewed worker",
+            target_id in valid_targets,
+            f"Failure edge {index} from reviewer '{reviewer_id}' targets worker '{target_id}' but reviewed workers are {sorted(valid_targets)} — failure feedback must route to a reviewed worker",
         )
 
 
@@ -821,15 +956,21 @@ def check_runtime_refs(graph, runtime_root=None):
         )
         return
 
-    root = os.path.abspath(runtime_root)
+    root = os.path.realpath(runtime_root)
+    skills_root = os.path.realpath(os.path.join(root, "skills"))
     for ref in refs:
-        safe_ref = isinstance(ref, str) and ref and ".." not in ref and "/" not in ref and "\\" not in ref
+        safe_ref = isinstance(ref, str) and bool(re.fullmatch(r"[A-Za-z0-9_-]+", ref))
         check(f"runtime_ref_{ref}_is_safe", safe_ref, f"Runtime reference '{ref}' must be a simple skill directory name")
         if safe_ref:
-            skill_path = os.path.join(root, "skills", ref, "SKILL.md")
+            skill_path = os.path.realpath(os.path.join(skills_root, ref, "SKILL.md"))
+            try:
+                inside = os.path.commonpath([skills_root, skill_path]) == skills_root
+            except ValueError:
+                inside = False
+            check(f"runtime_ref_{ref}_inside_skills_root", inside, f"Runtime reference '{ref}' escapes the skills root")
             check(
                 f"runtime_ref_{ref}_exists",
-                os.path.isfile(skill_path),
+                inside and os.path.isfile(skill_path),
                 f"Runtime skill '{ref}' not found at {skill_path}",
             )
 
@@ -1103,7 +1244,7 @@ def check_one_writer_per_file(graph):
     )
 
 
-def check_tool_auto_revocation(graph):
+def check_tool_auto_revocation(graph, rules_path=None):
     """ECC Auto-Revocation: gate tools declared in node `tools` arrays.
 
     Core tools are never gated. Workflow tools fail loud if missing.
@@ -1111,7 +1252,11 @@ def check_tool_auto_revocation(graph):
     This mirrors the ECC operating protocol's tool taxonomy so graph
     definitions stay honest about runtime availability.
     """
-    policy = load_tool_policy(DEFAULT_RULES_PATH)
+    try:
+        policy = load_tool_policy(rules_path or DEFAULT_RULES_PATH)
+    except ValueError as exc:
+        check("tool_policy_loads", False, f"Tool policy is invalid; validation is fail-closed: {exc}")
+        return
     for node in graph.get("nodes", []):
         if not isinstance(node, dict):
             continue
@@ -1277,7 +1422,7 @@ def main():
     check_human_gates_for_expensive_actions(graph, rules)
     check_failure_paths(graph)
     check_one_writer_per_file(graph)
-    check_tool_auto_revocation(graph)
+    check_tool_auto_revocation(graph, rules_path)
 
     print(f"\n{'─' * 40}")
     print(f"Checks passed: {checks_passed}")

@@ -30,15 +30,19 @@ def manifest_for(module, graph, run_id="run-test", artifact_digest="sha256:test-
     graph_value = json.loads(Path(graph).read_text())
     graph_sha = module.graph_hash(graph_value)
     runtime_sha = module.runtime_hash(REPO_ROOT)
+    package = module.runtime_package(REPO_ROOT)
+    policy_path = package / "validation-rules.json"
     return {
         "manifest_version": "v1",
         "graph_sha256": graph_sha,
         "runtime_sha256": runtime_sha,
+        "validator_sha256": module.file_sha256(package / "scripts" / "validate_graph.py"),
+        "policy_sha256": module.file_sha256(policy_path),
         "issued_at": iso(-60),
         "expires_at": iso(3600),
         "revoked": False,
         "runtime_profile": "unittest",
-        "runtime_identity": module.runtime_identity(),
+        "runtime_identity": module.runtime_identity(policy_path),
         "tool_snapshot": {},
         "approval_binding": {
             "run_id": run_id,
@@ -135,7 +139,10 @@ class TestRuntimeGate(unittest.TestCase):
             root = Path(directory)
             package = root / "skills" / "graph-engineer"
             package.mkdir(parents=True)
-            (package / "SKILL.md").write_text("one")
+            for relative in module.REQUIRED_RUNTIME_FILES:
+                path = package / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("one")
             first = module.runtime_hash(root)
             (package / "SKILL.md").write_text("two")
             second = module.runtime_hash(root)

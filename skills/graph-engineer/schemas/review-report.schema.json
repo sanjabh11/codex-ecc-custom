@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-engineer.local/schemas/review-report.schema.json",
   "title": "Review Report",
   "description": "Validates the output of a reviewer node in an agent graph",
   "type": "object",

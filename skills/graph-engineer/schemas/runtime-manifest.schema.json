@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-engineer.local/schemas/runtime-manifest.schema.json",
   "title": "Graph Engineer Runtime Manifest",
   "type": "object",
   "additionalProperties": false,
@@ -7,6 +8,8 @@
     "manifest_version",
     "graph_sha256",
     "runtime_sha256",
+    "validator_sha256",
+    "policy_sha256",
     "issued_at",
     "expires_at",
     "revoked",
@@ -19,19 +22,25 @@
     "manifest_version": { "type": "string", "const": "v1" },
     "graph_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
     "runtime_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
-    "issued_at": { "type": "string", "minLength": 1 },
-    "expires_at": { "type": "string", "minLength": 1 },
+    "validator_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "policy_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+    "issued_at": { "type": "string", "format": "date-time", "minLength": 1 },
+    "expires_at": { "type": "string", "format": "date-time", "minLength": 1 },
     "revoked": { "type": "boolean" },
     "revocation_reason": { "type": "string" },
     "runtime_profile": { "type": "string", "minLength": 1 },
     "runtime_identity": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["platform", "python", "executable"],
+      "required": ["platform", "python", "executable", "interpreter_path", "host_profile", "hostname", "policy_sha256"],
       "properties": {
         "platform": { "type": "string", "minLength": 1 },
         "python": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
-        "executable": { "type": "string", "minLength": 1 }
+        "executable": { "type": "string", "minLength": 1 },
+        "interpreter_path": { "type": "string", "minLength": 1 },
+        "host_profile": { "type": "string", "minLength": 1 },
+        "hostname": { "type": "string", "minLength": 1 },
+        "policy_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
       }
     },
     "tool_snapshot": {
@@ -59,8 +68,8 @@
         "target": { "type": "string", "minLength": 1 },
         "approver": { "type": "string", "minLength": 1 },
         "decision": { "type": "string", "enum": ["approved", "rejected", "aborted"] },
-        "approved_at": { "type": "string", "minLength": 1 },
-        "expires_at": { "type": "string", "minLength": 1 }
+        "approved_at": { "type": "string", "format": "date-time", "minLength": 1 },
+        "expires_at": { "type": "string", "format": "date-time", "minLength": 1 }
       }
     }
   }

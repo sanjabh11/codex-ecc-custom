@@ -1,6 +1,93 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-engineer.local/schemas/node-definition.schema.json",
   "title": "Node Definition",
   "description": "Canonical node definition shared with graph-definition.schema.json",
-  "$ref": "graph-definition.schema.json#/definitions/node"
+  "type": "object",
+  "required": ["id", "type", "responsibility", "inputs", "outputs"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "enum": ["planner", "worker", "reviewer", "synthesizer", "human-gate"]
+    },
+    "responsibility": { "type": "string", "minLength": 1 },
+    "inputs": { "type": "array", "items": { "type": "string" } },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "review_questions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "loop_cap": { "type": "integer", "minimum": 1 },
+    "human_gate_action": { "type": "string" },
+    "reviewed_node_id": { "type": "string", "minLength": 1 },
+    "tools": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string", "minLength": 1 },
+          {
+            "type": "object",
+            "required": ["name", "required"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" },
+              "health_command": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+              "min_version": { "type": "string", "minLength": 1 }
+            }
+          }
+        ]
+      }
+    },
+    "input_ports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "from_node", "schema"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "from_node": { "type": "string", "minLength": 1 },
+          "from_port": { "type": "string", "minLength": 1 },
+          "schema": { "type": "object" }
+        }
+      }
+    },
+    "output_ports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "schema"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "schema": { "type": "object" }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reads": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+        "writes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+        "locks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9:._/-]*$" } },
+        "isolation": { "type": "string", "enum": ["shared", "isolated"] }
+      }
+    },
+    "review_report_schema": { "type": "string", "minLength": 1 },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preconditions": { "type": "string", "minLength": 1 },
+        "postconditions": { "type": "string", "minLength": 1 },
+        "failure_output": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
 }
