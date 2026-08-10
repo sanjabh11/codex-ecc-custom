@@ -8,7 +8,7 @@
   "artifact_bindings": {
     "source_manifest_sha256": "c2b1ef7c66705a6abdcc89a6924c39a843e760911ec44768467aef29b7e7a830",
     "skill_manifest_sha256": "1e50568104f7bfa320fe30712cbce10031b4daccd6f306ec502bbf4731eecb87",
-    "frozen_summary_sha256": "e95d569fe71a970d2ece3fbe2a9a9a4e71927a50ce6a00ddb913d5b841319666"
+    "frozen_summary_sha256": "d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95"
   },
   "summary": {
     "score": 1.0,

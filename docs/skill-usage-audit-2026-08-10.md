@@ -25,16 +25,20 @@ modified and untracked skill packages remain outside the change scope.
 |---|---|---|
 | Repository | `/Users/sanjayb/codex-ecc-custom` | verified-local |
 | Git HEAD at initial live snapshot | `1f7cac81653fc119fde928184838465af0cbdb67` | historical baseline |
-| Authoritative clean-rerun commit | `d29999f187c95b220d1c31df85c74897729671ee` | verified-local |
-| Frozen manifest scan UTC | `2026-08-10T16:28:32Z` | verified-local |
+| Authoritative clean-rerun commit | `1d28de3d35258884049ece8025db3f061e6d576e` | verified-local |
+| Frozen manifest scan UTC | `2026-08-10T16:36:53Z` | verified-local |
 | Window | `2026-06-10T00:00:00Z` through `2026-08-10T23:59:59.999999Z` | verified-local |
 | Full worktree status entries at initial snapshot | `472` | verified-local, dirty checkout |
 | Main worktree status after selective commits | `470` | verified-local, unrelated user work |
 | Frozen source manifest | `docs/audits/skill-usage-audit-source-manifest.json` with `41` SHA-256-bound JSONL files | verified-local |
-| Analyzer SHA-256 at clean rerun | `7975a454465dd3e249ac52ceef98db2bec252035712cc48c84c51f0550efe8c1` | verified-local |
-| Test SHA-256 at clean rerun | `0180b46d82177e165f5468c7266d6a2666e41b97ab60f27ae0c0120d27e1ab66` | verified-local |
-| Evidence SHA-256 at clean rerun | `a2940c0520f0d1ba87c49d49c5c14b8a40fe4c52ea2ad810cd26d10f2ba48948` | verified-local |
+| Frozen skill manifest | `docs/audits/skill-usage-audit-skill-manifest.json` with `102` SHA-256-bound `SKILL.md` files | verified-local |
+| Inventory labels in frozen CSV | `111` distinct labels across `102` skill files | verified-local |
+| Analyzer SHA-256 at clean rerun | `b75f9c542a3fadb5195943eb0273355946ebd3e5d9d899260e08d76a9b9f9809` | verified-local |
+| Test SHA-256 at clean rerun | `504aacd2bba10abaf89152355a234ad7853f54d9308d92e99823cb88280a0955` | verified-local |
+| Evidence SHA-256 at clean rerun | `41b716f4a3a0c2a64336baa5954a1db92808f55938de7f8269cb0cd0c6f62eea` | verified-local |
 | Source-manifest SHA-256 at clean rerun | `c2b1ef7c66705a6abdcc89a6924c39a843e760911ec44768467aef29b7e7a830` | verified-local |
+| Skill-manifest SHA-256 at clean rerun | `1e50568104f7bfa320fe30712cbce10031b4daccd6f306ec502bbf4731eecb87` | verified-local |
+| Frozen summary SHA-256 at clean rerun | `d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95` | verified-local |
 | Canonical skill inventory | `102` local skill directories | verified-local |
 | Candidate transcript files in live coverage scan | `100` | verified-local, live reference |
 | Active transcript files in live coverage scan | `43` | verified-local, live reference |
@@ -49,9 +53,10 @@ modified and untracked skill packages remain outside the change scope.
 The checkout is intentionally dirty. The 472-entry count includes unrelated
 user work and must not be interpreted as changes made by this audit. The live
 coverage scan included two files that were still changing; the authoritative
-ranking therefore uses the 41-file hash-bound manifest and excludes those two
-recently modified files. The exact manifest run reproduced in a pristine
-detached worktree at the commit above.
+ranking therefore uses the 41-file hash-bound transcript manifest and the
+102-file hash-bound skill/inventory manifest, excluding those two recently
+modified transcript files. The exact run reproduced with clean analyzer code
+in a pristine detached worktree while reading those frozen local inputs.
 
 ## Evidence model
 
@@ -177,6 +182,8 @@ value and a clear output contract.
 - Separate L1/L2/L3/L4 and expose source coverage.
 - Support a hash-bound source manifest so live transcript growth cannot create
   false reproducibility.
+- Support a hash-bound skill/inventory manifest so a Git clean tree does not
+  silently omit user-owned untracked skill packages.
 - Add regression tests for context exclusion, malformed lines, out-of-window
   sessions, wrapper contamination, quality-signal propagation, and manifest
   hash drift.
@@ -265,8 +272,9 @@ these contracts are approved. Do not mass-edit all 102 skills.
 | U9 | Wrapper actions overcount implementation work | `exec` dominates at 30,638 calls and nested strings may be code examples | Tool telemetry was not modeled as a typed action/result graph | Medium | P4 |
 | U10 | Plugin mentions are not skill activation | `everything-claude-code` appears 242 times, but it is a plugin/container label | Plugin and skill namespaces were mixed in prior reasoning | Medium | P2 |
 | U11 | Prompt matching can false-positive or miss aliases | L3 is text/token based by design | No host trigger engine or alias map is exposed in this audit | Medium | P4/P6 |
-| U12 | Live reports can drift from the run | The new source-manifest mode fails closed on JSONL hash drift; live mode remains moving-input by design | A frozen snapshot command/manifest was initially missing | High | P0/P7 |
+| U12 | Live reports can drift from the run | Source and skill manifests fail closed on input drift; a committed frozen summary now backs the human report | A frozen snapshot command/manifest was initially missing | Medium | P0 complete; P7 maintenance |
 | U13 | External integration prerequisites remain separate | CASS, MCP client, host loaders, remote DBs, and multimodal rights are unavailable or unapproved | Optional gates were mixed with the core usage audit | High | P6 |
+| U14 | Git clean tree omits user-owned untracked skills | The first clean run dropped `second-brain-ops`, `ecc-explain`, and related labels | Git commit contents are not the same as the active local skill inventory | High | Fixed with hash-bound skill/inventory manifest; host portability still open |
 
 ## Manual steps
 
@@ -306,9 +314,10 @@ at OpenAI](https://openai.com/index/running-codex-safely/).
 
 **Decision:** The usage analyzer and its focused regression suite are
 `verified-local`. The ranked top 20 and underutilized top 10 are
-`verified-local` as measurements of the 41-file hash-bound transcript corpus,
-with L4 opportunity claims explicitly marked as hypotheses. Clean-checkout
-reproducibility is verified at `d29999f`. Skill host loading, successful
+`verified-local` as measurements of the 41-file hash-bound transcript corpus
+against the 102-file/111-label hash-bound local skill inventory, with L4
+opportunity claims explicitly marked as hypotheses. Clean analyzer
+reproducibility is verified at `1d28de3`. Skill host loading, successful
 execution, cross-surface coverage, and outcome/ROI remain unverified.
 
 Do not use this artifact to claim “top 20 most executed skills” or “the top 10
