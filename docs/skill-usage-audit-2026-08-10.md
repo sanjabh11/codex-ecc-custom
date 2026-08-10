@@ -25,12 +25,16 @@ modified and untracked skill packages remain outside the change scope.
 |---|---|---|
 | Repository | `/Users/sanjayb/codex-ecc-custom` | verified-local |
 | Git HEAD at initial live snapshot | `1f7cac81653fc119fde928184838465af0cbdb67` | historical baseline |
-| Frozen manifest scan UTC | `2026-08-10T16:23:58Z` | verified-local |
+| Authoritative clean-rerun commit | `d29999f187c95b220d1c31df85c74897729671ee` | verified-local |
+| Frozen manifest scan UTC | `2026-08-10T16:28:32Z` | verified-local |
 | Window | `2026-06-10T00:00:00Z` through `2026-08-10T23:59:59.999999Z` | verified-local |
 | Full worktree status entries at initial snapshot | `472` | verified-local, dirty checkout |
+| Main worktree status after selective commits | `470` | verified-local, unrelated user work |
 | Frozen source manifest | `docs/audits/skill-usage-audit-source-manifest.json` with `41` SHA-256-bound JSONL files | verified-local |
-| Analyzer SHA-256 before manifest extension | `47052262be2a1f4ef2e22ff4eb74cf5479342c44f4f4536f538456fe0fce340f` | historical baseline |
-| Test SHA-256 before manifest extension | `facd7bd50811acfbf75b6cafa032336a3240ea7dc4b2464c3680746dc1cf9aa4` | historical baseline |
+| Analyzer SHA-256 at clean rerun | `7975a454465dd3e249ac52ceef98db2bec252035712cc48c84c51f0550efe8c1` | verified-local |
+| Test SHA-256 at clean rerun | `0180b46d82177e165f5468c7266d6a2666e41b97ab60f27ae0c0120d27e1ab66` | verified-local |
+| Evidence SHA-256 at clean rerun | `a2940c0520f0d1ba87c49d49c5c14b8a40fe4c52ea2ad810cd26d10f2ba48948` | verified-local |
+| Source-manifest SHA-256 at clean rerun | `c2b1ef7c66705a6abdcc89a6924c39a843e760911ec44768467aef29b7e7a830` | verified-local |
 | Canonical skill inventory | `102` local skill directories | verified-local |
 | Candidate transcript files in live coverage scan | `100` | verified-local, live reference |
 | Active transcript files in live coverage scan | `43` | verified-local, live reference |
@@ -46,8 +50,8 @@ The checkout is intentionally dirty. The 472-entry count includes unrelated
 user work and must not be interpreted as changes made by this audit. The live
 coverage scan included two files that were still changing; the authoritative
 ranking therefore uses the 41-file hash-bound manifest and excludes those two
-recently modified files. A clean-checkout rerun is still required before a
-release-level provenance claim.
+recently modified files. The exact manifest run reproduced in a pristine
+detached worktree at the commit above.
 
 ## Evidence model
 
@@ -254,7 +258,7 @@ these contracts are approved. Do not mass-edit all 102 skills.
 | U2 | External/global labels lack source audits | `deep-research`, `prompt-optimizer`, `conformance-gate`, `agent-phase-ratchet`, `skill-optimizer`, and `codebase-onboarding` have null local quality fields | One ranking combined canonical and global labels | High | P2/P4 |
 | U3 | Alias and renamed-skill usage may be split | Matching is canonical-name/token based | No shared selector registry | High | P4 |
 | U4 | Outcomes are not measured | Counts show selection/mentions, not artifact quality, time, cost, or user success | Usage ledger was built before an outcome envelope | High | P3/P4 |
-| U5 | Worktree provenance is weak | 472 status entries at the initial snapshot; audit changes require selective commit | Audit ran in a user-owned dirty checkout | Critical | P0/P6 |
+| U5 | Primary worktree remains dirty | 470 unrelated status entries remain after selective audit commits; the clean detached worktree is pristine | User changes must be preserved while audit artifacts are committed selectively | Medium | P0 complete; P6 only for future releases |
 | U6 | Historical coverage may be incomplete | 100 live candidates, 41 hash-bound stable files; two recent files excluded; CASS was stale and skipped | Local transcript availability differs by host/archive | High | P0/P6 |
 | U7 | Quality checks are heuristic | `has_output_contract` and related flags are phrase/directory signals | A cheap inventory signal was needed before semantic schema work | Medium | P4 |
 | U8 | Per-skill scenario evidence is absent | Only analyzer regression scenarios exist | Top-20 audit was metadata/usage-first | High | P3/P5 |
@@ -266,9 +270,9 @@ these contracts are approved. Do not mass-edit all 102 skills.
 
 ## Manual steps
 
-1. Selectively commit the analyzer, regression test, report, evidence, and
-   source-manifest artifacts from a clean/isolated worktree. Do not use
-   `git add .` in the current checkout.
+1. No core-code manual step remains: the analyzer, regression test, report,
+   evidence, and source manifest are selectively committed in `d29999f`. Keep
+   unrelated worktree entries unstaged; do not use `git add .`.
 2. If host-level activation proof is required, obtain the relevant Codex
    invocation/skill telemetry or run one authenticated loader smoke test per
    logical host family.
@@ -302,10 +306,10 @@ at OpenAI](https://openai.com/index/running-codex-safely/).
 
 **Decision:** The usage analyzer and its focused regression suite are
 `verified-local`. The ranked top 20 and underutilized top 10 are
-`verified-local` as measurements of the available local transcript corpus, with
-L4 opportunity claims explicitly marked as hypotheses. Skill host loading,
-successful execution, cross-surface coverage, outcome/ROI, and clean-checkout
-provenance remain unverified.
+`verified-local` as measurements of the 41-file hash-bound transcript corpus,
+with L4 opportunity claims explicitly marked as hypotheses. Clean-checkout
+reproducibility is verified at `d29999f`. Skill host loading, successful
+execution, cross-surface coverage, and outcome/ROI remain unverified.
 
 Do not use this artifact to claim “top 20 most executed skills” or “the top 10
 skills the user needs.” The accurate wording is: “top 20 explicit selector
