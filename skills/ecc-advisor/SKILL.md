@@ -232,3 +232,40 @@ The advisor is always a stronger model than the executor. The specific pairing d
 - [Claude API Advisor Tool docs](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool)
 - [The Advisor Strategy blog post](https://claude.com/blog/the-advisor-strategy)
 - [advisor-middleware (fallback mode pattern)](https://github.com/emanueleielo/advisor-middleware)
+
+## Optimization Contract v1
+
+This contract makes the advisor result auditable without confusing advice with
+execution proof.
+
+```yaml
+contract_version: skill-optimization.v1
+scope: decision-point second opinion for the executing harness
+inputs:
+  - task_context
+  - key_decision
+  - constraints_and_risks
+  - available_backend_status
+outputs:
+  - backend_used
+  - decision
+  - rationale
+  - calls_remaining
+  - unverified_assumptions
+  - next_action
+evidence_policy:
+  advisor_text_is_guidance_not_execution_proof: true
+  record_backend_and_call_budget: true
+  record_fallback_or_unavailability: true
+completion_gate:
+  before_edits: advisor_decision_or_explicit_fallback_record
+  before_done: final_advisor_review_or_explicit_fallback_record
+stop_conditions:
+  - missing_task_context
+  - missing_required_approval
+  - advisor_result_conflicts_with_primary_evidence
+```
+
+The executor must preserve this distinction in its handoff: an advisor can
+recommend, rerank, or identify a risk, but only a command, test, artifact, or
+human approval proves that the recommendation was executed or accepted.
