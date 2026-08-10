@@ -3,7 +3,7 @@
   "skill_name": "skill-usage-audit",
   "target_kind": "workflow",
   "target_path": "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py",
-  "run_id": "2026-08-10-codex-skill-usage-audit-v1",
+  "run_id": "2026-08-10-codex-skill-usage-audit-v2-frozen-manifest",
   "summary": {
     "score": 1.0,
     "passed": 3,
@@ -27,7 +27,7 @@
       ],
       "result": "pass",
       "evidence": [
-        "python3 -m unittest -v test_skill_usage_audit.py: 4 tests passed",
+        "python3 -m unittest -v test_skill_usage_audit.py: 5 tests passed",
         "/Users/sanjayb/codex-ecc-custom/test_skill_usage_audit.py",
         "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py"
       ],
@@ -38,7 +38,7 @@
     },
     {
       "id": "S002",
-      "title": "Run a reproducible 60-day local usage scan",
+      "title": "Run a reproducible 60-day local usage scan from a hash-bound manifest",
       "prompt": "Scan the available Codex sessions for the fixed UTC window and rank explicit selectors, actions, and underutilized candidates.",
       "strictness": "neutral",
       "grader": "deterministic",
@@ -46,17 +46,20 @@
       "expected": [
         "The output records the UTC window and source coverage",
         "L1, L2, L3, and L4 are separated",
-        "The scan completes without malformed-line errors"
+        "The scan completes without malformed-line errors",
+        "A transcript hash change fails closed"
       ],
       "result": "pass",
       "evidence": [
-        "python3 scripts/skill_usage_audit.py --start 2026-06-10 --end 2026-08-10 with the recorded external labels",
-        "230208 in-window events across 34 sessions",
-        "969 filtered user prompts, 280 excluded context blocks, 0 malformed JSONL lines",
+        "python3 scripts/skill_usage_audit.py --source-manifest docs/audits/skill-usage-audit-source-manifest.json --start 2026-06-10 --end 2026-08-10 with the recorded external labels",
+        "218936 in-window events across 33 sessions from 41 SHA-256-bound files",
+        "931 filtered user prompts, 262 excluded context blocks, 0 malformed JSONL lines",
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-source-manifest.json",
         "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
       ],
       "artifact_paths": [
-        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md",
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-source-manifest.json"
       ]
     },
     {

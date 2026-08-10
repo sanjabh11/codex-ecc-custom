@@ -24,27 +24,30 @@ modified and untracked skill packages remain outside the change scope.
 | Field | Value | Proof label |
 |---|---|---|
 | Repository | `/Users/sanjayb/codex-ecc-custom` | verified-local |
-| Git HEAD | `1f7cac81653fc119fde928184838465af0cbdb67` | verified-local |
-| Snapshot UTC | `2026-08-10T16:14:01Z` | verified-local |
+| Git HEAD at initial live snapshot | `1f7cac81653fc119fde928184838465af0cbdb67` | historical baseline |
+| Frozen manifest scan UTC | `2026-08-10T16:23:58Z` | verified-local |
 | Window | `2026-06-10T00:00:00Z` through `2026-08-10T23:59:59.999999Z` | verified-local |
-| Full worktree status entries | `472` | verified-local, dirty checkout |
-| Scoped new files | `scripts/skill_usage_audit.py`, `test_skill_usage_audit.py` | artifact-only until committed |
-| Analyzer SHA-256 | `47052262be2a1f4ef2e22ff4eb74cf5479342c44f4f4536f538456fe0fce340f` | verified-local |
-| Test SHA-256 | `facd7bd50811acfbf75b6cafa032336a3240ea7dc4b2464c3680746dc1cf9aa4` | verified-local |
+| Full worktree status entries at initial snapshot | `472` | verified-local, dirty checkout |
+| Frozen source manifest | `docs/audits/skill-usage-audit-source-manifest.json` with `41` SHA-256-bound JSONL files | verified-local |
+| Analyzer SHA-256 before manifest extension | `47052262be2a1f4ef2e22ff4eb74cf5479342c44f4f4536f538456fe0fce340f` | historical baseline |
+| Test SHA-256 before manifest extension | `facd7bd50811acfbf75b6cafa032336a3240ea7dc4b2464c3680746dc1cf9aa4` | historical baseline |
 | Canonical skill inventory | `102` local skill directories | verified-local |
-| Candidate transcript files | `100` | verified-local |
-| Active transcript files | `43` | verified-local |
-| Distinct sessions | `34` | verified-local |
-| In-window events | `230,208` | verified-local |
-| Filtered user prompts | `969` | verified-local |
-| Repeated context blocks excluded | `280` | verified-local |
+| Candidate transcript files in live coverage scan | `100` | verified-local, live reference |
+| Active transcript files in live coverage scan | `43` | verified-local, live reference |
+| Stable files in authoritative manifest | `41` | verified-local |
+| Distinct sessions in authoritative manifest | `33` | verified-local |
+| In-window events in authoritative manifest | `218,936` | verified-local |
+| Filtered user prompts in authoritative manifest | `931` | verified-local |
+| Repeated context blocks excluded in authoritative manifest | `262` | verified-local |
 | Malformed JSONL lines | `0` | verified-local |
 | CASS | unhealthy/stale; not used as authoritative evidence | runtime-unverified |
 
 The checkout is intentionally dirty. The 472-entry count includes unrelated
-user work and must not be interpreted as changes made by this audit. A clean
-checkout or selective commit is still required before release or package-level
-provenance claims.
+user work and must not be interpreted as changes made by this audit. The live
+coverage scan included two files that were still changing; the authoritative
+ranking therefore uses the 41-file hash-bound manifest and excludes those two
+recently modified files. A clean-checkout rerun is still required before a
+release-level provenance claim.
 
 ## Evidence model
 
@@ -70,26 +73,26 @@ the canonical 102-skill inventory.
 
 | # | Skill | L1 selector prompts / sessions | L3 mention prompts / sessions | Source | Quality signals | Architect recommendation |
 |---:|---|---:|---:|---|---|---|
-| 1 | `deep-research` | 53 / 12 | 236 / 25 | external label | — | Keep as the default research route; add a mandatory source ledger, date window, and fact/inference split before treating a research result as complete. |
+| 1 | `deep-research` | 53 / 12 | 232 / 24 | external label | — | Keep as the default research route; add a mandatory source ledger, date window, and fact/inference split before treating a research result as complete. |
 | 2 | `ecc-niche-positioning-audit` | 34 / 7 | 38 / 8 | canonical | FM, SB, R, S, T | Preserve as a high-use workflow; add an explicit output contract and a claim-to-evidence matrix to make repeated audits comparable. |
-| 3 | `ecc-advisor` | 65 / 6 | 90 / 14 | canonical | FM, SB, R, S, T | Keep the advisor gate before edits and completion; add machine-readable decision/remaining-call-budget evidence to prevent advisory output from becoming process proof. |
+| 3 | `ecc-advisor` | 62 / 5 | 86 / 13 | canonical | FM, SB, R, S, T | Keep the advisor gate before edits and completion; add machine-readable decision/remaining-call-budget evidence to prevent advisory output from becoming process proof. |
 | 4 | `prompt-optimizer` | 12 / 4 | 12 / 4 | external label | — | Use only when prompt quality is the bottleneck; require before/after scenarios and avoid optimizing prompts when the missing control is repository/runtime enforcement. |
-| 5 | `conformance-gate` | 6 / 3 | 25 / 7 | external label | — | Make it the release-facing gate for contract work; require explicit pass/fail criteria, negative fixtures, and proof-layer labels. |
-| 6 | `last30days` | 5 / 3 | 6 / 3 | canonical | FM, SB, S, T | Reconcile the name/window mismatch with a single UTC window contract and source list; keep web freshness claims separate from local history evidence. |
-| 7 | `slides` | 4 / 2 | 9 / 5 | canonical | FM, SB, R, S, T | Add a render/open smoke check and a final artifact link/hash so deck generation is verified beyond source creation. |
-| 8 | `agent-phase-ratchet` | 3 / 2 | 20 / 7 | external label | — | Require baseline, one focused lever, check output, reflection, and next ratchet in every Tier 2+ ledger. |
+| 5 | `conformance-gate` | 6 / 3 | 20 / 6 | external label | — | Make it the release-facing gate for contract work; require explicit pass/fail criteria, negative fixtures, and proof-layer labels. |
+| 6 | `slides` | 4 / 2 | 9 / 5 | canonical | FM, SB, R, S, T | Add a render/open smoke check and a final artifact link/hash so deck generation is verified beyond source creation. |
+| 7 | `last30days` | 4 / 2 | 4 / 2 | canonical | FM, SB, S, T | Reconcile the name/window mismatch with a single UTC window contract and source list; keep web freshness claims separate from local history evidence. |
+| 8 | `agent-phase-ratchet` | 3 / 2 | 16 / 6 | external label | — | Require baseline, one focused lever, check output, reflection, and next ratchet in every Tier 2+ ledger. |
 | 9 | `second-brain-ops` | 12 / 1 | 12 / 1 | canonical | FM, SB | Keep vault writes approval-bound; add a content-hash, target-path, and reversible-write contract before using it for durable memory. |
 | 10 | `ecc-explain` | 6 / 1 | 8 / 2 | canonical | FM, SB | Require audience, evidence level, and limitations in every explanatory artifact; avoid turning a clear narrative into an unsupported readiness claim. |
 | 11 | `ecc-ml-engineering` | 6 / 1 | 6 / 1 | canonical | FM, R | Add scope boundaries, dataset/model provenance, and reproducibility gates before using it for implementation claims. |
 | 12 | `ecc-multi-execute` | 6 / 1 | 6 / 1 | canonical | FM | Treat as high-risk orchestration; require an explicit action budget, ownership map, approval gate, and rollback/stop condition. |
-| 13 | `skill-optimizer` | 4 / 1 | 6 / 3 | external label | — | Use the evidence schema and 3–7 supportive/neutral/competing scenarios; do not promote a skill based on a metadata-only quality score. |
-| 14 | `ecc-hormozi-funnel` | 1 / 1 | 25 / 7 | canonical | FM, SB, R, S, T | Separate copy generation from buyer validation; require claim provenance and a no-invention gate for market/customer statements. |
+| 13 | `skill-optimizer` | 4 / 1 | 5 / 2 | external label | — | Use the evidence schema and 3–7 supportive/neutral/competing scenarios; do not promote a skill based on a metadata-only quality score. |
+| 14 | `ecc-hormozi-funnel` | 1 / 1 | 24 / 6 | canonical | FM, SB, R, S, T | Separate copy generation from buyer validation; require claim provenance and a no-invention gate for market/customer statements. |
 | 15 | `codebase-onboarding` | 1 / 1 | 16 / 6 | external label | — | Make it the first step for unfamiliar repositories; require HEAD, status, instruction files, dependency health, and test baseline. |
-| 16 | `graph-engineer` | 1 / 1 | 37 / 5 | canonical | FM, SB, R, S, T | Keep its graph/schema validator as the core; separately track host loader, MCP, runtime, and human-gate proof rather than inferring them from local tests. |
-| 17 | `ecc-graphify` | 1 / 1 | 1 / 1 | canonical | FM, SB, R, S, T | Finish the clean-checkout core proof first; keep GraphML/SVG/wiki/remote DB/multimodal work explicitly optional until prerequisites and authority exist. |
-| 18 | `ecc-fable-loop` | 0 / 0 | 23 / 6 | canonical | FM | Add termination, budget, and durable-state output requirements; mentions do not establish that the loop was selected or run. |
-| 19 | `ecc-model-route` | 0 / 0 | 23 / 6 | canonical | FM, SB | Require an auditable route decision, model/tool constraints, and fallback behavior; test that the route cannot be silently bypassed. |
-| 20 | `ecc-verify` | 0 / 0 | 16 / 5 | canonical | FM | Add standard discovery tests and a structured failure taxonomy; a verification skill must report what it did not test. |
+| 16 | `ecc-fable-loop` | 0 / 0 | 22 / 5 | canonical | FM | Add termination, budget, and durable-state output requirements; mentions do not establish that the loop was selected or run. |
+| 17 | `ecc-model-route` | 0 / 0 | 22 / 5 | canonical | FM, SB | Require an auditable route decision, model/tool constraints, and fallback behavior; test that the route cannot be silently bypassed. |
+| 18 | `ecc-verify` | 0 / 0 | 16 / 5 | canonical | FM | Add standard discovery tests and a structured failure taxonomy; a verification skill must report what it did not test. |
+| 19 | `ecc-prompt-optimize` | 0 / 0 | 12 / 5 | canonical | FM | Distinguish this canonical package from the external `prompt-optimizer` label and add an explicit alias/namespace mapping. |
+| 20 | `graph-engineer` | 0 / 0 | 26 / 4 | canonical | FM, SB, R, S, T | Keep its graph/schema validator as the core; separately track host loader, MCP, runtime, and human-gate proof rather than inferring them from local tests. |
 
 ### Top-20 cross-cutting gaps
 
@@ -99,7 +102,7 @@ the canonical 102-skill inventory.
    contracts are inconsistently detectable. This is a metadata quality flag,
    not a semantic verdict; the detector is intentionally heuristic.
 3. A high mention count with zero selectors (`ecc-fable-loop`,
-   `ecc-model-route`, `ecc-verify`) is a discovery/routing question, not proof
+   `ecc-model-route`, `ecc-verify`, `graph-engineer`) is a discovery/routing question, not proof
    of underuse or failed activation.
 4. `ecc-advisor` and `ecc-niche-positioning-audit` are the strongest local
    candidates for reusable output schemas because they have both repeated
@@ -112,8 +115,8 @@ commands.
 
 | Action | Count | Sessions | Interpretation | Optimization |
 |---|---:|---:|---|---|
-| `exec` | 32,226 | 32 | Dominant wrapper/orchestration surface | Add a compact run summary and preserve the inner command's exit status; do not treat wrapper count as work count. |
-| `wait` | 3,812 | 29 | Long-running/polling workflow | Add bounded wait budgets and terminal-state evidence to long loops. |
+| `exec` | 30,638 | 31 | Dominant wrapper/orchestration surface | Add a compact run summary and preserve the inner command's exit status; do not treat wrapper count as work count. |
+| `wait` | 3,649 | 27 | Long-running/polling workflow | Add bounded wait budgets and terminal-state evidence to long loops. |
 | `exec_command` | 99 | 1 | Direct command surface | Prefer a reproducible command manifest for audits; keep secrets and environment values redacted. |
 | `request_user_input` | 54 | 20 | Human clarification/approval surface | Distinguish clarification from authorization and record the decision target/expiry when it is an approval. |
 | `send_message` | 18 | 2 | Coordination surface | Use only with explicit ownership and handoff state. |
@@ -135,16 +138,16 @@ activation pilot.
 
 | # | Skill | Relevance | Opportunity gap | L1 / L3 sessions | Quality signals | Audit and bounded next move |
 |---:|---|---:|---:|---:|---|---|
-| 1 | `plan-certificates` | 0.7143 | 0.7143 | 0 / 0 | FM, SB | Pilot on one provenance-heavy release plan; require certificate inputs, expiry, and verification output before considering adoption. |
-| 2 | `deterministic-simulation-testing` | 0.4286 | 0.4286 | 0 / 0 | FM, SB | Pilot against one boundary regression; require deterministic seed, fixture, replay command, and artifact hash. |
-| 3 | `ecc-a11y-audit` | 0.4286 | 0.4286 | 0 / 0 | FM | Pilot on one user-facing document/app surface; add scope, tool availability, and manual-review fallback. |
-| 4 | `ecc-buyer-pipeline` | 0.4286 | 0.4286 | 0 / 0 | FM, OC, SB, R | Pilot only for an evidence-backed buyer hypothesis; separate outreach copy from validated buyer evidence. |
-| 5 | `ecc-conversion-audit` | 0.4286 | 0.4286 | 0 / 0 | FM, OC, SB, R | Pilot on one existing funnel artifact; require baseline metric source, variant boundary, and no unsupported conversion claim. |
-| 6 | `spec-first-doctrine` | 0.4286 | 0.4286 | 0 / 0 | FM, SB | Use before one architecture change; require acceptance criteria and a refusal when the spec is incomplete. |
-| 7 | `agents-md-generator` | 0.2857 | 0.2857 | 0 / 0 | FM, SB | Pilot on a temporary fixture repository; require instruction precedence, diff review, and no broad overwrite. |
-| 8 | `ecc-content-quality-ops` | 0.2857 | 0.2857 | 0 / 0 | FM, OC, SB, R | Pilot on one customer-facing artifact; require source registry, claim scan, and final link/render check. |
-| 9 | `ecc-cpp-review` | 0.2857 | 0.2857 | 0 / 0 | FM | Activate only for a real C/C++ change; require compiler/toolchain detection before claiming review coverage. |
-| 10 | `ecc-eval` | 0.2857 | 0.2857 | 0 / 0 | FM, SB, R, S, T | Pilot as a measurement layer around one existing skill; require a baseline, evaluator rubric, and reproducible result artifact. |
+| 1 | `ecc-graphify` | 0.7143 | 0.7143 | 0 / 0 | FM, SB, R, S, T | Pilot the clean-checkout core on one codebase; keep MCP, GraphML/SVG/wiki, remote DB, and multimodal gates separate. |
+| 2 | `plan-certificates` | 0.7143 | 0.7143 | 0 / 0 | FM, SB | Pilot on one provenance-heavy release plan; require certificate inputs, expiry, and verification output before considering adoption. |
+| 3 | `deterministic-simulation-testing` | 0.4286 | 0.4286 | 0 / 0 | FM, SB | Pilot against one boundary regression; require deterministic seed, fixture, replay command, and artifact hash. |
+| 4 | `ecc-a11y-audit` | 0.4286 | 0.4286 | 0 / 0 | FM | Pilot on one user-facing document/app surface; add scope, tool availability, and manual-review fallback. |
+| 5 | `ecc-buyer-pipeline` | 0.4286 | 0.4286 | 0 / 0 | FM, OC, SB, R | Pilot only for an evidence-backed buyer hypothesis; separate outreach copy from validated buyer evidence. |
+| 6 | `ecc-conversion-audit` | 0.4286 | 0.4286 | 0 / 0 | FM, OC, SB, R | Pilot on one existing funnel artifact; require baseline metric source, variant boundary, and no unsupported conversion claim. |
+| 7 | `spec-first-doctrine` | 0.4286 | 0.4286 | 0 / 0 | FM, SB | Use before one architecture change; require acceptance criteria and a refusal when the spec is incomplete. |
+| 8 | `agents-md-generator` | 0.2857 | 0.2857 | 0 / 0 | FM, SB | Pilot on a temporary fixture repository; require instruction precedence, diff review, and no broad overwrite. |
+| 9 | `ecc-content-quality-ops` | 0.2857 | 0.2857 | 0 / 0 | FM, OC, SB, R | Pilot on one customer-facing artifact; require source registry, claim scan, and final link/render check. |
+| 10 | `ecc-cpp-review` | 0.2857 | 0.2857 | 0 / 0 | FM | Activate only for a real C/C++ change; require compiler/toolchain detection before claiming review coverage. |
 
 These rankings should not trigger automatic installation or edits. The next
 step is one scenario per candidate, then promote only candidates with repeatable
@@ -158,7 +161,9 @@ value and a clear output contract.
   report artifacts.
 - Record HEAD, full dirty status count, scoped paths, UTC window, inventory
   size, and source hashes.
-- Treat uncommitted output as `artifact-only`; do not call it release proof.
+- Treat the initial live scan as a coverage reference and the 41-file
+  SHA-256-bound manifest scan as the authoritative ranking.
+- Fail closed when a manifest-listed transcript changes.
 
 ### P1 — Build the usage ledger (complete)
 
@@ -166,8 +171,11 @@ value and a clear output contract.
 - Exclude repeated application context.
 - Deduplicate selector counts by session.
 - Separate L1/L2/L3/L4 and expose source coverage.
+- Support a hash-bound source manifest so live transcript growth cannot create
+  false reproducibility.
 - Add regression tests for context exclusion, malformed lines, out-of-window
-  sessions, wrapper contamination, and quality-signal propagation.
+  sessions, wrapper contamination, quality-signal propagation, and manifest
+  hash drift.
 
 ### P2 — Audit the top 20 (complete as architecture review)
 
@@ -246,21 +254,21 @@ these contracts are approved. Do not mass-edit all 102 skills.
 | U2 | External/global labels lack source audits | `deep-research`, `prompt-optimizer`, `conformance-gate`, `agent-phase-ratchet`, `skill-optimizer`, and `codebase-onboarding` have null local quality fields | One ranking combined canonical and global labels | High | P2/P4 |
 | U3 | Alias and renamed-skill usage may be split | Matching is canonical-name/token based | No shared selector registry | High | P4 |
 | U4 | Outcomes are not measured | Counts show selection/mentions, not artifact quality, time, cost, or user success | Usage ledger was built before an outcome envelope | High | P3/P4 |
-| U5 | Worktree provenance is weak | 472 status entries; new analyzer/test are uncommitted | Audit ran in a user-owned dirty checkout | Critical | P0/P6 |
-| U6 | Historical coverage may be incomplete | 100 files were found, 43 active; CASS was stale and skipped | Local transcript availability differs by host/archive | High | P0/P6 |
+| U5 | Worktree provenance is weak | 472 status entries at the initial snapshot; audit changes require selective commit | Audit ran in a user-owned dirty checkout | Critical | P0/P6 |
+| U6 | Historical coverage may be incomplete | 100 live candidates, 41 hash-bound stable files; two recent files excluded; CASS was stale and skipped | Local transcript availability differs by host/archive | High | P0/P6 |
 | U7 | Quality checks are heuristic | `has_output_contract` and related flags are phrase/directory signals | A cheap inventory signal was needed before semantic schema work | Medium | P4 |
 | U8 | Per-skill scenario evidence is absent | Only analyzer regression scenarios exist | Top-20 audit was metadata/usage-first | High | P3/P5 |
-| U9 | Wrapper actions overcount implementation work | `exec` dominates at 32,226 calls and nested strings may be code examples | Tool telemetry was not modeled as a typed action/result graph | Medium | P4 |
-| U10 | Plugin mentions are not skill activation | `everything-claude-code` appears 250 times, but it is a plugin/container label | Plugin and skill namespaces were mixed in prior reasoning | Medium | P2 |
+| U9 | Wrapper actions overcount implementation work | `exec` dominates at 30,638 calls and nested strings may be code examples | Tool telemetry was not modeled as a typed action/result graph | Medium | P4 |
+| U10 | Plugin mentions are not skill activation | `everything-claude-code` appears 242 times, but it is a plugin/container label | Plugin and skill namespaces were mixed in prior reasoning | Medium | P2 |
 | U11 | Prompt matching can false-positive or miss aliases | L3 is text/token based by design | No host trigger engine or alias map is exposed in this audit | Medium | P4/P6 |
-| U12 | Reports can drift from the run | Generated JSON is temporary and artifacts are written after the scan | No frozen snapshot command/manifest yet | High | P0/P7 |
+| U12 | Live reports can drift from the run | The new source-manifest mode fails closed on JSONL hash drift; live mode remains moving-input by design | A frozen snapshot command/manifest was initially missing | High | P0/P7 |
 | U13 | External integration prerequisites remain separate | CASS, MCP client, host loaders, remote DBs, and multimodal rights are unavailable or unapproved | Optional gates were mixed with the core usage audit | High | P6 |
 
 ## Manual steps
 
-1. Selectively commit the new analyzer, regression test, report, and evidence
-   artifact from a clean/isolated worktree. Do not use `git add .` in the
-   current checkout.
+1. Selectively commit the analyzer, regression test, report, evidence, and
+   source-manifest artifacts from a clean/isolated worktree. Do not use
+   `git add .` in the current checkout.
 2. If host-level activation proof is required, obtain the relevant Codex
    invocation/skill telemetry or run one authenticated loader smoke test per
    logical host family.

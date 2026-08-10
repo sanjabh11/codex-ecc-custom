@@ -100,6 +100,48 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def load_source_manifest(path: Path) -> list[Path]:
+    """Load and verify a frozen JSONL source manifest.
+
+    A live Codex session file can change while an audit is running.  Manifest
+    mode makes that drift visible and fails closed instead of presenting a
+    moving event count as a reproducible snapshot.
+    """
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read source manifest {path}: {exc}") from exc
+    if not isinstance(payload, dict) or payload.get("schema_version") != "skill-usage-source-manifest.v1":
+        raise ValueError("source manifest schema_version must be skill-usage-source-manifest.v1")
+    entries = payload.get("files")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("source manifest files must be a non-empty list")
+
+    resolved_paths: list[Path] = []
+    seen: set[Path] = set()
+    for index, entry in enumerate(entries, start=1):
+        if not isinstance(entry, dict):
+            raise ValueError(f"source manifest entry {index} must be an object")
+        raw_path = entry.get("path")
+        expected_hash = entry.get("sha256")
+        if not isinstance(raw_path, str) or not raw_path.startswith("/"):
+            raise ValueError(f"source manifest entry {index} path must be absolute")
+        if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", expected_hash):
+            raise ValueError(f"source manifest entry {index} sha256 must be 64 hexadecimal characters")
+        source = Path(raw_path).resolve()
+        if source in seen:
+            raise ValueError(f"source manifest contains duplicate path: {source}")
+        if source.suffix != ".jsonl" or not source.is_file():
+            raise ValueError(f"source manifest path is not an existing JSONL file: {source}")
+        actual_hash = sha256_file(source)
+        if actual_hash != expected_hash.lower():
+            raise ValueError(f"source manifest hash mismatch: {source}")
+        seen.add(source)
+        resolved_paths.append(source)
+    return resolved_paths
+
+
 def normalize_tokens(value: str) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
 
@@ -261,6 +303,7 @@ def audit_usage(
     start: datetime,
     end: datetime,
     extra_skills: Iterable[str] = (),
+    source_manifest: Path | None = None,
 ) -> dict[str, Any]:
     """Collect usage evidence from Codex JSONL sessions."""
 
@@ -480,6 +523,8 @@ def audit_usage(
         },
         "source_coverage": {
             "session_roots": [str(Path(root).resolve()) for root in session_roots],
+            "source_manifest": str(source_manifest.resolve()) if source_manifest else None,
+            "source_manifest_file_count": len(scanned_source_files) if source_manifest else None,
             "candidate_source_file_count": len(scanned_source_files),
             "active_source_file_count": len(active_source_files),
             "source_files": sorted(active_source_files),
@@ -509,6 +554,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--inventory-csv", type=Path, default=None, help="Optional generated skill inventory CSV")
     parser.add_argument("--start", help="UTC ISO date/timestamp; default is 60 days before now")
     parser.add_argument("--end", help="UTC ISO date/timestamp; default is now")
+    parser.add_argument(
+        "--source-manifest",
+        type=Path,
+        help="Verified JSON source manifest; fails closed if any listed JSONL hash changes",
+    )
     parser.add_argument("--extra-skill", action="append", default=[], help="External/plugin skill label; repeatable")
     parser.add_argument("--output", type=Path, help="Write JSON to this path instead of stdout")
     return parser
@@ -524,7 +574,15 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as exc:
         parser.error(str(exc))
     repo_root = Path(__file__).resolve().parent.parent
-    session_roots = args.session_roots or [Path.home() / ".codex" / "sessions", Path.home() / ".codex" / "archived_sessions"]
+    source_manifest = args.source_manifest
+    if source_manifest:
+        try:
+            session_roots = load_source_manifest(source_manifest)
+        except (OSError, UnicodeError, ValueError) as exc:
+            print(f"ERROR: invalid source manifest: {exc}", file=sys.stderr)
+            return 2
+    else:
+        session_roots = args.session_roots or [Path.home() / ".codex" / "sessions", Path.home() / ".codex" / "archived_sessions"]
     skill_root = args.skill_root or repo_root / "skills"
     inventory_csv = args.inventory_csv or repo_root / "docs" / "skill-inventory.csv"
     result = audit_usage(
@@ -534,6 +592,7 @@ def main(argv: list[str] | None = None) -> int:
         start=start,
         end=end,
         extra_skills=args.extra_skill,
+        source_manifest=source_manifest,
     )
     output = json.dumps(result, indent=2, sort_keys=False) + "\n"
     if args.output:

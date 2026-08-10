@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from scripts.skill_usage_audit import audit_usage  # noqa: E402
+from scripts.skill_usage_audit import audit_usage, load_source_manifest, sha256_file  # noqa: E402
 
 
 def write_jsonl(path: Path, events: list[dict]) -> None:
@@ -97,6 +97,28 @@ class SkillUsageAuditTests(unittest.TestCase):
             self.assertEqual(alpha["selector_session_count"], 1)
             self.assertEqual(result["source_coverage"]["active_source_file_count"], 1)
             self.assertEqual(result["source_coverage"]["malformed_jsonl_lines"], 1)
+
+    def test_source_manifest_is_hash_bound_and_fails_closed_on_drift(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "frozen.jsonl"
+            write_jsonl(source, [meta("frozen", "2026-07-02T00:00:00Z")])
+            manifest = root / "manifest.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "skill-usage-source-manifest.v1",
+                        "files": [{"path": str(source), "sha256": sha256_file(source)}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(load_source_manifest(manifest), [source.resolve()])
+            source.write_text(source.read_text(encoding="utf-8") + "drift\n", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                load_source_manifest(manifest)
 
     def test_top_level_actions_are_separate_from_lower_confidence_wrapper_call_sites(self):
         import tempfile
