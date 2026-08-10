@@ -27,6 +27,8 @@ modified and untracked skill packages remain outside the change scope.
 | Git HEAD at initial live snapshot | `1f7cac81653fc119fde928184838465af0cbdb67` | historical baseline |
 | Authoritative clean-rerun commit | `1d28de3d35258884049ece8025db3f061e6d576e` | verified-local |
 | Frozen manifest scan UTC | `2026-08-10T16:36:53Z` | verified-local |
+| Final clean-input verification UTC | `2026-08-10T16:38:40Z` | verified-local |
+| Final artifact commit | `9d3648ea2d1214743d1b6e0e656edec91e015fdc` | verified-local |
 | Window | `2026-06-10T00:00:00Z` through `2026-08-10T23:59:59.999999Z` | verified-local |
 | Full worktree status entries at initial snapshot | `472` | verified-local, dirty checkout |
 | Main worktree status after selective commits | `470` | verified-local, unrelated user work |
@@ -35,7 +37,7 @@ modified and untracked skill packages remain outside the change scope.
 | Inventory labels in frozen CSV | `111` distinct labels across `102` skill files | verified-local |
 | Analyzer SHA-256 at clean rerun | `b75f9c542a3fadb5195943eb0273355946ebd3e5d9d899260e08d76a9b9f9809` | verified-local |
 | Test SHA-256 at clean rerun | `504aacd2bba10abaf89152355a234ad7853f54d9308d92e99823cb88280a0955` | verified-local |
-| Evidence SHA-256 at clean rerun | `41b716f4a3a0c2a64336baa5954a1db92808f55938de7f8269cb0cd0c6f62eea` | verified-local |
+| Evidence SHA-256 at clean rerun | `2d975ca6e6b0767f9d95376333eb94a60d915c38e8b586eb70c725fcdd514ed4` | verified-local |
 | Source-manifest SHA-256 at clean rerun | `c2b1ef7c66705a6abdcc89a6924c39a843e760911ec44768467aef29b7e7a830` | verified-local |
 | Skill-manifest SHA-256 at clean rerun | `1e50568104f7bfa320fe30712cbce10031b4daccd6f306ec502bbf4731eecb87` | verified-local |
 | Frozen summary SHA-256 at clean rerun | `d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95` | verified-local |
@@ -317,8 +319,9 @@ at OpenAI](https://openai.com/index/running-codex-safely/).
 `verified-local` as measurements of the 41-file hash-bound transcript corpus
 against the 102-file/111-label hash-bound local skill inventory, with L4
 opportunity claims explicitly marked as hypotheses. Clean analyzer
-reproducibility is verified at `1d28de3`. Skill host loading, successful
-execution, cross-surface coverage, and outcome/ROI remain unverified.
+reproducibility is verified with code/input commit `1d28de3` and final artifact
+commit `9d3648e`. Skill host loading, successful execution, cross-surface
+coverage, and outcome/ROI remain unverified.
 
 Do not use this artifact to claim “top 20 most executed skills” or “the top 10
 skills the user needs.” The accurate wording is: “top 20 explicit selector
