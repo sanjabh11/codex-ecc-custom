@@ -197,6 +197,66 @@ def load_skill_manifest(path: Path, *, skill_root: Path, inventory_csv: Path) ->
     return len(expected_files)
 
 
+def load_optimization_aliases(path: Path) -> dict[str, tuple[str, ...]]:
+    """Load the shared canonical-skill selector registry.
+
+    Aliases are attribution metadata only: they make a selector such as
+    ``@advisor`` count for ``ecc-advisor`` without proving host activation.
+    The loader validates the small structural contract locally so a malformed
+    or colliding registry cannot silently change the ranking.
+    """
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read optimization manifest {path}: {exc}") from exc
+    if not isinstance(payload, dict) or payload.get("schema_version") != "skill-optimization-manifest.v1":
+        raise ValueError("optimization manifest schema_version must be skill-optimization-manifest.v1")
+    rows = payload.get("skills")
+    if not isinstance(rows, list) or not rows:
+        raise ValueError("optimization manifest skills must be a non-empty list")
+
+    result: dict[str, tuple[str, ...]] = {}
+    skill_ids_casefold: set[str] = set()
+    owner_by_alias: dict[str, str] = {}
+    for index, row in enumerate(rows, start=1):
+        if not isinstance(row, dict):
+            raise ValueError(f"optimization manifest skill row {index} must be an object")
+        skill_id = row.get("id")
+        aliases = row.get("aliases")
+        if (
+            not isinstance(skill_id, str)
+            or not skill_id.strip()
+            or skill_id != skill_id.strip()
+            or not re.fullmatch(r"[a-z0-9][a-z0-9._-]*", skill_id)
+        ):
+            raise ValueError(f"optimization manifest skill row {index} id must be a non-empty string")
+        if skill_id.casefold() in skill_ids_casefold:
+            raise ValueError(f"optimization manifest contains duplicate skill id: {skill_id}")
+        if not isinstance(aliases, list) or any(
+            not isinstance(alias, str)
+            or not alias.strip()
+            or alias != alias.strip()
+            or not re.fullmatch(r"[a-z0-9][a-z0-9._/@-]*", alias)
+            for alias in aliases
+        ):
+            raise ValueError(f"optimization manifest aliases for {skill_id} must be non-empty strings")
+        skill_ids_casefold.add(skill_id.casefold())
+        row_terms: set[str] = set()
+        terms = (skill_id, *aliases)
+        for term in terms:
+            key = term.casefold()
+            if key in row_terms:
+                raise ValueError(f"optimization manifest duplicate selector term in {skill_id}: {term}")
+            row_terms.add(key)
+            previous = owner_by_alias.get(key)
+            if previous is not None and previous != skill_id:
+                raise ValueError(f"optimization manifest selector collision: {term} maps to {previous} and {skill_id}")
+            owner_by_alias[key] = skill_id
+        result[skill_id] = tuple(aliases)
+    return result
+
+
 def normalize_tokens(value: str) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
 
@@ -311,20 +371,23 @@ def content_text(content: Any, context_prefixes: tuple[str, ...]) -> tuple[str, 
     return ("\n".join(parts), excluded)
 
 
-def explicit_selector(text: str, name: str) -> bool:
+def explicit_selector(text: str, name: str, aliases: Iterable[str] = ()) -> bool:
     """Recognize a user selector without treating prose as activation."""
 
     low = text.lower()
-    name_low = name.lower()
-    return any(
-        marker in low
-        for marker in (
-            f"${name_low}",
-            f"@{name_low}",
-            f"/skills/{name_low}/skill.md",
-            f"plugin://{name_low}",
-        )
-    )
+    for term in (name, *aliases):
+        term_low = term.lower()
+        if any(
+            marker in low
+            for marker in (
+                f"${term_low}",
+                f"@{term_low}",
+                f"/skills/{term_low}/skill.md",
+                f"plugin://{term_low}",
+            )
+        ):
+            return True
+    return False
 
 
 def nested_tool_names(raw: Any) -> list[str]:
@@ -361,10 +424,12 @@ def audit_usage(
     source_manifest: Path | None = None,
     skill_manifest: Path | None = None,
     skill_manifest_file_count: int | None = None,
+    optimization_manifest: Path | None = None,
 ) -> dict[str, Any]:
     """Collect usage evidence from Codex JSONL sessions."""
 
     inventory = load_inventory(skill_root, inventory_csv)
+    aliases_by_skill = load_optimization_aliases(optimization_manifest) if optimization_manifest else {}
     for extra in extra_skills:
         name = extra.strip().lower()
         if name and name not in inventory:
@@ -463,12 +528,13 @@ def audit_usage(
                     if any(term in low for term in terms):
                         topics[topic] += 1
                 for name, stat in skill_stats.items():
-                    token = normalize_tokens(name)
-                    if not token or f" {token} " not in normalized:
+                    aliases = aliases_by_skill.get(name, ())
+                    tokens = tuple(normalize_tokens(term) for term in (name, *aliases))
+                    if not any(token and f" {token} " in normalized for token in tokens):
                         continue
                     stat["mention_prompt_count"] += 1
                     stat["_mention_sessions"].add(session_key)
-                    if explicit_selector(text, name):
+                    if explicit_selector(text, name, aliases):
                         stat["selector_prompt_count"] += 1
                         stat["_selector_sessions"].add(session_key)
                 for match in re.finditer(r"plugin://([^\s)\]]+)", low):
@@ -584,6 +650,8 @@ def audit_usage(
             "source_manifest_file_count": len(scanned_source_files) if source_manifest else None,
             "skill_manifest": str(skill_manifest.resolve()) if skill_manifest else None,
             "skill_manifest_file_count": skill_manifest_file_count if skill_manifest else None,
+            "optimization_manifest": str(optimization_manifest.resolve()) if optimization_manifest else None,
+            "optimization_alias_count": sum(len(aliases) for aliases in aliases_by_skill.values()),
             "candidate_source_file_count": len(scanned_source_files),
             "active_source_file_count": len(active_source_files),
             "source_files": sorted(active_source_files),
@@ -623,6 +691,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Verified skill/inventory manifest; fails closed if canonical skill inputs change",
     )
+    parser.add_argument(
+        "--optimization-manifest",
+        type=Path,
+        help="Shared canonical-skill alias registry; fails closed on malformed or colliding aliases",
+    )
     parser.add_argument("--extra-skill", action="append", default=[], help="External/plugin skill label; repeatable")
     parser.add_argument("--output", type=Path, help="Write JSON to this path instead of stdout")
     return parser
@@ -659,6 +732,13 @@ def main(argv: list[str] | None = None) -> int:
         except (OSError, UnicodeError, ValueError) as exc:
             print(f"ERROR: invalid skill manifest: {exc}", file=sys.stderr)
             return 2
+    optimization_manifest = args.optimization_manifest
+    if optimization_manifest:
+        try:
+            load_optimization_aliases(optimization_manifest)
+        except (OSError, UnicodeError, ValueError) as exc:
+            print(f"ERROR: invalid optimization manifest: {exc}", file=sys.stderr)
+            return 2
     result = audit_usage(
         session_roots=session_roots,
         skill_root=skill_root,
@@ -669,6 +749,7 @@ def main(argv: list[str] | None = None) -> int:
         source_manifest=source_manifest,
         skill_manifest=skill_manifest,
         skill_manifest_file_count=skill_manifest_file_count,
+        optimization_manifest=optimization_manifest,
     )
     output = json.dumps(result, indent=2, sort_keys=False) + "\n"
     if args.output:

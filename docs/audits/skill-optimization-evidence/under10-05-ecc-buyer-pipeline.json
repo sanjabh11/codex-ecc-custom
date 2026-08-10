@@ -1,0 +1,132 @@
+{
+  "notes": "Deterministic metadata-only audit; output-contract status is reported but host activation and outcome quality remain unverified.",
+  "rejected_edits": [
+    {
+      "edit": "Promote based only on metadata lanes",
+      "reason": "This runner does not invoke the host trigger engine or prove successful execution."
+    }
+  ],
+  "run_id": "skill-optimization-2026-08-10-ecc-buyer-pipeline",
+  "scenarios": [
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "scope-control",
+        "output-contract"
+      ],
+      "evidence": [
+        "target=/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md",
+        "frontmatter_name=True",
+        "explicit_output_contract=False",
+        "metadata-only; host trigger engine not invoked",
+        "supportive_metadata=True"
+      ],
+      "expected": [
+        "Valid frontmatter names the skill",
+        "Trigger/use guidance exists"
+      ],
+      "grader": "deterministic",
+      "id": "supportive-ecc-buyer-pipeline",
+      "prompt": "Deterministic metadata audit lane: supportive.",
+      "result": "pass",
+      "strictness": "supportive",
+      "title": "Supportive activation metadata"
+    },
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "scope-control",
+        "output-contract"
+      ],
+      "evidence": [
+        "target=/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md",
+        "frontmatter_name=True",
+        "explicit_output_contract=False",
+        "metadata-only; host trigger engine not invoked",
+        "neutral_scope_metadata=False"
+      ],
+      "expected": [
+        "Out-of-scope or anti-trigger guidance exists"
+      ],
+      "grader": "deterministic",
+      "id": "neutral-ecc-buyer-pipeline",
+      "prompt": "Deterministic metadata audit lane: neutral.",
+      "result": "fail",
+      "strictness": "neutral",
+      "title": "Neutral scope boundary metadata"
+    },
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "scope-control",
+        "output-contract"
+      ],
+      "evidence": [
+        "target=/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md",
+        "frontmatter_name=True",
+        "explicit_output_contract=False",
+        "metadata-only; host trigger engine not invoked",
+        "competing_safety_metadata=True"
+      ],
+      "expected": [
+        "Limitations, evidence, manual gate, or stop guidance exists"
+      ],
+      "grader": "deterministic",
+      "id": "competing-ecc-buyer-pipeline",
+      "prompt": "Deterministic metadata audit lane: competing.",
+      "result": "pass",
+      "strictness": "competing",
+      "title": "Competing request safety metadata"
+    },
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "scope-control",
+        "output-contract"
+      ],
+      "evidence": [
+        "target=/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md",
+        "frontmatter_name=True",
+        "explicit_output_contract=False",
+        "metadata-only; host trigger engine not invoked",
+        "explicit_contract=False"
+      ],
+      "expected": [
+        "The shared Optimization Contract v1 is explicit"
+      ],
+      "grader": "deterministic",
+      "id": "contract-ecc-buyer-pipeline",
+      "prompt": "Deterministic metadata audit lane: neutral.",
+      "result": "fail",
+      "strictness": "neutral",
+      "title": "Explicit optimization output contract"
+    }
+  ],
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "ecc-buyer-pipeline",
+  "summary": {
+    "failed": 2,
+    "not_run": 0,
+    "passed": 2,
+    "score": 0.5,
+    "total": 4
+  },
+  "target_kind": "skill",
+  "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md"
+}

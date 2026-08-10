@@ -1,0 +1,84 @@
+{
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "ecc-graphify",
+  "target_kind": "skill",
+  "target_path": "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/SKILL.md",
+  "run_id": "2026-08-10-ecc-graphify-clean-core-recheck",
+  "summary": {
+    "score": 0.0,
+    "passed": 0,
+    "failed": 1,
+    "not_run": 2,
+    "total": 3
+  },
+  "scenarios": [
+    {
+      "id": "supportive-ecc-graphify-clean-core",
+      "title": "Clean-checkout Graphify core smoke",
+      "prompt": "Use ecc-graphify for a bounded read-only codebase graph audit.",
+      "strictness": "supportive",
+      "grader": "deterministic",
+      "coverage_tags": ["core-health", "platform-discovery", "proof-boundary"],
+      "expected": [
+        "Graphify health check passes",
+        "The bounded smoke test passes all discovery-surface checks"
+      ],
+      "result": "fail",
+      "evidence": [
+        "bash /Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/scripts/graphify-health.sh: GRAPHIFY_READY; graphify 0.9.38",
+        "bash /Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/scripts/smoke-test.sh: 18 passed, 6 failed, including five projections resolving to /Users/sanjayb/codex-ecc-custom/skills/ecc-graphify and missing .gemini",
+        "git -C /Users/sanjayb/codex-ecc-custom-graphify-core log -1: dabfae32a1847f04b430112a6040fff7862d5300"
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/SKILL.md",
+        "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/scripts/graphify-health.sh",
+        "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/scripts/smoke-test.sh"
+      ]
+    },
+    {
+      "id": "neutral-ecc-graphify-clean-core",
+      "title": "Host-neutral trigger lane",
+      "prompt": "Do not activate Graphify for a linear task that needs no graph or multimodal processing.",
+      "strictness": "neutral",
+      "grader": "deterministic",
+      "coverage_tags": ["trigger-boundary", "host-boundary"],
+      "expected": ["The host trigger engine demonstrates a non-activation decision"],
+      "result": "not_run",
+      "not_run_reason": "No authenticated host trigger engine is available in this local clean-checkout smoke run.",
+      "evidence": [
+        "The local smoke script checks package files and projections, not host trigger decisions."
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/SKILL.md"
+      ]
+    },
+    {
+      "id": "competing-ecc-graphify-clean-core",
+      "title": "Competing host-boundary lane",
+      "prompt": "Use a normal file reader for a text-only question that does not need a knowledge graph.",
+      "strictness": "competing",
+      "grader": "deterministic",
+      "coverage_tags": ["scope-control", "host-boundary"],
+      "expected": ["The host trigger engine demonstrates routing away from Graphify"],
+      "result": "not_run",
+      "not_run_reason": "No authenticated host trigger engine is available in this local clean-checkout smoke run.",
+      "evidence": [
+        "The local smoke script cannot prove host routing or non-activation behavior."
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom-graphify-core/skills/ecc-graphify/SKILL.md"
+      ]
+    }
+  ],
+  "rejected_edits": [
+    {
+      "edit": "Promote Graphify based on CLI health alone",
+      "reason": "Health passes, but discovery projections and host trigger behavior are not fully verified."
+    },
+    {
+      "edit": "Treat five overlapping symlink paths as five independent integrations",
+      "reason": "The smoke run resolves several paths to the primary checkout and does not prove host loading."
+    }
+  ],
+  "notes": "Clean-core pilot recheck is locally reproducible but blocked at platform projection/host proof. Keep Graphify as a bounded pilot, not a promoted underutilized skill."
+}

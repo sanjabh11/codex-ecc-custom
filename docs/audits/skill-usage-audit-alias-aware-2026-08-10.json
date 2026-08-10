@@ -1,0 +1,3183 @@
+{
+  "schema_version": "skill-usage-audit.v1",
+  "generated_at": "2026-08-10T17:33:00.362998+00:00",
+  "window": {
+    "start": "2026-06-10T00:00:00+00:00",
+    "end": "2026-08-10T23:59:59+00:00",
+    "timezone": "UTC"
+  },
+  "proof_levels": {
+    "L1": "explicit user selector, deduplicated by session",
+    "L2": "top-level tool-call record in a session transcript",
+    "L3": "plain prompt mention or nested wrapper call-site; supporting evidence only",
+    "L4": "opportunity hypothesis derived from observed task vocabulary"
+  },
+  "source_coverage": {
+    "session_roots": [
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-10T12-31-50-019f4ad5-2358-7bb3-b268-14934dae82eb.jsonl",
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-16T19-01-28-019f6b20-04c0-7110-9a2a-ce9d93a1bb50.jsonl",
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-17T20-58-09-019f70b1-333a-7e70-91d2-d8fe34bdaa40.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/04/rollout-2026-07-04T12-39-31-019f2bf6-067c-7e20-868e-9162180ef272.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/10/rollout-2026-07-10T14-38-05-019f4b48-bb3c-7ae3-a5d7-8e24514a4477.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/12/rollout-2026-07-12T08-56-25-019f545c-a603-7bf0-ab5b-a8acc1baf0bd.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/13/rollout-2026-07-13T13-24-09-019f5a78-1a87-7b63-9a75-df02444f219a.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/13/rollout-2026-07-13T18-40-39-019f5b99-d816-7113-b6d2-1debca31f405.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T10-30-20-019f5eff-56ef-77d3-b2d9-8a9f6aef0495.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T12-35-34-019f5f71-ed77-7830-a7e5-40efc445e59d.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T19-52-55-019f6102-6603-7702-b3dc-2c4cc011079b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-56-18-019f6699-b865-7111-96c7-49a052236584.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-57-39-019f669a-f76e-7870-9297-a7b4d431596f.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-57-55-019f669b-31ce-7511-8fa7-f3b661e41cd4.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-58-10-019f669b-6ade-78f0-8c28-d9d0472fb6d1.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T17-38-18-019f6ad3-e16f-7972-bba4-f755636da1ba.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T20-07-41-019f6b5c-a407-7a53-b433-23db3d37ed61.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T21-48-06-019f6bb8-9597-7892-88cc-2a9797e2e954.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/17/rollout-2026-07-17T13-00-47-019f6efc-24f0-7522-b647-64d37f0f51b3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/18/rollout-2026-07-18T13-02-55-019f7424-7874-7c60-9cd0-4a3b3313c2f1.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/18/rollout-2026-07-18T13-35-48-019f7442-942d-7ce2-ae97-ed7e0e2faf8c.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/22/rollout-2026-07-22T11-15-13-019f885b-4e6b-7f23-bff5-f4fb13c38055.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/22/rollout-2026-07-22T11-42-10-019f8873-fde6-7280-89e5-9af14c3c7185.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/25/rollout-2026-07-25T19-15-07-019f9985-c076-7672-a059-f01320b76d60.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/27/rollout-2026-07-27T19-16-16-019fa3d3-8741-7bf0-827e-ecd3c94a509d.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/28/rollout-2026-07-28T13-40-05-019fa7c6-1b23-7551-ba55-b8d72fbcd9af.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/28/rollout-2026-07-28T14-06-32-019fa7de-4f98-7570-b118-d7d1991119cf.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/29/rollout-2026-07-29T18-38-12-019fadfd-6615-7b22-b658-ce3bc66a9fab.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/31/rollout-2026-07-31T15-24-18-019fb798-97aa-7d80-97e1-47f7d22ee8b3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-43-59-019fbcd0-f93b-7930-961b-7a92bbe7f7d3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-44-43-019fbcd1-a2f3-74e1-90c3-2ef1e686e11b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-45-15-019fbcd2-213f-7912-a5cd-6ccc14212ab6.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T16-19-38-019fbcf1-9cd6-7892-b2b6-7fc20638f267.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/02/rollout-2026-08-02T09-57-32-019fc0ba-242b-7d33-80ba-0d2fa695a98c.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/02/rollout-2026-08-02T11-29-17-019fc10e-2417-7092-8939-e6702c660d04.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/05/rollout-2026-08-05T14-52-48-019fd13b-8772-73e0-8e32-34863f91fc57.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/06/rollout-2026-08-06T12-02-45-019fd5c6-3a6f-7952-a63f-2c23a7cf373a.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/08/rollout-2026-08-08T12-26-54-019fe029-0e0d-7cd0-9d48-087345b4a6a3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T15-17-48-019feb12-3928-76a1-ac67-1f8ff9cc0d1b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T20-39-01-019fec38-50a3-73a3-8da4-ca414bdb70ed.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T20-39-04-019fec38-5ab4-7e63-9d87-ff002a72e324.jsonl"
+    ],
+    "source_manifest": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-source-manifest.json",
+    "source_manifest_file_count": 41,
+    "skill_manifest": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-skill-manifest.json",
+    "skill_manifest_file_count": 102,
+    "optimization_manifest": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+    "optimization_alias_count": 15,
+    "candidate_source_file_count": 41,
+    "active_source_file_count": 41,
+    "source_files": [
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-10T12-31-50-019f4ad5-2358-7bb3-b268-14934dae82eb.jsonl",
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-16T19-01-28-019f6b20-04c0-7110-9a2a-ce9d93a1bb50.jsonl",
+      "/Users/sanjayb/.codex/archived_sessions/rollout-2026-07-17T20-58-09-019f70b1-333a-7e70-91d2-d8fe34bdaa40.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/04/rollout-2026-07-04T12-39-31-019f2bf6-067c-7e20-868e-9162180ef272.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/10/rollout-2026-07-10T14-38-05-019f4b48-bb3c-7ae3-a5d7-8e24514a4477.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/12/rollout-2026-07-12T08-56-25-019f545c-a603-7bf0-ab5b-a8acc1baf0bd.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/13/rollout-2026-07-13T13-24-09-019f5a78-1a87-7b63-9a75-df02444f219a.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/13/rollout-2026-07-13T18-40-39-019f5b99-d816-7113-b6d2-1debca31f405.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T10-30-20-019f5eff-56ef-77d3-b2d9-8a9f6aef0495.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T12-35-34-019f5f71-ed77-7830-a7e5-40efc445e59d.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/14/rollout-2026-07-14T19-52-55-019f6102-6603-7702-b3dc-2c4cc011079b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-56-18-019f6699-b865-7111-96c7-49a052236584.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-57-39-019f669a-f76e-7870-9297-a7b4d431596f.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-57-55-019f669b-31ce-7511-8fa7-f3b661e41cd4.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/15/rollout-2026-07-15T21-58-10-019f669b-6ade-78f0-8c28-d9d0472fb6d1.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T17-38-18-019f6ad3-e16f-7972-bba4-f755636da1ba.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T20-07-41-019f6b5c-a407-7a53-b433-23db3d37ed61.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/16/rollout-2026-07-16T21-48-06-019f6bb8-9597-7892-88cc-2a9797e2e954.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/17/rollout-2026-07-17T13-00-47-019f6efc-24f0-7522-b647-64d37f0f51b3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/18/rollout-2026-07-18T13-02-55-019f7424-7874-7c60-9cd0-4a3b3313c2f1.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/18/rollout-2026-07-18T13-35-48-019f7442-942d-7ce2-ae97-ed7e0e2faf8c.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/22/rollout-2026-07-22T11-15-13-019f885b-4e6b-7f23-bff5-f4fb13c38055.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/22/rollout-2026-07-22T11-42-10-019f8873-fde6-7280-89e5-9af14c3c7185.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/25/rollout-2026-07-25T19-15-07-019f9985-c076-7672-a059-f01320b76d60.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/27/rollout-2026-07-27T19-16-16-019fa3d3-8741-7bf0-827e-ecd3c94a509d.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/28/rollout-2026-07-28T13-40-05-019fa7c6-1b23-7551-ba55-b8d72fbcd9af.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/28/rollout-2026-07-28T14-06-32-019fa7de-4f98-7570-b118-d7d1991119cf.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/29/rollout-2026-07-29T18-38-12-019fadfd-6615-7b22-b658-ce3bc66a9fab.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/07/31/rollout-2026-07-31T15-24-18-019fb798-97aa-7d80-97e1-47f7d22ee8b3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-43-59-019fbcd0-f93b-7930-961b-7a92bbe7f7d3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-44-43-019fbcd1-a2f3-74e1-90c3-2ef1e686e11b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T15-45-15-019fbcd2-213f-7912-a5cd-6ccc14212ab6.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/01/rollout-2026-08-01T16-19-38-019fbcf1-9cd6-7892-b2b6-7fc20638f267.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/02/rollout-2026-08-02T09-57-32-019fc0ba-242b-7d33-80ba-0d2fa695a98c.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/02/rollout-2026-08-02T11-29-17-019fc10e-2417-7092-8939-e6702c660d04.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/05/rollout-2026-08-05T14-52-48-019fd13b-8772-73e0-8e32-34863f91fc57.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/06/rollout-2026-08-06T12-02-45-019fd5c6-3a6f-7952-a63f-2c23a7cf373a.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/08/rollout-2026-08-08T12-26-54-019fe029-0e0d-7cd0-9d48-087345b4a6a3.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T15-17-48-019feb12-3928-76a1-ac67-1f8ff9cc0d1b.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T20-39-01-019fec38-50a3-73a3-8da4-ca414bdb70ed.jsonl",
+      "/Users/sanjayb/.codex/sessions/2026/08/10/rollout-2026-08-10T20-39-04-019fec38-5ab4-7e63-9d87-ff002a72e324.jsonl"
+    ],
+    "session_count": 33,
+    "events_in_window": 218936,
+    "user_prompt_count": 931,
+    "excluded_context_blocks": 262,
+    "malformed_jsonl_lines": 0,
+    "caveat": "Transcript availability is local and may not cover every Codex host or archived session."
+  },
+  "observed_topics": {
+    "audit_review": 701,
+    "research_browser": 598,
+    "implementation_fix": 867,
+    "testing_verification": 675,
+    "planning_orchestration": 822,
+    "docs_artifacts": 627,
+    "security_provenance": 572
+  },
+  "skills": [
+    {
+      "name": "deep-research",
+      "selector_prompt_count": 53,
+      "selector_session_count": 12,
+      "mention_prompt_count": 232,
+      "mention_session_count": 24,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-niche-positioning-audit",
+      "selector_prompt_count": 34,
+      "selector_session_count": 7,
+      "mention_prompt_count": 74,
+      "mention_session_count": 8,
+      "canonical_path": "skills/ecc-niche-positioning-audit/SKILL.md",
+      "canonical_sha256": "f7ce2d8c5b15970a666906583df29446387480767826ebff57949650d12f3990",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-advisor",
+      "selector_prompt_count": 62,
+      "selector_session_count": 5,
+      "mention_prompt_count": 104,
+      "mention_session_count": 15,
+      "canonical_path": "skills/ecc-advisor/SKILL.md",
+      "canonical_sha256": "fd65b029433935e16e34cf630d58f3f06cc44007282c1ae6c634cee2ce820799",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "prompt-optimizer",
+      "selector_prompt_count": 12,
+      "selector_session_count": 4,
+      "mention_prompt_count": 12,
+      "mention_session_count": 4,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "conformance-gate",
+      "selector_prompt_count": 6,
+      "selector_session_count": 3,
+      "mention_prompt_count": 20,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "slides",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 12,
+      "mention_session_count": 7,
+      "canonical_path": "skills/slides/SKILL.md",
+      "canonical_sha256": "9ad30da4796ebbd500086ce82cf4b9f479429030605f05fcc8070c7400e13c4f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "last30days",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 4,
+      "mention_session_count": 2,
+      "canonical_path": "skills/last30days/SKILL.md",
+      "canonical_sha256": "392d0b28adeb360d0f4fc797e13355c51fcee627bf8dd537c6dfa856190d43ed",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "agent-phase-ratchet",
+      "selector_prompt_count": 3,
+      "selector_session_count": 2,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "second-brain-ops",
+      "selector_prompt_count": 12,
+      "selector_session_count": 1,
+      "mention_prompt_count": 12,
+      "mention_session_count": 1,
+      "canonical_path": "skills/second-brain-ops/SKILL.md",
+      "canonical_sha256": "9992d26daf0e7cf1315aa38a997e575ffdd884702f290a774deae55f6ae220bf",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-explain",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-explain/SKILL.md",
+      "canonical_sha256": "b435954ad154be478567dfc694fda0fe2f04dba2b0c51533679c80d7ad4fa24f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-ml-engineering",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-ml-engineering/SKILL.md",
+      "canonical_sha256": "aab5e889217b7d4c98690cb7091f48ecae4f496fea317b56907532b151c1cf14",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-execute",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-multi-execute/SKILL.md",
+      "canonical_sha256": "a80c4c4dcf8b3dded27d3e4c54ac0d0025ba5ee1c78d68f5f5e059292bb461b2",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "skill-optimizer",
+      "selector_prompt_count": 4,
+      "selector_session_count": 1,
+      "mention_prompt_count": 5,
+      "mention_session_count": 2,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-hormozi-funnel",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 24,
+      "mention_session_count": 6,
+      "canonical_path": "skills/ecc-hormozi-funnel/SKILL.md",
+      "canonical_sha256": "0480d4e2c55eac3b98f91ee12bd2d72b7394ab4ee4bfee49d051a16d37b924e8",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "codebase-onboarding",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-fable-loop",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-fable-loop/SKILL.md",
+      "canonical_sha256": "79915fffa3c7c05c7b2d80fb5907fa4415b65551d2d5deb05e73c95b0c599440",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-model-route",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-model-route/SKILL.md",
+      "canonical_sha256": "e96ec3ca40a0186ea5b383391f7565cfc9b720c4f5f37d208e6bae71ebc0201a",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-verify",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 16,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-verify/SKILL.md",
+      "canonical_sha256": "ce43d48ddbe6d39523ed86cab9de4c90375170ff70b11afd86c03cf1a2f18cd1",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-prompt-optimize",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 12,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-prompt-optimize/SKILL.md",
+      "canonical_sha256": "fcf3f0376766fead07abb4054de6b148d577c224381f54e9e365a7300a1bfa0b",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "graph-engineer",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 26,
+      "mention_session_count": 4,
+      "canonical_path": "skills/graph-engineer/SKILL.md",
+      "canonical_sha256": "ff82e3e538b75b7e4a871326f6352fd441de552dcccbc1f27c4631952c20af34",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-plan",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 12,
+      "mention_session_count": 4,
+      "canonical_path": "skills/ecc-plan/SKILL.md",
+      "canonical_sha256": "0e4fe667cc3aa4d9bd722e7d0f5c20861265709ac4ab623dab122f6cb8972b67",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-owasp-security",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 4,
+      "mention_session_count": 2,
+      "canonical_path": "skills/ecc-owasp-security/SKILL.md",
+      "canonical_sha256": "1cfa284712f07bbdf315146678cbe3207132efed18b71ac9a3a0768060d0ae00",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": false,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-code-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 3,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-code-review/SKILL.md",
+      "canonical_sha256": "9e03df0e998a8dcc183d369871fa7efb26f11a30f2c548e5b4ca90e60f370b9f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-harness-audit",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 3,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-harness-audit/SKILL.md",
+      "canonical_sha256": "4a626f1d23e2ee42fcc151edf3fd8b09fa1fc86ca8fb726c4d6038d88475a850",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-model-blindspot",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 3,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-multi-model-blindspot/SKILL.md",
+      "canonical_sha256": "5dd3e2bbc5b8966fc01c758e9511f56ba9a71799e4a3d172baaffd79ad46c1e9",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-graphify",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 2,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-graphify/SKILL.md",
+      "canonical_sha256": "dd739e8e6753b0184c0a992d107c1634ab93b922a14063c553ce9390a7a5db16",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-closed-loop-analytics",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 1,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-closed-loop-analytics/SKILL.md",
+      "canonical_sha256": "4c0aa4cc856dfdf792511ee57144598827f5a9dd525a8bdc396482e98d05e025",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-growth-experiment-loop",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 1,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-growth-experiment-loop/SKILL.md",
+      "canonical_sha256": "278b256c275fc79c5e1732eb4cee4a9a7534af63f8faa6ad94877c74d246fe76",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-weekly-marketing-flywheel",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 1,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-weekly-marketing-flywheel/SKILL.md",
+      "canonical_sha256": "76f17084c3a1ad848fbe1cc3e58bca4ed7bb7b48a2bbf6129fbc0146a0be4b66",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "agents-md-generator",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/agents-md-generator/SKILL.md",
+      "canonical_sha256": "3a867a0efcec1e7375288b60ee533e51825ea042d935c0b0b71260a2b667a012",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "deterministic-simulation-testing",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/deterministic-simulation-testing/SKILL.md",
+      "canonical_sha256": "3871d3df47a64d7f90a4f0eefb85be6c99bc1990eba3e01785dda0b106394f5d",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-a11y-audit",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-a11y-audit/SKILL.md",
+      "canonical_sha256": "3870e40d43c6fca8a26748bbe6387ddc5efce0f6fdd0a898f2e0489e1de172ed",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-agent-reach",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-agent-reach/SKILL.md",
+      "canonical_sha256": "0e225f888b85a97c1fa209645cb6adace7b53fe297a6f4de0dc1bb7f3ab7b534",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-aside",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-aside/SKILL.md",
+      "canonical_sha256": "3ba80c294f2012294d74ea4343178b65ba4f09c0d012893f9cabab754e2b6f2b",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-build-fix",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-build-fix/SKILL.md",
+      "canonical_sha256": "81b0e3a01234864ba2229b029b5202f151c7b49396888d5f5035e6edd59e1770",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-buyer-pipeline",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-buyer-pipeline/SKILL.md",
+      "canonical_sha256": "203bd3afa6b95572aa99ab791980d37ba08c00e8a63bf4eead9229b921c8f314",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cass",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-cass/SKILL.md",
+      "canonical_sha256": "1efc2a0efb6be99928344c7f51b9e750d908b2bc183bcfe09017af0768b9d8c6",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-checkpoint",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-checkpoint/SKILL.md",
+      "canonical_sha256": "89ab813c9051e8e700e7d3e7fcf2f1208bbac57d5371945a94022abf76056779",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-claw",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-claw/SKILL.md",
+      "canonical_sha256": "32043bf90d9cfef567669d2ad7ad12455a324fd43f220f4c8ee41584aa88bdaf",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-command-catalog",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-command-catalog/SKILL.md",
+      "canonical_sha256": "1df6c5976d5e44395f04ed8af31b3ec4d44874828c10346b807053afcce7c8be",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-content-quality-ops",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-content-quality-ops/SKILL.md",
+      "canonical_sha256": "5ab148af430d1b38fe5194043a973fa0e72bd855875b3a3bde567dd73f2fa0c5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-context-budget",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-context-budget/SKILL.md",
+      "canonical_sha256": "bcac1dc409f7325c4ac12b80b3b97139c2230d14c55d4e37d4f14190b108f949",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-conversion-audit",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-conversion-audit/SKILL.md",
+      "canonical_sha256": "d83256f075e67d92eb2a327b1ca4edaf632e5953e05c0b663c92c5d25445ed12",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cpp-build",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-cpp-build/SKILL.md",
+      "canonical_sha256": "899c8dc77f16a8b6537dd3a5b5df5d58149d73460eaf03022e216ef4aee575b5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cpp-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-cpp-review/SKILL.md",
+      "canonical_sha256": "cf578bc744eaf6fe82ab285485843ba8931f220098b862df22302de457cad0b1",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cpp-test",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-cpp-test/SKILL.md",
+      "canonical_sha256": "8defdb501c5d42745c977867c2d327a86c4fea3201a4473cbd324d8b1ee6c33f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-devfleet",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-devfleet/SKILL.md",
+      "canonical_sha256": "7331ac1e21ab1e653171b79d32add06a0ff54516220a1a76bc6d6a3cbb74c35d",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-docs",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-docs/SKILL.md",
+      "canonical_sha256": "dc77cfab01e08c9baa0dfdbd39b383cb528fa269f187927c57441f253683b4e6",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-e2e",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-e2e/SKILL.md",
+      "canonical_sha256": "879c9fae01a449e1608e68d3aa739139497f07f823459b38b535b6a07817dda5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-eval",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-eval/SKILL.md",
+      "canonical_sha256": "541d2406339cfe4cf90be8b4de3db7aadaeb03f78a1a6c604f288ea72f098e18",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-evolve",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-evolve/SKILL.md",
+      "canonical_sha256": "58fd280d9fb98e81a2605d57a112b55f4c0abf0a47067b17481490fd2e0c6df4",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-fable-goal",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-fable-goal/SKILL.md",
+      "canonical_sha256": "cf9feb106880c3c05580cdb5ffd9a9c536b6476a3a951c8f7b8ed3a3fb221e6e",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-go-build",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-go-build/SKILL.md",
+      "canonical_sha256": "01a4a002cc0511293c8343c44047cc71889e3125f86f2a4ab893fcf31576e056",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-go-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-go-review/SKILL.md",
+      "canonical_sha256": "cc332bf32b68d7febe98591beb9776ad902f9cb44d0f9b0e2525eb1ee59e5857",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-go-test",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-go-test/SKILL.md",
+      "canonical_sha256": "71f7fc1665e4cfaa71dc8cfa271d34da8d0a8efb6227b4941356e8a986eec0b0",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-gradle-build",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-gradle-build/SKILL.md",
+      "canonical_sha256": "d3717a9300822bdf9022e99cef4ffaf8709cca855081a090885b3e3089b144ef",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-graphql-security",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-graphql-security/SKILL.md",
+      "canonical_sha256": "6af9a624734115a936be99fd6284039faa1374efc7e3e49196406c923cc7d954",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-headroom",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-headroom/SKILL.md",
+      "canonical_sha256": "4730fd32d57ad136bd9ec65554b09178bc7cf410256db7948e01c13326c4d80e",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-instinct-export",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-instinct-export/SKILL.md",
+      "canonical_sha256": "abe27c31d78d534224a4b0e87a0d4a3b91649edfcaf9e592091389bfb06b1c18",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-instinct-import",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-instinct-import/SKILL.md",
+      "canonical_sha256": "d801c6dc027e665120e7938c5e4c155ca979894f2e4030d57afb2c26c87576ba",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-instinct-status",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-instinct-status/SKILL.md",
+      "canonical_sha256": "bdb95eac28b0eb29626a6343abefb1a8fda34cea9b712efed3160a2062e70861",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-integrations-catalog",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-integrations-catalog/SKILL.md",
+      "canonical_sha256": "65f8d9552f51bf9508c8c6af5639dbc5eb153f8c9c636da52f74bfc631a06046",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-kotlin-build",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-kotlin-build/SKILL.md",
+      "canonical_sha256": "616dd65cca8017a7b6f4673912cf440ff896a7fd25e57444c80bab379c1e975e",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-kotlin-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-kotlin-review/SKILL.md",
+      "canonical_sha256": "96569a75142041eeaf100ebf60a9bdb6eb74f294413a8ef0309bb0772bf7d07a",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-kotlin-test",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-kotlin-test/SKILL.md",
+      "canonical_sha256": "3269ff7fc8640412fddc8e89c08396814cad1d36e156bf8d426c50f3d1c7a4ae",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-lead-dossier",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-lead-dossier/SKILL.md",
+      "canonical_sha256": "4173a48000daa6e1a734563d2731897080f840d2ad9bcee252b265e94dffe666",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-learn",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-learn/SKILL.md",
+      "canonical_sha256": "8ec8bc4339ea654707dc50157e2cdc4806f39df39c25703eaca7e117cff2d8fd",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-learn-eval",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-learn-eval/SKILL.md",
+      "canonical_sha256": "4f0d95f9c2c1ffecd5ac252ee2bb88d9a21b24db2a569c521ea7c40773df01d6",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-loop-start",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-loop-start/SKILL.md",
+      "canonical_sha256": "b2ee4caaa69e8dbc94b417cb3c1770188ccebc3b8ef86e990b108d87a9c8dbd5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-loop-status",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-loop-status/SKILL.md",
+      "canonical_sha256": "f6bced4192bcb5ac7d48a5c5374f572a4b84176b0fe5114f2da81dd21addc2a3",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-backend",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-multi-backend/SKILL.md",
+      "canonical_sha256": "159e39bc8cd29209bd21a8c83ec6e0a2810f64903259d770513e7a34dcdc488b",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-frontend",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-multi-frontend/SKILL.md",
+      "canonical_sha256": "a3a8f7bd5a0972e0f8d3b61c77442f821c062d7672b45aa04e6b7109270aabf3",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-plan",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-multi-plan/SKILL.md",
+      "canonical_sha256": "4e26443523494979261a342ef9a8b89cbf0a17bcd6f04f5f3d8dd583efb5c096",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-workflow",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-multi-workflow/SKILL.md",
+      "canonical_sha256": "74d72f82865b4d00080e5962b3696b06ece2eeaa5a1d59693c2af1edc68b4212",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-orchestrate",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-orchestrate/SKILL.md",
+      "canonical_sha256": "535ae673835fa63f06e104896d46882f4ffbc0e85cca6897e3bbe7796769efe9",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-outbound-campaign",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-outbound-campaign/SKILL.md",
+      "canonical_sha256": "6b9e34c7675b14aebd4481642fe72d1f5d569ed2adc9edbe5cc4b814945cee3e",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-pm2",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-pm2/SKILL.md",
+      "canonical_sha256": "c1b8d9852dc6dcc5bac3d543086a1d2e6cddcb7711d5181bb6ae47e5faff21ec",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-projects",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-projects/SKILL.md",
+      "canonical_sha256": "0b05dd26a567d45939e2c9152f589e6d04dbf2370c9e22886879cd2b7e2685dd",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-promote",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-promote/SKILL.md",
+      "canonical_sha256": "8f07f29e7d22260519cb73c14d2f13f2afdc9b18ae409831bfdf686ea0f0820d",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-prune",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-prune/SKILL.md",
+      "canonical_sha256": "46b9b97b26873d4b65e37c8baf1b3ad1bcc55eb8494579f274dc0838d72aa8db",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-python-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-python-review/SKILL.md",
+      "canonical_sha256": "171f32ac6979e8d1280ef33f5c937bfc2970418e9372cc04ebb5f15a4ff8f882",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-quality-gate",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-quality-gate/SKILL.md",
+      "canonical_sha256": "05049d471202d0f9691abc4bb658e2276dcbd575a5bc169f7a09965a6f2d93bf",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-refactor-clean",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-refactor-clean/SKILL.md",
+      "canonical_sha256": "fcbdb3edbf4ff327eef9e9bb2c350c2d04436316356821aa039e2d21c89674b0",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-resume-session",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-resume-session/SKILL.md",
+      "canonical_sha256": "e664faa090b8467ca2a6fa6a68c2e0d1ecc0d6301dcd41b5f0f2f04b08bd09b6",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-revenue-attribution",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-revenue-attribution/SKILL.md",
+      "canonical_sha256": "9f5ce53c3f204897f160c35b2d9851341baf55b1101c52ab2edb7b7972e71fcd",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-role-catalog",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-role-catalog/SKILL.md",
+      "canonical_sha256": "33aeb11cd2ea37e8d6354a815005e8278cb9baf065587fe4784a8c59eafef3b5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-router",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-router/SKILL.md",
+      "canonical_sha256": "f8deddecb9be486da379dd01eeec7729555d74115a675d056487229624afc330",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-rules-distill",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-rules-distill/SKILL.md",
+      "canonical_sha256": "b7d3db432e771b8dcb11e55ceb62f506999fec25c34fbb734c4af2765d55a0a0",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-rust-build",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-rust-build/SKILL.md",
+      "canonical_sha256": "bfc3f69991fbdd37aa1e4d4af24f3cbcd17437602a188205ff82b3efbfb28f0c",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-rust-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-rust-review/SKILL.md",
+      "canonical_sha256": "4c61fb737e46806f82e10ce5e6a74be6ae4d6f54e1fafd88109b4938e8cd2989",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-rust-test",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-rust-test/SKILL.md",
+      "canonical_sha256": "e3baefa72ad9409ee8f4596558a127442690c5603f8669687911b37a4d1fe6ba",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-save-session",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-save-session/SKILL.md",
+      "canonical_sha256": "63c2d06063bb1cda84686bc9bb5e408a09f67eefe2e8253447413981ab11e9b1",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-self-improve",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-self-improve/SKILL.md",
+      "canonical_sha256": "06dae368895245976230c1d85d8289617e075b6eeaa43fde44b2c07093b31db1",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-seo-opportunity-loop",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-seo-opportunity-loop/SKILL.md",
+      "canonical_sha256": "0aaf0fa63d6a0b966c9e56ec3f0d1ba1552e12ea09417550e1a3f0fbbfe52432",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-sessions",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-sessions/SKILL.md",
+      "canonical_sha256": "a1b1d99c466f6a13800b2f692fd5a0315e52723428ed17b3d3824634d13f3003",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-setup-pm",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-setup-pm/SKILL.md",
+      "canonical_sha256": "c33bd30bd652ee26300b5f899d39e6959cebdb96c6739d84607f41db8e1f85a5",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-skill-create",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-skill-create/SKILL.md",
+      "canonical_sha256": "9178e7878a4131214f54a22ec6b8660d60a4bcb51570d5ba25cdc58f8e499cc6",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-skill-health",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-skill-health/SKILL.md",
+      "canonical_sha256": "08217e8b6e4f362f9d1d3574b4d7c645d4cdf994c50ea11154d669a3be4edb8e",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-tdd",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-tdd/SKILL.md",
+      "canonical_sha256": "756472ae00855c968637dc03c4ca431f49f897dd81d3fcbf386674e758f4a117",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-test-coverage",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-test-coverage/SKILL.md",
+      "canonical_sha256": "f31c593f3e78010f03258a9801206c569d6da979229e5d31a32d6b90c3a1f6df",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-trace-wrap",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-trace-wrap/SKILL.md",
+      "canonical_sha256": "824e2cc8e7a9459fe449265b9df99b66ad8f44df57debbccf0db82adc8743aac",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-update-codemaps",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-update-codemaps/SKILL.md",
+      "canonical_sha256": "1ec9f58614d410242013c662b05e15a314da976841c3e1d2a87f8113caf80b4c",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-update-docs",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-update-docs/SKILL.md",
+      "canonical_sha256": "f306701e937de1152e25c3d43b491777892656cfbbd81b4a80943ecc97e38953",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-value-pricing",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/ecc-value-pricing/SKILL.md",
+      "canonical_sha256": "bd1c9831fcb6d1f6a788587df7f4a8c7fafc426f4de26c8f43cd616367671436",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "invariant-registry",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/invariant-registry/SKILL.md",
+      "canonical_sha256": "7a793321d7a46b7335075839819211066bb7b0770eda19fc3160abeecae76c18",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "plan-certificates",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/plan-certificates/SKILL.md",
+      "canonical_sha256": "6950e0697183772de835c76583a584a5a2ad26d655728fb0f945fc1b3843922f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "reference-oracle-testing",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/reference-oracle-testing/SKILL.md",
+      "canonical_sha256": "f8e2f6c970f9ff5fe3d13f09ec612c3ed70edc05fbdeba9b87dbcc86012b7d5c",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "spec-first-doctrine",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "canonical_path": "skills/spec-first-doctrine/SKILL.md",
+      "canonical_sha256": "a56cac0e54dbb6dfd3cb462e90e657448307de5697e75515a3994782c7607c19",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    }
+  ],
+  "plugin_mentions": [
+    {
+      "plugin": "everything-claude-code",
+      "prompt_count": 242,
+      "session_count": 25
+    },
+    {
+      "plugin": "browser",
+      "prompt_count": 33,
+      "session_count": 14
+    },
+    {
+      "plugin": "computer-use",
+      "prompt_count": 2,
+      "session_count": 2
+    },
+    {
+      "plugin": "pdf",
+      "prompt_count": 2,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome-dev",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome-internal",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "github",
+      "prompt_count": 1,
+      "session_count": 1
+    }
+  ],
+  "actions": {
+    "top_level": [
+      {
+        "action": "exec",
+        "count": 30638,
+        "session_count": 31,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "wait",
+        "count": 3649,
+        "session_count": 27,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "exec_command",
+        "count": 99,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "request_user_input",
+        "count": 54,
+        "session_count": 20,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "send_message",
+        "count": 18,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "wait_agent",
+        "count": 10,
+        "session_count": 4,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "list_agents",
+        "count": 5,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "write_stdin",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "spawn_agent",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "get_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "create_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "update_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      }
+    ],
+    "nested_call_sites": [
+      {
+        "action": "exec_command",
+        "count": 30597,
+        "session_count": 31,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "apply_patch",
+        "count": 4263,
+        "session_count": 19,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "write_stdin",
+        "count": 3664,
+        "session_count": 22,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "web__run",
+        "count": 991,
+        "session_count": 23,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__node_repl__js",
+        "count": 924,
+        "session_count": 11,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "update_plan",
+        "count": 777,
+        "session_count": 21,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "get_goal",
+        "count": 58,
+        "session_count": 13,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "view_image",
+        "count": 52,
+        "session_count": 6,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__exa__web_search_exa",
+        "count": 29,
+        "session_count": 7,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__load_workspace_dependencies",
+        "count": 27,
+        "session_count": 8,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "update_goal",
+        "count": 26,
+        "session_count": 13,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_evaluate",
+        "count": 21,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "create_goal",
+        "count": 18,
+        "session_count": 12,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_navigate",
+        "count": 15,
+        "session_count": 5,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__exa__web_fetch_exa",
+        "count": 14,
+        "session_count": 6,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_search",
+        "count": 11,
+        "session_count": 8,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__read_thread_terminal",
+        "count": 11,
+        "session_count": 7,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_run_code_unsafe",
+        "count": 11,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "multi_agent_v1__wait_agent",
+        "count": 11,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_wait_for",
+        "count": 10,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_click",
+        "count": 9,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "multi_agent_v1__spawn_agent",
+        "count": 9,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_snapshot",
+        "count": 6,
+        "session_count": 4,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_scrape",
+        "count": 6,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_console_messages",
+        "count": 6,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__list_threads",
+        "count": 5,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__create_thread",
+        "count": 5,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_job_logs",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_get_repo",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "exec",
+        "count": 4,
+        "session_count": 3,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_tabs",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_find",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__check_decision",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_search_feedback",
+        "count": 3,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_run_jobs",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "err",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "txt",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__find_prior_work",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__browser_tools__getConsoleErrors",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__read_thread",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "wait",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__node_repl__js_add_node_module_dir",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "scripts",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_commit_workflow_runs",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__ask_history",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_run_artifacts",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_job_steps",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "__version__",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__project_memory",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "exec\u0ab0",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__browser_tools__getNetworkErrors",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_press_key",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_fill_form",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__search_threads",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__set_thread_archived",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__navigate_to_codex_page",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_network_requests",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__list_projects",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      }
+    ]
+  },
+  "ranked_top_skills": [
+    {
+      "name": "deep-research",
+      "selector_prompt_count": 53,
+      "selector_session_count": 12,
+      "mention_prompt_count": 232,
+      "mention_session_count": 24,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-niche-positioning-audit",
+      "selector_prompt_count": 34,
+      "selector_session_count": 7,
+      "mention_prompt_count": 74,
+      "mention_session_count": 8,
+      "canonical_path": "skills/ecc-niche-positioning-audit/SKILL.md",
+      "canonical_sha256": "f7ce2d8c5b15970a666906583df29446387480767826ebff57949650d12f3990",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-advisor",
+      "selector_prompt_count": 62,
+      "selector_session_count": 5,
+      "mention_prompt_count": 104,
+      "mention_session_count": 15,
+      "canonical_path": "skills/ecc-advisor/SKILL.md",
+      "canonical_sha256": "fd65b029433935e16e34cf630d58f3f06cc44007282c1ae6c634cee2ce820799",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "prompt-optimizer",
+      "selector_prompt_count": 12,
+      "selector_session_count": 4,
+      "mention_prompt_count": 12,
+      "mention_session_count": 4,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "conformance-gate",
+      "selector_prompt_count": 6,
+      "selector_session_count": 3,
+      "mention_prompt_count": 20,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "slides",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 12,
+      "mention_session_count": 7,
+      "canonical_path": "skills/slides/SKILL.md",
+      "canonical_sha256": "9ad30da4796ebbd500086ce82cf4b9f479429030605f05fcc8070c7400e13c4f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "last30days",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 4,
+      "mention_session_count": 2,
+      "canonical_path": "skills/last30days/SKILL.md",
+      "canonical_sha256": "392d0b28adeb360d0f4fc797e13355c51fcee627bf8dd537c6dfa856190d43ed",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "agent-phase-ratchet",
+      "selector_prompt_count": 3,
+      "selector_session_count": 2,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "second-brain-ops",
+      "selector_prompt_count": 12,
+      "selector_session_count": 1,
+      "mention_prompt_count": 12,
+      "mention_session_count": 1,
+      "canonical_path": "skills/second-brain-ops/SKILL.md",
+      "canonical_sha256": "9992d26daf0e7cf1315aa38a997e575ffdd884702f290a774deae55f6ae220bf",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-explain",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-explain/SKILL.md",
+      "canonical_sha256": "b435954ad154be478567dfc694fda0fe2f04dba2b0c51533679c80d7ad4fa24f",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-ml-engineering",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-ml-engineering/SKILL.md",
+      "canonical_sha256": "aab5e889217b7d4c98690cb7091f48ecae4f496fea317b56907532b151c1cf14",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-execute",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "canonical_path": "skills/ecc-multi-execute/SKILL.md",
+      "canonical_sha256": "a80c4c4dcf8b3dded27d3e4c54ac0d0025ba5ee1c78d68f5f5e059292bb461b2",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "skill-optimizer",
+      "selector_prompt_count": 4,
+      "selector_session_count": 1,
+      "mention_prompt_count": 5,
+      "mention_session_count": 2,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-hormozi-funnel",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 24,
+      "mention_session_count": 6,
+      "canonical_path": "skills/ecc-hormozi-funnel/SKILL.md",
+      "canonical_sha256": "0480d4e2c55eac3b98f91ee12bd2d72b7394ab4ee4bfee49d051a16d37b924e8",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "codebase-onboarding",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "canonical_path": null,
+      "canonical_sha256": null,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-fable-loop",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-fable-loop/SKILL.md",
+      "canonical_sha256": "79915fffa3c7c05c7b2d80fb5907fa4415b65551d2d5deb05e73c95b0c599440",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-model-route",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-model-route/SKILL.md",
+      "canonical_sha256": "e96ec3ca40a0186ea5b383391f7565cfc9b720c4f5f37d208e6bae71ebc0201a",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-verify",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 16,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-verify/SKILL.md",
+      "canonical_sha256": "ce43d48ddbe6d39523ed86cab9de4c90375170ff70b11afd86c03cf1a2f18cd1",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-prompt-optimize",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 12,
+      "mention_session_count": 5,
+      "canonical_path": "skills/ecc-prompt-optimize/SKILL.md",
+      "canonical_sha256": "fcf3f0376766fead07abb4054de6b148d577c224381f54e9e365a7300a1bfa0b",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "graph-engineer",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 26,
+      "mention_session_count": 4,
+      "canonical_path": "skills/graph-engineer/SKILL.md",
+      "canonical_sha256": "ff82e3e538b75b7e4a871326f6352fd441de552dcccbc1f27c4631952c20af34",
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    }
+  ],
+  "underutilized_candidates": [
+    {
+      "name": "plan-certificates",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.7143,
+      "opportunity_gap_score": 0.7143,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "deterministic-simulation-testing",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "matched_observed_topics": [
+        "implementation_fix",
+        "testing_verification",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-a11y-audit",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "testing_verification"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-buyer-pipeline",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "matched_observed_topics": [
+        "audit_review",
+        "research_browser",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-conversion-audit",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "matched_observed_topics": [
+        "audit_review",
+        "research_browser",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "spec-first-doctrine",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "matched_observed_topics": [
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-graphify",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 2,
+      "mention_session_count": 1,
+      "relevance_score": 0.7143,
+      "opportunity_gap_score": 0.3571,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "agents-md-generator",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "matched_observed_topics": [
+        "planning_orchestration",
+        "docs_artifacts"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-content-quality-ops",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cpp-review",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 0,
+      "mention_session_count": 0,
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    }
+  ]
+}

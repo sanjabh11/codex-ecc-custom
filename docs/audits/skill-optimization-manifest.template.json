@@ -1,0 +1,45 @@
+{
+  "schema_version": "skill-optimization-manifest.v1",
+  "generated_at_utc": "2026-01-01T00:00:00Z",
+  "source_audit": {
+    "summary_path": "docs/audits/skill-usage-audit-frozen-summary.json",
+    "summary_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "skill_manifest_path": "docs/audits/skill-usage-audit-skill-manifest.json",
+    "skill_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "inventory_path": "docs/skill-inventory.csv",
+    "inventory_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "window_start": "2026-01-01T00:00:00Z",
+    "window_end": "2026-01-31T23:59:59Z"
+  },
+  "skills": [
+    {
+      "id": "example-skill",
+      "rank_bucket": "top20",
+      "rank": 1,
+      "canonical_path": "/absolute/path/to/skills/example-skill/SKILL.md",
+      "aliases": [],
+      "source_kind": "canonical",
+      "target_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "status": "pilot",
+      "owner": "architect",
+      "proof_ref": ["docs/audits/skill-usage-audit-2026-08-10.md"],
+      "before_metric": {"status": "not_run"},
+      "after_metric": {"status": "not_run"},
+      "next_action": "Replace this row with a frozen ranked skill before running a pilot.",
+      "risk": "contract-only",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_references": null,
+        "has_scope_boundary": null,
+        "has_scripts": null,
+        "has_tests": null
+      },
+      "optimization": {
+        "goal": "Define a bounded skill optimization target.",
+        "control": "Run supportive, neutral, and competing scenarios with stable IDs.",
+        "scenario_ids": ["supportive-example", "neutral-example", "competing-example"]
+      }
+    }
+  ]
+}

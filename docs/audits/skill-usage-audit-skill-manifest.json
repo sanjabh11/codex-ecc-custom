@@ -1,9 +1,4 @@
 {
-  "schema_version": "skill-usage-skill-manifest.v1",
-  "generated_at_utc": "2026-08-10T16:31:00Z",
-  "skill_root": "/Users/sanjayb/codex-ecc-custom/skills",
-  "inventory_csv": "/Users/sanjayb/codex-ecc-custom/docs/skill-inventory.csv",
-  "inventory_sha256": "83791e00dba2bea24713e63f7c9889153e6b09b4d7d32351c9c7c7d01d5e4cd8",
   "files": [
     {
       "path": "/Users/sanjayb/codex-ecc-custom/skills/agents-md-generator/SKILL.md",
@@ -19,7 +14,7 @@
     },
     {
       "path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-advisor/SKILL.md",
-      "sha256": "9b303fec755281cbb8a7203952dbf63828da195a90b6df3c8726ae4cf7ffcf36"
+      "sha256": "fd65b029433935e16e34cf630d58f3f06cc44007282c1ae6c634cee2ce820799"
     },
     {
       "path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-agent-reach/SKILL.md",
@@ -239,7 +234,7 @@
     },
     {
       "path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-niche-positioning-audit/SKILL.md",
-      "sha256": "b7682209d36d145a8987f3068ea2be10b1ad7f875fe4d00e82f6a3856f498df2"
+      "sha256": "f7ce2d8c5b15970a666906583df29446387480767826ebff57949650d12f3990"
     },
     {
       "path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-orchestrate/SKILL.md",
@@ -413,5 +408,9 @@
       "path": "/Users/sanjayb/codex-ecc-custom/skills/spec-first-doctrine/SKILL.md",
       "sha256": "a56cac0e54dbb6dfd3cb462e90e657448307de5697e75515a3994782c7607c19"
     }
-  ]
+  ],
+  "inventory_csv": "/Users/sanjayb/codex-ecc-custom/docs/skill-inventory.csv",
+  "inventory_sha256": "83791e00dba2bea24713e63f7c9889153e6b09b4d7d32351c9c7c7d01d5e4cd8",
+  "schema_version": "skill-usage-skill-manifest.v1",
+  "skill_root": "/Users/sanjayb/codex-ecc-custom/skills"
 }

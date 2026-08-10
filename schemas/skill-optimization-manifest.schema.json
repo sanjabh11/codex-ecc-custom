@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/schemas/skill-optimization-manifest.v1.json",
+  "title": "ECC skill optimization manifest",
+  "description": "Evidence-bound optimization scope for ranked Codex skills.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at_utc",
+    "source_audit",
+    "skills"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "skill-optimization-manifest.v1"
+    },
+    "generated_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_audit": {
+      "$ref": "#/$defs/sourceAudit"
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/skill"
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "sourceAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary_path",
+        "summary_sha256",
+        "skill_manifest_path",
+        "skill_manifest_sha256",
+        "inventory_path",
+        "inventory_sha256",
+        "window_start",
+        "window_end"
+      ],
+      "properties": {
+        "summary_path": {"type": "string", "minLength": 1},
+        "summary_sha256": {"$ref": "#/$defs/requiredSha256"},
+        "skill_manifest_path": {"type": "string", "minLength": 1},
+        "skill_manifest_sha256": {"$ref": "#/$defs/requiredSha256"},
+        "inventory_path": {"type": "string", "minLength": 1},
+        "inventory_sha256": {"$ref": "#/$defs/requiredSha256"},
+        "window_start": {"type": "string", "format": "date-time"},
+        "window_end": {"type": "string", "format": "date-time"}
+      }
+    },
+    "requiredSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "rank_bucket",
+        "rank",
+        "canonical_path",
+        "aliases",
+        "source_kind",
+        "target_sha256",
+        "status",
+        "owner",
+        "proof_ref",
+        "before_metric",
+        "after_metric",
+        "next_action",
+        "risk",
+        "quality_signals",
+        "optimization"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "rank_bucket": {
+          "enum": ["top20", "under10"]
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "canonical_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._/@-]*$"
+          }
+        },
+        "source_kind": {
+          "enum": ["canonical", "external"]
+        },
+        "target_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "enum": ["pilot", "evidence", "edit", "defer"]
+        },
+        "owner": {
+          "enum": ["architect", "glm", "external", "manual"]
+        },
+        "proof_ref": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "before_metric": {
+          "type": "object"
+        },
+        "after_metric": {
+          "type": "object"
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk": {
+          "enum": ["none", "contract-only"]
+        },
+        "quality_signals": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "has_frontmatter",
+            "has_output_contract",
+            "has_references",
+            "has_scope_boundary",
+            "has_scripts",
+            "has_tests"
+          ],
+          "properties": {
+            "has_frontmatter": {"type": ["boolean", "null"]},
+            "has_output_contract": {"type": ["boolean", "null"]},
+            "has_references": {"type": ["boolean", "null"]},
+            "has_scope_boundary": {"type": ["boolean", "null"]},
+            "has_scripts": {"type": ["boolean", "null"]},
+            "has_tests": {"type": ["boolean", "null"]}
+          }
+        },
+        "optimization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["goal", "control", "scenario_ids"],
+          "properties": {
+            "goal": {"type": "string", "minLength": 1},
+            "control": {"type": "string", "minLength": 1},
+            "scenario_ids": {
+              "type": "array",
+              "minItems": 3,
+              "uniqueItems": true,
+              "items": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"rank_bucket": {"const": "top20"}}},
+          "then": {"properties": {"rank": {"maximum": 20}}}
+        },
+        {
+          "if": {"properties": {"rank_bucket": {"const": "under10"}}},
+          "then": {"properties": {"rank": {"maximum": 10}}}
+        },
+        {
+          "if": {"properties": {"source_kind": {"const": "external"}}},
+          "then": {
+            "properties": {
+              "canonical_path": {"pattern": "^external://"},
+              "target_sha256": {"type": "null"},
+              "owner": {"enum": ["external", "manual"]}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"source_kind": {"const": "canonical"}}},
+          "then": {
+            "properties": {
+              "canonical_path": {"pattern": "(^|/)SKILL\\.md$"},
+              "target_sha256": {"$ref": "#/$defs/requiredSha256"},
+              "owner": {"enum": ["architect", "glm", "manual"]}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,428 @@
+{
+  "generated_at_utc": "2026-08-10T17:11:23.521566Z",
+  "host_activation": "unverified",
+  "manifest_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+  "schema_version": "skill-optimization-evidence-index.v1",
+  "skills": [
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-01-deep-research.json",
+      "host_activation": "unverified",
+      "id": "deep-research",
+      "rank": 1,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-02-ecc-niche-positioning-audit.json",
+      "host_activation": "unverified",
+      "id": "ecc-niche-positioning-audit",
+      "rank": 2,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 0,
+        "passed": 4,
+        "score": 1.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-03-ecc-advisor.json",
+      "host_activation": "unverified",
+      "id": "ecc-advisor",
+      "rank": 3,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 0,
+        "passed": 4,
+        "score": 1.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-04-prompt-optimizer.json",
+      "host_activation": "unverified",
+      "id": "prompt-optimizer",
+      "rank": 4,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-05-conformance-gate.json",
+      "host_activation": "unverified",
+      "id": "conformance-gate",
+      "rank": 5,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-06-slides.json",
+      "host_activation": "unverified",
+      "id": "slides",
+      "rank": 6,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-07-last30days.json",
+      "host_activation": "unverified",
+      "id": "last30days",
+      "rank": 7,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 4,
+        "not_run": 0,
+        "passed": 0,
+        "score": 0.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-08-agent-phase-ratchet.json",
+      "host_activation": "unverified",
+      "id": "agent-phase-ratchet",
+      "rank": 8,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-09-second-brain-ops.json",
+      "host_activation": "unverified",
+      "id": "second-brain-ops",
+      "rank": 9,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 2,
+        "not_run": 0,
+        "passed": 2,
+        "score": 0.5,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-10-ecc-explain.json",
+      "host_activation": "unverified",
+      "id": "ecc-explain",
+      "rank": 10,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 2,
+        "not_run": 0,
+        "passed": 2,
+        "score": 0.5,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-11-ecc-ml-engineering.json",
+      "host_activation": "unverified",
+      "id": "ecc-ml-engineering",
+      "rank": 11,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 2,
+        "not_run": 0,
+        "passed": 2,
+        "score": 0.5,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-12-ecc-multi-execute.json",
+      "host_activation": "unverified",
+      "id": "ecc-multi-execute",
+      "rank": 12,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 4,
+        "not_run": 0,
+        "passed": 0,
+        "score": 0.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-13-skill-optimizer.json",
+      "host_activation": "unverified",
+      "id": "skill-optimizer",
+      "rank": 13,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-14-ecc-hormozi-funnel.json",
+      "host_activation": "unverified",
+      "id": "ecc-hormozi-funnel",
+      "rank": 14,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-15-codebase-onboarding.json",
+      "host_activation": "unverified",
+      "id": "codebase-onboarding",
+      "rank": 15,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 0,
+        "not_run": 3,
+        "passed": 0,
+        "score": 0.0,
+        "total": 3
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-16-ecc-fable-loop.json",
+      "host_activation": "unverified",
+      "id": "ecc-fable-loop",
+      "rank": 16,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 4,
+        "not_run": 0,
+        "passed": 0,
+        "score": 0.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-17-ecc-model-route.json",
+      "host_activation": "unverified",
+      "id": "ecc-model-route",
+      "rank": 17,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 2,
+        "not_run": 0,
+        "passed": 2,
+        "score": 0.5,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-18-ecc-verify.json",
+      "host_activation": "unverified",
+      "id": "ecc-verify",
+      "rank": 18,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 3,
+        "not_run": 0,
+        "passed": 1,
+        "score": 0.25,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-19-ecc-prompt-optimize.json",
+      "host_activation": "unverified",
+      "id": "ecc-prompt-optimize",
+      "rank": 19,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 4,
+        "not_run": 0,
+        "passed": 0,
+        "score": 0.0,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/top20-20-graph-engineer.json",
+      "host_activation": "unverified",
+      "id": "graph-engineer",
+      "rank": 20,
+      "rank_bucket": "top20",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-01-ecc-graphify.json",
+      "host_activation": "unverified",
+      "id": "ecc-graphify",
+      "rank": 1,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-02-plan-certificates.json",
+      "host_activation": "unverified",
+      "id": "plan-certificates",
+      "rank": 2,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-03-deterministic-simulation-testing.json",
+      "host_activation": "unverified",
+      "id": "deterministic-simulation-testing",
+      "rank": 3,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-04-ecc-a11y-audit.json",
+      "host_activation": "unverified",
+      "id": "ecc-a11y-audit",
+      "rank": 4,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-05-ecc-buyer-pipeline.json",
+      "host_activation": "unverified",
+      "id": "ecc-buyer-pipeline",
+      "rank": 5,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 2,
+        "not_run": 0,
+        "passed": 2,
+        "score": 0.5,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-06-ecc-conversion-audit.json",
+      "host_activation": "unverified",
+      "id": "ecc-conversion-audit",
+      "rank": 6,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 3,
+        "not_run": 0,
+        "passed": 1,
+        "score": 0.25,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-07-spec-first-doctrine.json",
+      "host_activation": "unverified",
+      "id": "spec-first-doctrine",
+      "rank": 7,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-08-agents-md-generator.json",
+      "host_activation": "unverified",
+      "id": "agents-md-generator",
+      "rank": 8,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 1,
+        "not_run": 0,
+        "passed": 3,
+        "score": 0.75,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-09-ecc-content-quality-ops.json",
+      "host_activation": "unverified",
+      "id": "ecc-content-quality-ops",
+      "rank": 9,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 3,
+        "not_run": 0,
+        "passed": 1,
+        "score": 0.25,
+        "total": 4
+      }
+    },
+    {
+      "evidence_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-evidence/under10-10-ecc-cpp-review.json",
+      "host_activation": "unverified",
+      "id": "ecc-cpp-review",
+      "rank": 10,
+      "rank_bucket": "under10",
+      "summary": {
+        "failed": 4,
+        "not_run": 0,
+        "passed": 0,
+        "score": 0.0,
+        "total": 4
+      }
+    }
+  ]
+}

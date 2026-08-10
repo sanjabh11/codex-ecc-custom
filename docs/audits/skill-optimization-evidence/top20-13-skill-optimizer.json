@@ -1,0 +1,92 @@
+{
+  "notes": "Metadata-only ranking row. No host activation, skill loading, or successful execution is proven.",
+  "rejected_edits": [
+    {
+      "edit": "Audit or edit an external implementation from this checkout",
+      "reason": "external/global label; no canonical local SKILL.md or host trigger engine is available"
+    }
+  ],
+  "run_id": "skill-optimization-2026-08-10-skill-optimizer",
+  "scenarios": [
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "host-boundary"
+      ],
+      "evidence": [
+        "external/global label; no canonical local SKILL.md or host trigger engine is available"
+      ],
+      "expected": [
+        "Host implementation is available and can be tested."
+      ],
+      "grader": "deterministic",
+      "id": "supportive-skill-optimizer",
+      "not_run_reason": "external/global label; no canonical local SKILL.md or host trigger engine is available",
+      "prompt": "External-label audit lane: supportive.",
+      "result": "not_run",
+      "strictness": "supportive",
+      "title": "External label supportive lane"
+    },
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "host-boundary"
+      ],
+      "evidence": [
+        "external/global label; no canonical local SKILL.md or host trigger engine is available"
+      ],
+      "expected": [
+        "Host implementation is available and can be tested."
+      ],
+      "grader": "deterministic",
+      "id": "neutral-skill-optimizer",
+      "not_run_reason": "external/global label; no canonical local SKILL.md or host trigger engine is available",
+      "prompt": "External-label audit lane: neutral.",
+      "result": "not_run",
+      "strictness": "neutral",
+      "title": "External label neutral lane"
+    },
+    {
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "coverage_tags": [
+        "activation-metadata",
+        "host-boundary"
+      ],
+      "evidence": [
+        "external/global label; no canonical local SKILL.md or host trigger engine is available"
+      ],
+      "expected": [
+        "Host implementation is available and can be tested."
+      ],
+      "grader": "deterministic",
+      "id": "competing-skill-optimizer",
+      "not_run_reason": "external/global label; no canonical local SKILL.md or host trigger engine is available",
+      "prompt": "External-label audit lane: competing.",
+      "result": "not_run",
+      "strictness": "competing",
+      "title": "External label competing lane"
+    }
+  ],
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "skill-optimizer",
+  "summary": {
+    "failed": 0,
+    "not_run": 3,
+    "passed": 0,
+    "score": 0.0,
+    "total": 3
+  },
+  "target_kind": "skill",
+  "target_path": "/external/skill-optimizer/SKILL.md"
+}

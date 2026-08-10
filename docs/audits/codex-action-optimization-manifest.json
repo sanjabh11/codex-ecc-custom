@@ -1,0 +1,628 @@
+{
+  "actions": [
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 300
+      },
+      "id": "exec",
+      "manual_gate": true,
+      "next_action": "Pilot one read-only and one approved mutating command with exit/artifact evidence.",
+      "objective": "Make the wrapper and inner command result auditable without changing command semantics.",
+      "observed_count": 30638,
+      "observed_session_count": 31,
+      "owner": "architect",
+      "preconditions": [
+        "cwd and scope are explicit",
+        "read-only versus mutating intent is classified"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 1,
+      "result_contract": {
+        "failure_definition": [
+          "non-zero exit status",
+          "timeout",
+          "redaction failure",
+          "artifact validation failure"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "exit_status",
+          "stdout_ref",
+          "stderr_ref"
+        ],
+        "success_definition": [
+          "exit_status is exactly 0",
+          "declared artifacts validate when present"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "destructive scope lacks approval",
+        "secret-like output is detected",
+        "wall-clock budget is exhausted"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 1,
+        "max_tool_calls": 120,
+        "max_wall_clock_seconds": 600
+      },
+      "id": "wait",
+      "manual_gate": false,
+      "next_action": "Pilot one bounded wait and capture terminal-state evidence plus timeout behavior.",
+      "objective": "Bound polling and record the terminal state instead of treating elapsed waiting as progress.",
+      "observed_count": 3649,
+      "observed_session_count": 27,
+      "owner": "architect",
+      "preconditions": [
+        "wait target and terminal states are declared",
+        "timeout budget is finite"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 2,
+      "result_contract": {
+        "failure_definition": [
+          "timeout",
+          "target disappears",
+          "undeclared terminal state"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "target_id",
+          "terminal_state",
+          "poll_count",
+          "timeout_seconds"
+        ],
+        "success_definition": [
+          "target reaches a declared terminal state before timeout"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "no terminal state is observed within budget",
+        "poll response shape is invalid"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 300
+      },
+      "id": "exec_command",
+      "manual_gate": true,
+      "next_action": "Pilot a read-only command manifest with redacted environment and exact exit evidence.",
+      "objective": "Make direct shell execution reproducible, bounded, and provenance-aware.",
+      "observed_count": 99,
+      "observed_session_count": 1,
+      "owner": "architect",
+      "preconditions": [
+        "command, cwd, and environment policy are recorded",
+        "approval is known for writes"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 3,
+      "result_contract": {
+        "failure_definition": [
+          "non-zero exit status",
+          "timeout",
+          "unexpected cwd",
+          "artifact mismatch"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "command_digest",
+          "exit_status",
+          "stdout_ref",
+          "stderr_ref"
+        ],
+        "success_definition": [
+          "exit_status is exactly 0",
+          "command digest and artifact refs are recorded"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "broad/destructive target is unresolved",
+        "credentials would be exposed"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 86400
+      },
+      "id": "request_user_input",
+      "manual_gate": true,
+      "next_action": "Pilot one clarification and one approval-shaped request with distinct records.",
+      "objective": "Separate clarification from authorization and bind approvals to a target and expiry.",
+      "observed_count": 54,
+      "observed_session_count": 20,
+      "owner": "architect",
+      "preconditions": [
+        "question type is clarification or authorization",
+        "decision target is explicit"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 4,
+      "result_contract": {
+        "failure_definition": [
+          "ambiguous target",
+          "expired approval",
+          "missing decision"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "question_type",
+          "target",
+          "expires_at"
+        ],
+        "success_definition": [
+          "clarification is recorded or authorization matches the exact target"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "approval is requested without scope or expiry",
+        "user input is unavailable"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 1,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 60
+      },
+      "id": "send_message",
+      "manual_gate": false,
+      "next_action": "Pilot one bounded handoff with explicit artifact ownership and acknowledgment.",
+      "objective": "Make coordination messages ownership-bound and acknowledgeable.",
+      "observed_count": 18,
+      "observed_session_count": 2,
+      "owner": "architect",
+      "preconditions": [
+        "recipient and ownership scope are explicit",
+        "message excludes secrets"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 5,
+      "result_contract": {
+        "failure_definition": [
+          "recipient unavailable",
+          "scope overlap",
+          "missing acknowledgment"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "recipient",
+          "scope",
+          "ack_status"
+        ],
+        "success_definition": [
+          "recipient accepts the handoff and artifact ownership is clear"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "ownership is ambiguous",
+        "message would cause an unapproved external action"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 1800
+      },
+      "id": "wait_agent",
+      "manual_gate": false,
+      "next_action": "Pilot one worker completion and one timeout path with explicit terminal records.",
+      "objective": "Close delegated work only with worker state, artifact, and timeout evidence.",
+      "observed_count": 10,
+      "observed_session_count": 4,
+      "owner": "architect",
+      "preconditions": [
+        "worker scope and owner are declared",
+        "completion criteria are attached"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 6,
+      "result_contract": {
+        "failure_definition": [
+          "worker fails",
+          "worker times out",
+          "artifact contract is incomplete"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "worker_id",
+          "worker_state",
+          "timeout_seconds"
+        ],
+        "success_definition": [
+          "worker reaches a declared terminal state with required artifacts"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "worker scope overlaps another owner",
+        "terminal evidence is missing"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 30
+      },
+      "id": "list_agents",
+      "manual_gate": false,
+      "next_action": "Record one availability snapshot and keep it separate from worker execution claims.",
+      "objective": "Treat worker discovery as availability evidence, never execution evidence.",
+      "observed_count": 5,
+      "observed_session_count": 2,
+      "owner": "architect",
+      "preconditions": [
+        "snapshot timestamp and host scope are recorded"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 7,
+      "result_contract": {
+        "failure_definition": [
+          "snapshot is stale",
+          "worker identity is malformed"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "available_workers",
+          "snapshot_at"
+        ],
+        "success_definition": [
+          "availability snapshot is internally consistent"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "availability cannot be bound to a host snapshot"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 300
+      },
+      "id": "write_stdin",
+      "manual_gate": true,
+      "next_action": "Pilot a bounded interactive continuation and capture final exit evidence.",
+      "objective": "Bound interactive process continuation and capture the final process result.",
+      "observed_count": 4,
+      "observed_session_count": 1,
+      "owner": "architect",
+      "preconditions": [
+        "process identity is known",
+        "stdin payload is non-secret and bounded"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 8,
+      "result_contract": {
+        "failure_definition": [
+          "process disappears",
+          "write is rejected",
+          "timeout"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "process_id",
+          "bytes_written",
+          "exit_status"
+        ],
+        "success_definition": [
+          "process reaches a terminal state with final exit status"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "interactive process exceeds lifetime budget",
+        "payload is unbounded or secret-like"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 60
+      },
+      "id": "spawn_agent",
+      "manual_gate": true,
+      "next_action": "Pilot one disjoint worker scope and verify its ownership record before execution.",
+      "objective": "Require scope, ownership, budget, and rollback before delegation.",
+      "observed_count": 4,
+      "observed_session_count": 2,
+      "owner": "architect",
+      "preconditions": [
+        "task boundary and artifact owner are explicit",
+        "no-overlap check passes"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 9,
+      "result_contract": {
+        "failure_definition": [
+          "overlap",
+          "missing owner",
+          "budget rejected",
+          "spawn unavailable"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "worker_id",
+          "scope",
+          "owner",
+          "budget",
+          "rollback_plan"
+        ],
+        "success_definition": [
+          "worker is created with a unique scope and bounded budget"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "scope or rollback is ambiguous",
+        "required authority is unavailable"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 30
+      },
+      "id": "get_goal",
+      "manual_gate": false,
+      "next_action": "Use goal reads to refresh acceptance criteria before claiming completion.",
+      "objective": "Read goal state as evidence without inferring completion from presence alone.",
+      "observed_count": 1,
+      "observed_session_count": 1,
+      "owner": "architect",
+      "preconditions": [
+        "goal identifier is explicit"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 10,
+      "result_contract": {
+        "failure_definition": [
+          "goal missing",
+          "state is malformed"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "goal_id",
+          "status",
+          "acceptance_criteria"
+        ],
+        "success_definition": [
+          "current goal state and acceptance criteria are returned"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "completion cannot be tied to acceptance evidence"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 60
+      },
+      "id": "create_goal",
+      "manual_gate": false,
+      "next_action": "Create goals only with explicit acceptance evidence and a bounded next adjustment.",
+      "objective": "Create bounded work with an explicit objective and acceptance contract.",
+      "observed_count": 1,
+      "observed_session_count": 1,
+      "owner": "architect",
+      "preconditions": [
+        "objective is concrete",
+        "scope and acceptance evidence are stated"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 11,
+      "result_contract": {
+        "failure_definition": [
+          "objective is ambiguous",
+          "budget missing",
+          "unfinished goal conflict"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "goal_id",
+          "objective",
+          "acceptance_criteria",
+          "budget"
+        ],
+        "success_definition": [
+          "goal is created with durable acceptance criteria"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "goal would be unbounded",
+        "acceptance evidence is absent"
+      ]
+    },
+    {
+      "budget": {
+        "max_retries": 0,
+        "max_tool_calls": 1,
+        "max_wall_clock_seconds": 60
+      },
+      "id": "update_goal",
+      "manual_gate": false,
+      "next_action": "Keep goal completion bound to acceptance evidence, not elapsed effort or test count alone.",
+      "objective": "Tie completion or blockage to acceptance evidence and repeated blocking state.",
+      "observed_count": 1,
+      "observed_session_count": 1,
+      "owner": "architect",
+      "preconditions": [
+        "goal state is current",
+        "completion or blockage rule is satisfied"
+      ],
+      "proof_level": "L2-top-level-tool-record",
+      "rank": 12,
+      "result_contract": {
+        "failure_definition": [
+          "premature completion",
+          "unproven blockage",
+          "missing evidence refs"
+        ],
+        "redaction_policy": [
+          "Do not persist credentials, bearer tokens, cookies, or raw environment dumps.",
+          "Record references and hashes instead of sensitive payloads."
+        ],
+        "required_fields": [
+          "action_id",
+          "started_at",
+          "finished_at",
+          "duration_ms",
+          "decision",
+          "redaction_status",
+          "artifact_refs",
+          "goal_id",
+          "new_status",
+          "evidence_refs",
+          "next_adjustment"
+        ],
+        "success_definition": [
+          "status change is justified by the goal acceptance contract"
+        ]
+      },
+      "status": "pilot",
+      "stop_conditions": [
+        "status cannot be justified from current evidence"
+      ]
+    }
+  ],
+  "generated_at_utc": "2026-08-10T17:21:34.950423Z",
+  "schema_version": "codex-action-optimization-manifest.v1",
+  "source_audit": {
+    "summary_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-frozen-summary.json",
+    "summary_sha256": "d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95",
+    "window_end": "2026-08-10T23:59:59.999999+00:00",
+    "window_start": "2026-06-10T00:00:00+00:00"
+  }
+}

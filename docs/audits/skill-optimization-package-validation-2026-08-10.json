@@ -1,0 +1,255 @@
+{
+  "generated_at_utc": "2026-08-10T17:31:15.992215Z",
+  "manifest_path": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-optimization-manifest.json",
+  "results": [
+    {
+      "exit_code": 0,
+      "id": "ecc-niche-positioning-audit",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-niche-positioning-audit",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-niche-positioning-audit/SKILL.md",
+      "target_sha256": "f7ce2d8c5b15970a666906583df29446387480767826ebff57949650d12f3990"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-advisor",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-advisor",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-advisor/SKILL.md",
+      "target_sha256": "fd65b029433935e16e34cf630d58f3f06cc44007282c1ae6c634cee2ce820799"
+    },
+    {
+      "exit_code": 1,
+      "id": "slides",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/slides",
+      "status": "fail",
+      "stderr": "",
+      "stdout": "Description is too long (1096 characters). Maximum is 1024 characters.\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/slides/SKILL.md",
+      "target_sha256": "9ad30da4796ebbd500086ce82cf4b9f479429030605f05fcc8070c7400e13c4f"
+    },
+    {
+      "exit_code": 0,
+      "id": "last30days",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/last30days",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/last30days/SKILL.md",
+      "target_sha256": "392d0b28adeb360d0f4fc797e13355c51fcee627bf8dd537c6dfa856190d43ed"
+    },
+    {
+      "exit_code": 1,
+      "id": "second-brain-ops",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/second-brain-ops",
+      "status": "fail",
+      "stderr": "",
+      "stdout": "Unexpected key(s) in SKILL.md frontmatter: triggers, version. Allowed properties are: allowed-tools, compatibility, description, license, metadata, name\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/second-brain-ops/SKILL.md",
+      "target_sha256": "9992d26daf0e7cf1315aa38a997e575ffdd884702f290a774deae55f6ae220bf"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-explain",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-explain",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-explain/SKILL.md",
+      "target_sha256": "b435954ad154be478567dfc694fda0fe2f04dba2b0c51533679c80d7ad4fa24f"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-ml-engineering",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-ml-engineering",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-ml-engineering/SKILL.md",
+      "target_sha256": "aab5e889217b7d4c98690cb7091f48ecae4f496fea317b56907532b151c1cf14"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-multi-execute",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-multi-execute",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-multi-execute/SKILL.md",
+      "target_sha256": "a80c4c4dcf8b3dded27d3e4c54ac0d0025ba5ee1c78d68f5f5e059292bb461b2"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-hormozi-funnel",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-hormozi-funnel",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-hormozi-funnel/SKILL.md",
+      "target_sha256": "0480d4e2c55eac3b98f91ee12bd2d72b7394ab4ee4bfee49d051a16d37b924e8"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-fable-loop",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-fable-loop",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-fable-loop/SKILL.md",
+      "target_sha256": "79915fffa3c7c05c7b2d80fb5907fa4415b65551d2d5deb05e73c95b0c599440"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-model-route",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-model-route",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-model-route/SKILL.md",
+      "target_sha256": "e96ec3ca40a0186ea5b383391f7565cfc9b720c4f5f37d208e6bae71ebc0201a"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-verify",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-verify",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-verify/SKILL.md",
+      "target_sha256": "ce43d48ddbe6d39523ed86cab9de4c90375170ff70b11afd86c03cf1a2f18cd1"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-prompt-optimize",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-prompt-optimize",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-prompt-optimize/SKILL.md",
+      "target_sha256": "fcf3f0376766fead07abb4054de6b148d577c224381f54e9e365a7300a1bfa0b"
+    },
+    {
+      "exit_code": 0,
+      "id": "graph-engineer",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/graph-engineer",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/graph-engineer/SKILL.md",
+      "target_sha256": "ff82e3e538b75b7e4a871326f6352fd441de552dcccbc1f27c4631952c20af34"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-graphify",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-graphify",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-graphify/SKILL.md",
+      "target_sha256": "dd739e8e6753b0184c0a992d107c1634ab93b922a14063c553ce9390a7a5db16"
+    },
+    {
+      "exit_code": 0,
+      "id": "plan-certificates",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/plan-certificates",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/plan-certificates/SKILL.md",
+      "target_sha256": "6950e0697183772de835c76583a584a5a2ad26d655728fb0f945fc1b3843922f"
+    },
+    {
+      "exit_code": 0,
+      "id": "deterministic-simulation-testing",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/deterministic-simulation-testing",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/deterministic-simulation-testing/SKILL.md",
+      "target_sha256": "3871d3df47a64d7f90a4f0eefb85be6c99bc1990eba3e01785dda0b106394f5d"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-a11y-audit",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-a11y-audit",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-a11y-audit/SKILL.md",
+      "target_sha256": "3870e40d43c6fca8a26748bbe6387ddc5efce0f6fdd0a898f2e0489e1de172ed"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-buyer-pipeline",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-buyer-pipeline/SKILL.md",
+      "target_sha256": "203bd3afa6b95572aa99ab791980d37ba08c00e8a63bf4eead9229b921c8f314"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-conversion-audit",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-conversion-audit",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-conversion-audit/SKILL.md",
+      "target_sha256": "d83256f075e67d92eb2a327b1ca4edaf632e5953e05c0b663c92c5d25445ed12"
+    },
+    {
+      "exit_code": 0,
+      "id": "spec-first-doctrine",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/spec-first-doctrine",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/spec-first-doctrine/SKILL.md",
+      "target_sha256": "a56cac0e54dbb6dfd3cb462e90e657448307de5697e75515a3994782c7607c19"
+    },
+    {
+      "exit_code": 0,
+      "id": "agents-md-generator",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/agents-md-generator",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/agents-md-generator/SKILL.md",
+      "target_sha256": "3a867a0efcec1e7375288b60ee533e51825ea042d935c0b0b71260a2b667a012"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-content-quality-ops",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-content-quality-ops",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-content-quality-ops/SKILL.md",
+      "target_sha256": "5ab148af430d1b38fe5194043a973fa0e72bd855875b3a3bde567dd73f2fa0c5"
+    },
+    {
+      "exit_code": 0,
+      "id": "ecc-cpp-review",
+      "package_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-cpp-review",
+      "status": "pass",
+      "stderr": "",
+      "stdout": "Skill is valid!\n",
+      "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-cpp-review/SKILL.md",
+      "target_sha256": "cf578bc744eaf6fe82ab285485843ba8931f220098b862df22302de457cad0b1"
+    }
+  ],
+  "schema_version": "skill-package-validation.v1",
+  "summary": {
+    "failed": 2,
+    "passed": 22,
+    "timed_out": 0,
+    "total": 24
+  },
+  "validator_path": "/Users/sanjayb/.codeium/windsurf/skills/skill-creator/scripts/quick_validate.py",
+  "validator_sha256": "67cf5703402013936c8fb75ad6a1afecd8841d45cc5e606b634eb05825fde365"
+}

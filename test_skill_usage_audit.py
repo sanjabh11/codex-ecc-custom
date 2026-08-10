@@ -11,7 +11,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from scripts.skill_usage_audit import audit_usage, load_skill_manifest, load_source_manifest, sha256_file  # noqa: E402
+from scripts.skill_usage_audit import (  # noqa: E402
+    audit_usage,
+    load_optimization_aliases,
+    load_skill_manifest,
+    load_source_manifest,
+    sha256_file,
+)
 
 
 def write_jsonl(path: Path, events: list[dict]) -> None:
@@ -36,6 +42,87 @@ def user_message(text: str, *, with_context: bool = False, timestamp: str = "202
 
 
 class SkillUsageAuditTests(unittest.TestCase):
+    def test_alias_selector_is_attributed_to_canonical_skill(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skill_root = root / "skills"
+            skill_dir = skill_root / "canonical-skill"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                "---\nname: canonical-skill\ndescription: Audit aliases.\n---\n",
+                encoding="utf-8",
+            )
+            optimization_manifest = root / "optimization-manifest.json"
+            optimization_manifest.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "skill-optimization-manifest.v1",
+                        "skills": [{"id": "canonical-skill", "aliases": ["alias-skill"]}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            sessions = root / "sessions"
+            sessions.mkdir()
+            write_jsonl(
+                sessions / "alias.jsonl",
+                [meta("alias-session", "2026-07-05T00:00:00Z"), user_message("Use @alias-skill for this audit.")],
+            )
+            result = audit_usage(
+                session_roots=[sessions],
+                skill_root=skill_root,
+                inventory_csv=None,
+                start=datetime(2026, 6, 10, tzinfo=timezone.utc),
+                end=datetime(2026, 8, 10, 23, 59, tzinfo=timezone.utc),
+                optimization_manifest=optimization_manifest,
+            )
+            canonical = next(item for item in result["skills"] if item["name"] == "canonical-skill")
+            self.assertEqual(canonical["selector_prompt_count"], 1)
+            self.assertEqual(canonical["selector_session_count"], 1)
+            self.assertNotIn("alias-skill", {item["name"] for item in result["skills"]})
+            self.assertEqual(result["source_coverage"]["optimization_alias_count"], 1)
+
+    def test_alias_collision_fails_closed(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = Path(directory) / "optimization-manifest.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "skill-optimization-manifest.v1",
+                        "skills": [
+                            {"id": "one", "aliases": ["shared"]},
+                            {"id": "two", "aliases": ["SHARED"]},
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError):
+                load_optimization_aliases(manifest)
+
+    def test_alias_registry_rejects_malformed_terms(self):
+        import tempfile
+
+        cases = [
+            {"id": "canonical-skill", "aliases": ["alias", "alias"]},
+            {"id": "canonical-skill", "aliases": [" canonical-alias"]},
+            {"id": "Canonical-skill", "aliases": ["alias"]},
+            {"id": "canonical-skill", "aliases": ["canonical-skill"]},
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            for row in cases:
+                manifest = Path(directory) / "optimization-manifest.json"
+                manifest.write_text(
+                    json.dumps({"schema_version": "skill-optimization-manifest.v1", "skills": [row]}),
+                    encoding="utf-8",
+                )
+                with self.subTest(row=row), self.assertRaises(ValueError):
+                    load_optimization_aliases(manifest)
+
     def test_context_is_excluded_and_selector_is_deduplicated_by_session(self):
         with self.subTest("fixture setup"):
             import tempfile

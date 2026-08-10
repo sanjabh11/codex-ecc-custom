@@ -1,0 +1,28 @@
+{
+  "mode": "strict-improve",
+  "skill_name": "ecc-niche-positioning-audit",
+  "target_path": "/Users/sanjayb/codex-ecc-custom/skills/ecc-niche-positioning-audit/SKILL.md",
+  "before_score": 0.75,
+  "after_score": 1.0,
+  "delta": 0.25,
+  "before_counts": {
+    "pass": 3,
+    "fail": 1,
+    "not_run": 0,
+    "total": 4
+  },
+  "after_counts": {
+    "pass": 4,
+    "fail": 0,
+    "not_run": 0,
+    "total": 4
+  },
+  "missing_baseline": [],
+  "added_scenarios": [],
+  "regressed": [],
+  "newly_passing": [
+    "contract-ecc-niche-positioning-audit"
+  ],
+  "blocking_reasons": [],
+  "decision": "promote"
+}
