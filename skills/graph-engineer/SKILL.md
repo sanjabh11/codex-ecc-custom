@@ -236,7 +236,7 @@ with feedback, or abort the run."
 
 ## Graph Definition and Validation
 
-The complete machine-readable contract lives in `references/graph-definition.md` and `schemas/graph-definition.schema.json`. Every graph declares `schema_version`: `v1` preserves the legacy string contract; `v1.1` requires objective, structured success criteria, an execution budget, an evidence policy, typed ports, reviewer ownership, explicit state conditions, and canonical resource locks. Reviewer artifacts can be checked with `--review-report` against `schemas/review-report.schema.json`.
+The complete machine-readable contract lives in `references/graph-definition.md` and `schemas/graph-definition.schema.json`. Every graph declares `schema_version`: `v1` preserves the legacy string contract; `v1.1` requires objective, structured success criteria, an execution budget, an evidence policy, typed ports, reviewer ownership, explicit state conditions, and canonical resource locks. Reviewer artifacts can be checked with `--review-report` against `schemas/review-report.schema.json`; `record_evidence.py` requires each recorded review to carry an evidence-root-contained report and matching full SHA-256 digest.
 
 Run the validator before implementing any graph:
 
@@ -298,7 +298,7 @@ pre-run gate use the same taxonomy from `validation-rules.json`:
 | **Core** | python3, git, cat, grep, find, and basic shell tools | Validator does not revoke; runtime still records resolution. |
 | **Workflow** | pytest, cargo, npm, docker, go, gradle, dotnet, ruby | Missing or unhealthy required tools block. |
 | **Advisory** | cass, cm, dcg, ubs, gh, br, bv, graphify | Missing tools may produce `degraded` only when optional. |
-| **Unknown** | Anything else | Blocked by default; an exception requires an explicit policy entry and must be visible in the runtime manifest. |
+| **Unknown** | Anything else | Always blocked in v1. Add the executable to the shared policy taxonomy and regenerate the manifest; there is no `allow_unknown` escape hatch. |
 
 If a workflow tool is missing, the validator exits 1 with a message naming
 the tool and node. Install the tool or remove the node dependency; never
@@ -313,8 +313,11 @@ run/artifact/action/target approval record. Decisions are
 `available | degraded | blocked | revoked`.
 
 This is a pre-run gate, not an executor, process supervisor, or host trigger
-engine; it cannot terminate running or bypassed processes. Install JSON
-Schema from `requirements.txt`; missing `jsonschema` fails closed.
+engine; it cannot terminate running or bypassed processes. The manifest and
+approval binding are content-validated but unsigned caller-supplied JSON, so
+they are not cryptographic authorization against an actor who can rewrite both
+the manifest and runtime. Install JSON Schema from `requirements.txt`; missing
+`jsonschema` fails closed.
 
 ## Advisor Integration
 

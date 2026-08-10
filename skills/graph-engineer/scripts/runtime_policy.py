@@ -31,6 +31,12 @@ def load_tool_policy(rules_path):
         policy = rules.get("tool_policy")
         if not isinstance(policy, dict):
             raise ValueError("rules.tool_policy must be an object")
+        unexpected = set(policy) - set(DEFAULT_POLICY)
+        if unexpected:
+            raise ValueError(
+                "rules.tool_policy contains unsupported categories: "
+                + ", ".join(sorted(unexpected))
+            )
 
         result = {}
         for key in DEFAULT_POLICY:

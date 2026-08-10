@@ -261,11 +261,9 @@ def check_tools(graph, rules_path=None):
             category = classify_tool(name, policy)
             available = executable_available(name)
             record = {"node": node.get("id"), "tool": name, "category": category, "available": available}
-            # G9: Block unknown tools by default — even if installed, they are
-            # not in the policy taxonomy and could be arbitrary executables.
-            # Only allow unknown tools if explicitly marked optional AND the
-            # policy has an "allow_unknown" flag set to True.
-            if category == "unknown" and not policy.get("allow_unknown", False):
+            # G9: Unknown tools are never accepted by this policy version —
+            # they must first be added to the shared taxonomy and reviewed.
+            if category == "unknown":
                 record["status"] = "blocked"
                 blocked.append({"node": node.get("id"), "tool": name, "reason": "unknown tool not in policy taxonomy — blocked by default"})
                 checks.append(record)

@@ -430,6 +430,93 @@ def check_tools_well_formed(graph):
                 )
 
 
+_PORT_SCHEMA_CACHE = {}
+
+
+def _resolve_port_schema(schema):
+    """Resolve only local schema references used by typed graph ports."""
+    current = schema
+    seen = set()
+    for _ in range(8):
+        if not isinstance(current, dict):
+            return None
+        ref = current.get("$ref")
+        if not isinstance(ref, str):
+            return current
+        if ref in seen or not ref.startswith("schemas/"):
+            return None
+        seen.add(ref)
+        path = (Path(SKILL_DIR) / ref).resolve()
+        try:
+            path.relative_to(Path(SKILL_DIR).resolve())
+        except ValueError:
+            return None
+        if not path.is_file():
+            return None
+        try:
+            if ref not in _PORT_SCHEMA_CACHE:
+                _PORT_SCHEMA_CACHE[ref] = json.loads(path.read_text(encoding="utf-8"))
+            current = _PORT_SCHEMA_CACHE[ref]
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            return None
+    return None
+
+
+def _schemas_compatible(source_schema, destination_schema):
+    """Use a conservative subset check for machine-consumed port contracts.
+
+    A source output must be guaranteed to satisfy the destination input. Exact
+    schemas, equal local references, and unconstrained destination primitive or
+    object types are safe. For constrained objects, required fields and
+    declared property schemas must be compatible. Unknown schema relations are
+    rejected rather than accepted by matching only ``type``.
+    """
+    if not isinstance(source_schema, dict) or not isinstance(destination_schema, dict):
+        return False
+    if source_schema == destination_schema:
+        return True
+    if (
+        isinstance(source_schema.get("$ref"), str)
+        and source_schema.get("$ref") == destination_schema.get("$ref")
+    ):
+        return True
+    source = _resolve_port_schema(source_schema)
+    destination = _resolve_port_schema(destination_schema)
+    if source is None or destination is None:
+        return False
+    if source == destination:
+        return True
+
+    destination_type = destination.get("type")
+    source_type = source.get("type")
+    if (
+        isinstance(destination_type, str)
+        and set(destination) <= {"type"}
+        and source_type == destination_type
+    ):
+        return True
+
+    if source_type != "object" or destination_type != "object":
+        return False
+
+    source_required = set(source.get("required", []))
+    destination_required = set(destination.get("required", []))
+    if not destination_required.issubset(source_required):
+        return False
+    source_properties = source.get("properties", {})
+    destination_properties = destination.get("properties", {})
+    if not isinstance(source_properties, dict) or not isinstance(destination_properties, dict):
+        return False
+    if not set(destination_properties).issubset(source_properties):
+        return False
+    for name, destination_property in destination_properties.items():
+        if source_properties.get(name) != destination_property:
+            return False
+    if destination.get("additionalProperties") is False and source.get("additionalProperties") is not False:
+        return False
+    return True
+
+
 def check_v11_typed_contracts(graph):
     """Validate typed ports and review-report bindings for strict v1.1 graphs."""
     if graph.get("schema_version") != "v1.1":
@@ -541,15 +628,7 @@ def check_v11_typed_contracts(graph):
                 )
                 source_schema = source_port.get("schema") if source_port else None
                 destination_schema = destination_port.get("schema")
-                compatible = False
-                if isinstance(source_schema, dict) and isinstance(destination_schema, dict):
-                    compatible = source_schema == destination_schema
-                    if not compatible and source_schema.get("$ref") and destination_schema.get("$ref"):
-                        compatible = source_schema["$ref"] == destination_schema["$ref"]
-                    if not compatible and source_schema.get("$ref") and destination_schema.get("type") == "object":
-                        compatible = True
-                    if not compatible and source_schema.get("type") == destination_schema.get("type"):
-                        compatible = True
+                compatible = _schemas_compatible(source_schema, destination_schema)
                 check(
                     f"edge_{index}_port_schema_compatible",
                     compatible,
@@ -1269,6 +1348,13 @@ def check_tool_auto_revocation(graph, rules_path=None):
                 continue
             tool_name = declaration["name"]
             category = classify_tool(tool_name, policy)
+            if category == "unknown":
+                check(
+                    f"tool_{node.get('id')}_{tool_name}_known",
+                    False,
+                    f"Unknown tool '{tool_name}' (node '{node.get('id')}') is blocked; add it to the shared policy taxonomy",
+                )
+                continue
             if not executable_available(tool_name):
                 if category == "workflow" or (category == "unknown" and declaration["required"]):
                     check(

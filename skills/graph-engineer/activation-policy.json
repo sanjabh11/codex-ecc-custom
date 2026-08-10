@@ -1,5 +1,7 @@
 {
   "schema_version": "v1",
+  "logical_host_family_count": 6,
+  "physical_discovery_path_count": 7,
   "logical_host_families": ["Codex", "Claude Code", "Devin", "Agents", "Windsurf", "Gemini"],
   "discovery_surfaces": [
     {"id": "codex", "family": "Codex", "path": "~/.codex/skills/graph-engineer"},

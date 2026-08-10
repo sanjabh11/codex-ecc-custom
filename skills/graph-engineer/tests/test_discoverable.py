@@ -139,8 +139,8 @@ class TestGraphEngineerDiscoverable(unittest.TestCase):
         ids = [surface["id"] for surface in policy["discovery_surfaces"]]
         self.assertEqual(len(ids), len(set(ids)))
         self.assertIn("Windsurf", policy["logical_host_families"])
-        self.assertEqual(len(policy["logical_host_families"]), 6)
-        self.assertEqual(len(policy["discovery_surfaces"]), 7)
+        self.assertEqual(len(policy["logical_host_families"]), policy["logical_host_family_count"])
+        self.assertEqual(len(policy["discovery_surfaces"]), policy["physical_discovery_path_count"])
 
     def test_trigger_metadata_cases(self):
         module_path = TESTS_DIR / "test_triggers.py"

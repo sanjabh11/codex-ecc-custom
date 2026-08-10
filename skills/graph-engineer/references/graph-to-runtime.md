@@ -48,8 +48,17 @@ the graph and approval decision are known; it records the caller-supplied
 decision and is not a human approval surface.
 
 Record `run_started` first, then node/review events, any gate decision, and
-`run_finished` or `run_aborted`. Evidence is append-locked and redacts
-secret-like strings; it is not a substitute for independent reviewer artifacts.
+`run_finished` or `run_aborted`. Reviewer events must point to a schema-valid
+review report stored inside the evidence root and carry its full SHA-256
+content digest. Evidence is append-locked and redacts secret-like strings;
+it still does not establish reviewer independence by itself.
+
+The runtime manifest and approval binding are content-validated but unsigned
+caller-supplied JSON. They detect accidental or one-sided tampering of the
+graph, package, policy, tools, run, and artifact; they are not a cryptographic
+authority against an actor who can rewrite both the manifest and the runtime.
+Use a separately approved signing/key-management design before making a
+tamper-proof or production authorization claim.
 
 ## Context and state boundaries
 

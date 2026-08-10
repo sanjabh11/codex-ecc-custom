@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import subprocess
@@ -70,12 +71,36 @@ class TestGraphEngineerAdversarial(unittest.TestCase):
             # G8: runtime_hash now returns None for unsafe symlinks (fail closed)
             self.assertIsNone(module.runtime_hash(root))
 
-    def recorder(self, root, run_id, event_type, *extra):
-        return subprocess.run([
+    def review_artifact_args(self, root, reviewer, status):
+        details = {
+            "reviewer-a": ("worker-a", "Is the output factually correct?"),
+            "reviewer-b": ("worker-b", "Is the output complete?"),
+        }
+        reviewed_node, question = details[reviewer]
+        report = {
+            "reviewer_id": reviewer,
+            "reviewed_node_id": reviewed_node,
+            "question": question,
+            "result": "pass" if status == "pass" else "fail",
+            "feedback": "The reviewed artifact satisfies the question.",
+        }
+        path = root / f"{reviewer}.review.json"
+        path.write_text(json.dumps(report))
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        return ("--artifact", str(path), "--artifact-digest", digest)
+
+    def recorder(self, root, run_id, event_type, *extra, auto_review=True):
+        command = [
             "python3", str(RECORDER), "--graph", str(GRAPH), "--run-id", run_id,
             "--event-type", event_type, "--output", str(root / "evidence.jsonl"),
             "--evidence-root", str(root), "--runtime-root", str(REPO_ROOT), *extra,
-        ], capture_output=True, text=True)
+        ]
+        if auto_review and event_type == "review" and "--artifact" not in extra:
+            node = extra[extra.index("--node") + 1]
+            if node in {"reviewer-a", "reviewer-b"}:
+                status = extra[extra.index("--status") + 1]
+                command.extend(self.review_artifact_args(root, node, status))
+        return subprocess.run(command, capture_output=True, text=True)
 
     def test_corrupt_evidence_is_rejected_without_traceback(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -143,6 +168,31 @@ class TestGraphEngineerAdversarial(unittest.TestCase):
         self.assertTrue(any("unknown tool" in b.get("reason", "") for b in blocked),
                         f"Expected unknown tool to be blocked, got blocked={blocked}")
 
+    def test_g9_validator_blocks_unknown_optional_tool(self):
+        """The design-time validator must match the runtime unknown-tool gate."""
+        graph = json.loads(GRAPH.read_text())
+        graph["nodes"][1]["tools"] = [{"name": "totally-unknown-tool-xyz", "required": False}]
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as handle:
+            json.dump(graph, handle)
+            handle.flush()
+            result = self.validator(handle.name)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Unknown tool", result.stdout)
+
+    def test_g9_policy_rejects_unknown_override_category(self):
+        """Policy files cannot smuggle an allow_unknown escape hatch."""
+        from importlib.util import module_from_spec, spec_from_file_location
+        spec = spec_from_file_location("ge_policy_g9_override", SKILL_DIR / "scripts" / "runtime_policy.py")
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        policy = json.loads((SKILL_DIR / "validation-rules.json").read_text())
+        policy["rules"]["tool_policy"]["allow_unknown"] = True
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as handle:
+            json.dump(policy, handle)
+            handle.flush()
+            with self.assertRaises(ValueError):
+                module.load_tool_policy(handle.name)
+
     def test_g10_invalid_utf8_graph_rejected_without_traceback(self):
         """G10: Invalid UTF-8 in graph file must be rejected cleanly."""
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as handle:
@@ -204,6 +254,157 @@ class TestGraphEngineerAdversarial(unittest.TestCase):
             result = self.recorder(root, "g12-2", "review", "--node", "reviewer-a", "--status", "pass")
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("node_attempt", result.stderr.lower())
+
+    def test_review_requires_content_bound_report(self):
+        """A reviewer pass cannot be recorded without a schema-bound report and digest."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.assertEqual(self.recorder(root, "review-contract", "run_started").returncode, 0)
+            self.assertEqual(
+                self.recorder(root, "review-contract", "node_attempt", "--node", "worker-a", "--status", "pass").returncode,
+                0,
+            )
+            missing = self.recorder(
+                root,
+                "review-contract",
+                "review",
+                "--node",
+                "reviewer-a",
+                "--status",
+                "pass",
+                auto_review=False,
+            )
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertIn("artifact", missing.stderr.lower())
+            valid_args = self.review_artifact_args(root, "reviewer-a", "pass")
+            bad_digest = self.recorder(
+                root,
+                "review-contract",
+                "review",
+                "--node",
+                "reviewer-a",
+                "--status",
+                "pass",
+                "--artifact",
+                valid_args[1],
+                "--artifact-digest",
+                "0" * 64,
+                auto_review=False,
+            )
+            self.assertNotEqual(bad_digest.returncode, 0)
+            self.assertIn("digest", bad_digest.stderr.lower())
+
+    def test_terminal_node_attempt_cannot_be_reopened(self):
+        """A passing node cannot silently produce a second contradictory attempt."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.assertEqual(self.recorder(root, "attempt-contract", "run_started").returncode, 0)
+            self.assertEqual(
+                self.recorder(root, "attempt-contract", "node_attempt", "--node", "worker-a", "--status", "pass").returncode,
+                0,
+            )
+            reopened = self.recorder(
+                root,
+                "attempt-contract",
+                "node_attempt",
+                "--node",
+                "worker-a",
+                "--attempt",
+                "2",
+                "--status",
+                "pass",
+            )
+            self.assertNotEqual(reopened.returncode, 0)
+            self.assertIn("after pass", reopened.stderr)
+
+    def test_failed_review_allows_one_new_worker_attempt(self):
+        """A review failure opens the bounded worker retry path exactly once."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.assertEqual(self.recorder(root, "retry-contract", "run_started").returncode, 0)
+            self.assertEqual(
+                self.recorder(root, "retry-contract", "node_attempt", "--node", "worker-a", "--status", "pass").returncode,
+                0,
+            )
+            failed_review = self.recorder(
+                root,
+                "retry-contract",
+                "review",
+                "--node",
+                "reviewer-a",
+                "--attempt",
+                "1",
+                "--status",
+                "fail",
+            )
+            self.assertEqual(failed_review.returncode, 0, failed_review.stderr)
+            retried = self.recorder(
+                root,
+                "retry-contract",
+                "node_attempt",
+                "--node",
+                "worker-a",
+                "--attempt",
+                "2",
+                "--status",
+                "pass",
+            )
+            self.assertEqual(retried.returncode, 0, retried.stderr)
+            passed_review = self.recorder(
+                root,
+                "retry-contract",
+                "review",
+                "--node",
+                "reviewer-a",
+                "--attempt",
+                "2",
+                "--status",
+                "pass",
+            )
+            self.assertEqual(passed_review.returncode, 0, passed_review.stderr)
+
+    def test_mixed_graph_hash_for_same_run_is_rejected(self):
+        """A JSONL stream cannot combine evidence for two graph definitions."""
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.assertEqual(self.recorder(root, "mixed-graph", "run_started").returncode, 0)
+            graph = json.loads(GRAPH.read_text())
+            graph["description"] = "same shape with a different graph identity"
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as handle:
+                json.dump(graph, handle)
+                handle.flush()
+                result = subprocess.run(
+                    [
+                        "python3", str(RECORDER), "--graph", handle.name,
+                        "--run-id", "mixed-graph", "--event-type", "node_attempt",
+                        "--node", "worker-a", "--status", "pass",
+                        "--output", str(root / "evidence.jsonl"),
+                        "--evidence-root", str(root), "--runtime-root", str(REPO_ROOT),
+                    ],
+                    capture_output=True,
+                    text=True,
+                )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("mixed graph hashes", result.stderr)
+
+    def test_v11_constrained_port_mismatch_is_rejected(self):
+        """Matching only JSON type is not enough for constrained object ports."""
+        graph = json.loads(V11_GRAPH.read_text())
+        graph["nodes"][1]["output_ports"][0]["schema"] = {
+            "type": "object",
+            "required": ["worker_only"],
+        }
+        graph["nodes"][2]["input_ports"][0]["schema"] = {
+            "type": "object",
+            "required": ["reviewer_only"],
+        }
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json") as handle:
+            json.dump(graph, handle)
+            handle.flush()
+            result = self.validator(handle.name)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("edge_1_port_schema_compatible", result.stdout)
+        self.assertNotIn("Traceback", result.stdout + result.stderr)
 
     def test_g14_malformed_policy_raises_value_error(self):
         """G14: load_tool_policy must raise ValueError on malformed policy, not fall back."""

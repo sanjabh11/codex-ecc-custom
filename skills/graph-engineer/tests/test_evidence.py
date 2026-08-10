@@ -1,3 +1,4 @@
+import hashlib
 import json
 import subprocess
 import tempfile
@@ -13,6 +14,24 @@ RECORDER = SKILL_DIR / "scripts" / "record_evidence.py"
 
 
 class TestEvidenceRecorder(unittest.TestCase):
+    def review_artifact_args(self, root, reviewer, status):
+        details = {
+            "reviewer-a": ("worker-a", "Is the output factually correct?"),
+            "reviewer-b": ("worker-b", "Is the output complete?"),
+        }
+        reviewed_node, question = details[reviewer]
+        report = {
+            "reviewer_id": reviewer,
+            "reviewed_node_id": reviewed_node,
+            "question": question,
+            "result": "pass" if status == "pass" else "fail",
+            "feedback": "The reviewed artifact satisfies the question.",
+        }
+        path = root / f"{reviewer}.review.json"
+        path.write_text(json.dumps(report))
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        return ("--artifact", str(path), "--artifact-digest", digest)
+
     def run_recorder(self, root, run_id, event_type, *extra):
         output = root / "run.jsonl"
         command = [
@@ -26,6 +45,10 @@ class TestEvidenceRecorder(unittest.TestCase):
             "--runtime-root", str(REPO_ROOT),
         ]
         command.extend(extra)
+        if event_type == "review" and "--artifact" not in extra:
+            reviewer = extra[extra.index("--node") + 1]
+            status = extra[extra.index("--status") + 1]
+            command.extend(self.review_artifact_args(root, reviewer, status))
         return subprocess.run(command, capture_output=True, text=True)
 
     def test_lifecycle_node_binding_and_schema(self):

@@ -23,6 +23,10 @@ def load_trigger_metadata():
     with open(schema_file, encoding="utf-8") as handle:
         schema = json.load(handle)
     jsonschema.validate(instance=policy, schema=schema)
+    if len(policy["logical_host_families"]) != policy["logical_host_family_count"]:
+        raise ValueError("logical host-family count does not match activation metadata")
+    if len(policy["discovery_surfaces"]) != policy["physical_discovery_path_count"]:
+        raise ValueError("physical discovery-path count does not match activation metadata")
     return policy
 
 

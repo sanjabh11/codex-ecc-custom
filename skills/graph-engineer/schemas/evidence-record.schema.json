@@ -14,6 +14,8 @@
       "enum": ["run_started", "node_attempt", "review", "gate_decision", "run_finished", "run_aborted"]
     },
     "node_id": { "type": ["string", "null"], "minLength": 1 },
+    "reviewed_node_id": { "type": ["string", "null"], "minLength": 1 },
+    "reviewed_attempt": { "type": ["integer", "null"], "minimum": 1 },
     "status": {
       "type": "string",
       "enum": ["started", "pass", "fail", "retry", "skip", "finished", "aborted"]
@@ -81,7 +83,16 @@
     },
     {
       "if": { "properties": { "event_type": { "const": "review" } } },
-      "then": { "properties": { "status": { "enum": ["pass", "fail", "retry"] } } }
+      "then": {
+        "required": ["artifact", "artifact_digest", "reviewed_node_id", "reviewed_attempt"],
+        "properties": {
+          "status": { "enum": ["pass", "fail", "retry"] },
+          "artifact": { "type": "string", "minLength": 1 },
+          "artifact_digest": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+          "reviewed_node_id": { "type": "string", "minLength": 1 },
+          "reviewed_attempt": { "type": "integer", "minimum": 1 }
+        }
+      }
     },
     {
       "if": { "properties": { "event_type": { "const": "node_attempt" } } },
