@@ -37,7 +37,7 @@ modified and untracked skill packages remain outside the change scope.
 | Inventory labels in frozen CSV | `111` distinct labels across `102` skill files | verified-local |
 | Analyzer SHA-256 at clean rerun | `b75f9c542a3fadb5195943eb0273355946ebd3e5d9d899260e08d76a9b9f9809` | verified-local |
 | Test SHA-256 at clean rerun | `504aacd2bba10abaf89152355a234ad7853f54d9308d92e99823cb88280a0955` | verified-local |
-| Evidence SHA-256 at clean rerun | `2d975ca6e6b0767f9d95376333eb94a60d915c38e8b586eb70c725fcdd514ed4` | verified-local |
+| Evidence SHA-256 at clean rerun | `88a5abc381b4649a0fe7d592b89b15fd19031b2d6538edffa213b4ce2f8a9930` | verified-local |
 | Source-manifest SHA-256 at clean rerun | `c2b1ef7c66705a6abdcc89a6924c39a843e760911ec44768467aef29b7e7a830` | verified-local |
 | Skill-manifest SHA-256 at clean rerun | `1e50568104f7bfa320fe30712cbce10031b4daccd6f306ec502bbf4731eecb87` | verified-local |
 | Frozen summary SHA-256 at clean rerun | `d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95` | verified-local |

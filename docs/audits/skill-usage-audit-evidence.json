@@ -29,11 +29,12 @@
         "Context blocks are excluded",
         "Selector sessions are deduplicated",
         "Nested wrapper call-sites remain L3",
-        "Quality signals reach underutilized candidates"
+        "Quality signals reach underutilized candidates",
+        "Skill and inventory manifest drift is rejected"
       ],
       "result": "pass",
       "evidence": [
-        "python3 -m unittest -v test_skill_usage_audit.py: 5 tests passed",
+        "python3 -m unittest -v test_skill_usage_audit.py: 6 tests passed",
         "/Users/sanjayb/codex-ecc-custom/test_skill_usage_audit.py",
         "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py"
       ],
