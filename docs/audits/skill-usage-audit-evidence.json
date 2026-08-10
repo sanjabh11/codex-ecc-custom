@@ -1,0 +1,96 @@
+{
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "skill-usage-audit",
+  "target_kind": "workflow",
+  "target_path": "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py",
+  "run_id": "2026-08-10-codex-skill-usage-audit-v1",
+  "summary": {
+    "score": 1.0,
+    "passed": 3,
+    "failed": 0,
+    "not_run": 0,
+    "total": 3
+  },
+  "scenarios": [
+    {
+      "id": "S001",
+      "title": "Regression suite preserves proof-tier separation",
+      "prompt": "Run the local regression tests for context filtering, session deduplication, malformed input, wrapper contamination, and quality metadata.",
+      "strictness": "supportive",
+      "grader": "deterministic",
+      "coverage_tags": ["proof-buckets", "scope-control", "regression"],
+      "expected": [
+        "Context blocks are excluded",
+        "Selector sessions are deduplicated",
+        "Nested wrapper call-sites remain L3",
+        "Quality signals reach underutilized candidates"
+      ],
+      "result": "pass",
+      "evidence": [
+        "python3 -m unittest -v test_skill_usage_audit.py: 4 tests passed",
+        "/Users/sanjayb/codex-ecc-custom/test_skill_usage_audit.py",
+        "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py"
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/test_skill_usage_audit.py",
+        "/Users/sanjayb/codex-ecc-custom/scripts/skill_usage_audit.py"
+      ]
+    },
+    {
+      "id": "S002",
+      "title": "Run a reproducible 60-day local usage scan",
+      "prompt": "Scan the available Codex sessions for the fixed UTC window and rank explicit selectors, actions, and underutilized candidates.",
+      "strictness": "neutral",
+      "grader": "deterministic",
+      "coverage_tags": ["usage-ledger", "provenance", "diagnosis"],
+      "expected": [
+        "The output records the UTC window and source coverage",
+        "L1, L2, L3, and L4 are separated",
+        "The scan completes without malformed-line errors"
+      ],
+      "result": "pass",
+      "evidence": [
+        "python3 scripts/skill_usage_audit.py --start 2026-06-10 --end 2026-08-10 with the recorded external labels",
+        "230208 in-window events across 34 sessions",
+        "969 filtered user prompts, 280 excluded context blocks, 0 malformed JSONL lines",
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/docs/skill-usage-audit-2026-08-10.md"
+      ]
+    },
+    {
+      "id": "S003",
+      "title": "Reject false usage from malformed and out-of-window records",
+      "prompt": "Evaluate mixed session fixtures containing stale events, malformed JSONL, repeated context, and nested tool-call examples.",
+      "strictness": "competing",
+      "grader": "deterministic",
+      "coverage_tags": ["false-green", "negative-fixtures", "activation-boundary"],
+      "expected": [
+        "Out-of-window selector text is not counted",
+        "Malformed lines are counted as malformed rather than usage",
+        "Nested tool names are marked L3 and not host-activation proof"
+      ],
+      "result": "pass",
+      "evidence": [
+        "test_malformed_lines_and_out_of_window_sessions_are_not_false_usage passed",
+        "test_top_level_actions_are_separate_from_lower_confidence_wrapper_call_sites passed",
+        "Nested action output includes the warning that it is not host-activation proof"
+      ],
+      "artifact_paths": [
+        "/Users/sanjayb/codex-ecc-custom/test_skill_usage_audit.py"
+      ]
+    }
+  ],
+  "rejected_edits": [
+    {
+      "edit": "Mass-edit the 20 skills or all 102 canonical skill packages immediately",
+      "reason": "The checkout is dirty and the usage evidence does not prove host activation, outcome value, or a need for broad edits. Use bounded pilots and clean-worktree provenance first."
+    },
+    {
+      "edit": "Treat plain mentions, nested wrapper strings, or plugin mentions as execution counts",
+      "reason": "They are L3 supporting evidence or namespace-level signals, not L1/L2 activation evidence."
+    }
+  ],
+  "notes": "This evidence validates the local usage-audit workflow only. It does not promote transcript selectors to host-loader, successful-execution, outcome, or production proof."
+}
