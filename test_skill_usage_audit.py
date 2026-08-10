@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from scripts.skill_usage_audit import audit_usage, load_source_manifest, sha256_file  # noqa: E402
+from scripts.skill_usage_audit import audit_usage, load_skill_manifest, load_source_manifest, sha256_file  # noqa: E402
 
 
 def write_jsonl(path: Path, events: list[dict]) -> None:
@@ -119,6 +119,39 @@ class SkillUsageAuditTests(unittest.TestCase):
             source.write_text(source.read_text(encoding="utf-8") + "drift\n", encoding="utf-8")
             with self.assertRaises(ValueError):
                 load_source_manifest(manifest)
+
+    def test_skill_manifest_binds_skill_files_and_inventory(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skill_root = root / "skills"
+            skill_dir = skill_root / "demo"
+            skill_dir.mkdir(parents=True)
+            skill_file = skill_dir / "SKILL.md"
+            skill_file.write_text("---\nname: demo\ndescription: demo\n---\n", encoding="utf-8")
+            inventory = root / "skill-inventory.csv"
+            inventory.write_text("name,categories\ndemo,testing\n", encoding="utf-8")
+            manifest = root / "skill-manifest.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "skill-usage-skill-manifest.v1",
+                        "skill_root": str(skill_root.resolve()),
+                        "inventory_csv": str(inventory.resolve()),
+                        "inventory_sha256": sha256_file(inventory),
+                        "files": [{"path": str(skill_file), "sha256": sha256_file(skill_file)}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                load_skill_manifest(manifest, skill_root=skill_root, inventory_csv=inventory),
+                1,
+            )
+            skill_file.write_text(skill_file.read_text(encoding="utf-8") + "changed\n", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                load_skill_manifest(manifest, skill_root=skill_root, inventory_csv=inventory)
 
     def test_top_level_actions_are_separate_from_lower_confidence_wrapper_call_sites(self):
         import tempfile

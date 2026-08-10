@@ -1,0 +1,1072 @@
+{
+  "schema_version": "skill-usage-audit.v1",
+  "generated_at": "2026-08-10T16:35:10.454224+00:00",
+  "window": {
+    "start": "2026-06-10T00:00:00+00:00",
+    "end": "2026-08-10T23:59:59.999999+00:00",
+    "timezone": "UTC"
+  },
+  "source_coverage": {
+    "source_manifest": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-source-manifest.json",
+    "source_manifest_file_count": 41,
+    "skill_manifest": "/Users/sanjayb/codex-ecc-custom/docs/audits/skill-usage-audit-skill-manifest.json",
+    "skill_manifest_file_count": 102,
+    "candidate_source_file_count": 41,
+    "active_source_file_count": 41,
+    "session_count": 33,
+    "events_in_window": 218936,
+    "user_prompt_count": 931,
+    "excluded_context_blocks": 262,
+    "malformed_jsonl_lines": 0
+  },
+  "observed_topics": {
+    "audit_review": 701,
+    "research_browser": 598,
+    "implementation_fix": 867,
+    "testing_verification": 675,
+    "planning_orchestration": 822,
+    "docs_artifacts": 627,
+    "security_provenance": 572
+  },
+  "ranked_top_skills": [
+    {
+      "name": "deep-research",
+      "selector_prompt_count": 53,
+      "selector_session_count": 12,
+      "mention_prompt_count": 232,
+      "mention_session_count": 24,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-niche-positioning-audit",
+      "selector_prompt_count": 34,
+      "selector_session_count": 7,
+      "mention_prompt_count": 38,
+      "mention_session_count": 8,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "ecc-advisor",
+      "selector_prompt_count": 62,
+      "selector_session_count": 5,
+      "mention_prompt_count": 86,
+      "mention_session_count": 13,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "prompt-optimizer",
+      "selector_prompt_count": 12,
+      "selector_session_count": 4,
+      "mention_prompt_count": 12,
+      "mention_session_count": 4,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "conformance-gate",
+      "selector_prompt_count": 6,
+      "selector_session_count": 3,
+      "mention_prompt_count": 20,
+      "mention_session_count": 6,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "slides",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 9,
+      "mention_session_count": 5,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "last30days",
+      "selector_prompt_count": 4,
+      "selector_session_count": 2,
+      "mention_prompt_count": 4,
+      "mention_session_count": 2,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "agent-phase-ratchet",
+      "selector_prompt_count": 3,
+      "selector_session_count": 2,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "second-brain-ops",
+      "selector_prompt_count": 12,
+      "selector_session_count": 1,
+      "mention_prompt_count": 12,
+      "mention_session_count": 1,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-explain",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-ml-engineering",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-multi-execute",
+      "selector_prompt_count": 6,
+      "selector_session_count": 1,
+      "mention_prompt_count": 6,
+      "mention_session_count": 1,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "skill-optimizer",
+      "selector_prompt_count": 4,
+      "selector_session_count": 1,
+      "mention_prompt_count": 5,
+      "mention_session_count": 2,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-hormozi-funnel",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 24,
+      "mention_session_count": 6,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "codebase-onboarding",
+      "selector_prompt_count": 1,
+      "selector_session_count": 1,
+      "mention_prompt_count": 16,
+      "mention_session_count": 6,
+      "inventory_source": "caller-supplied-external-label",
+      "quality_signals": {
+        "has_frontmatter": null,
+        "has_output_contract": null,
+        "has_scope_boundary": null,
+        "has_references": null,
+        "has_scripts": null,
+        "has_tests": null
+      }
+    },
+    {
+      "name": "ecc-fable-loop",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-model-route",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 22,
+      "mention_session_count": 5,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-verify",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 16,
+      "mention_session_count": 5,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-prompt-optimize",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 12,
+      "mention_session_count": 5,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "graph-engineer",
+      "selector_prompt_count": 0,
+      "selector_session_count": 0,
+      "mention_prompt_count": 26,
+      "mention_session_count": 4,
+      "inventory_source": "canonical",
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    }
+  ],
+  "underutilized_candidates": [
+    {
+      "name": "ecc-graphify",
+      "relevance_score": 0.7143,
+      "opportunity_gap_score": 0.7143,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": true,
+        "has_tests": true
+      }
+    },
+    {
+      "name": "plan-certificates",
+      "relevance_score": 0.7143,
+      "opportunity_gap_score": 0.7143,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "deterministic-simulation-testing",
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "implementation_fix",
+        "testing_verification",
+        "security_provenance"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-a11y-audit",
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix",
+        "testing_verification"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-buyer-pipeline",
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "research_browser",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-conversion-audit",
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "research_browser",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "spec-first-doctrine",
+      "relevance_score": 0.4286,
+      "opportunity_gap_score": 0.4286,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "implementation_fix",
+        "planning_orchestration",
+        "docs_artifacts"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "agents-md-generator",
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "planning_orchestration",
+        "docs_artifacts"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": true,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-content-quality-ops",
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": true,
+        "has_scope_boundary": true,
+        "has_references": true,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    },
+    {
+      "name": "ecc-cpp-review",
+      "relevance_score": 0.2857,
+      "opportunity_gap_score": 0.2857,
+      "mention_session_count": 0,
+      "matched_observed_topics": [
+        "audit_review",
+        "implementation_fix"
+      ],
+      "quality_signals": {
+        "has_frontmatter": true,
+        "has_output_contract": false,
+        "has_scope_boundary": false,
+        "has_references": false,
+        "has_scripts": false,
+        "has_tests": false
+      }
+    }
+  ],
+  "actions": {
+    "top_level": [
+      {
+        "action": "exec",
+        "count": 30638,
+        "session_count": 31,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "wait",
+        "count": 3649,
+        "session_count": 27,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "exec_command",
+        "count": 99,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "request_user_input",
+        "count": 54,
+        "session_count": 20,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "send_message",
+        "count": 18,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "wait_agent",
+        "count": 10,
+        "session_count": 4,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "list_agents",
+        "count": 5,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "write_stdin",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "spawn_agent",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "get_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "create_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      },
+      {
+        "action": "update_goal",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L2-top-level-tool-record"
+      }
+    ],
+    "nested_call_sites": [
+      {
+        "action": "exec_command",
+        "count": 30597,
+        "session_count": 31,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "apply_patch",
+        "count": 4263,
+        "session_count": 19,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "write_stdin",
+        "count": 3664,
+        "session_count": 22,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "web__run",
+        "count": 991,
+        "session_count": 23,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__node_repl__js",
+        "count": 924,
+        "session_count": 11,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "update_plan",
+        "count": 777,
+        "session_count": 21,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "get_goal",
+        "count": 58,
+        "session_count": 13,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "view_image",
+        "count": 52,
+        "session_count": 6,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__exa__web_search_exa",
+        "count": 29,
+        "session_count": 7,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__load_workspace_dependencies",
+        "count": 27,
+        "session_count": 8,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "update_goal",
+        "count": 26,
+        "session_count": 13,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_evaluate",
+        "count": 21,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "create_goal",
+        "count": 18,
+        "session_count": 12,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_navigate",
+        "count": 15,
+        "session_count": 5,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__exa__web_fetch_exa",
+        "count": 14,
+        "session_count": 6,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_search",
+        "count": 11,
+        "session_count": 8,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__read_thread_terminal",
+        "count": 11,
+        "session_count": 7,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_run_code_unsafe",
+        "count": 11,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "multi_agent_v1__wait_agent",
+        "count": 11,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_wait_for",
+        "count": 10,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_click",
+        "count": 9,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "multi_agent_v1__spawn_agent",
+        "count": 9,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_snapshot",
+        "count": 6,
+        "session_count": 4,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_scrape",
+        "count": 6,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_console_messages",
+        "count": 6,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__list_threads",
+        "count": 5,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__create_thread",
+        "count": 5,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_job_logs",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_get_repo",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "exec",
+        "count": 4,
+        "session_count": 3,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_tabs",
+        "count": 4,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_find",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__check_decision",
+        "count": 4,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__firecrawl__firecrawl_search_feedback",
+        "count": 3,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_run_jobs",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "err",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "txt",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__find_prior_work",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__browser_tools__getConsoleErrors",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__read_thread",
+        "count": 2,
+        "session_count": 2,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "wait",
+        "count": 2,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__node_repl__js_add_node_module_dir",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "scripts",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_commit_workflow_runs",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__ask_history",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_run_artifacts",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__codex_apps__github_fetch_workflow_job_steps",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "__version__",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__project_memory",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "execર",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__browser_tools__getNetworkErrors",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_press_key",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_fill_form",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__callimachus__search_threads",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__set_thread_archived",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__navigate_to_codex_page",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "mcp__playwright__browser_network_requests",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      },
+      {
+        "action": "codex_app__list_projects",
+        "count": 1,
+        "session_count": 1,
+        "proof_level": "L3-wrapper-call-site",
+        "warning": "May include source-code examples inside exec inputs; not host-activation proof."
+      }
+    ]
+  },
+  "plugin_mentions": [
+    {
+      "plugin": "everything-claude-code",
+      "prompt_count": 242,
+      "session_count": 25
+    },
+    {
+      "plugin": "browser",
+      "prompt_count": 33,
+      "session_count": 14
+    },
+    {
+      "plugin": "computer-use",
+      "prompt_count": 2,
+      "session_count": 2
+    },
+    {
+      "plugin": "pdf",
+      "prompt_count": 2,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome-dev",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "chrome-internal",
+      "prompt_count": 1,
+      "session_count": 1
+    },
+    {
+      "plugin": "github",
+      "prompt_count": 1,
+      "session_count": 1
+    }
+  ]
+}

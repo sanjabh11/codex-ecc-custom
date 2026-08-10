@@ -142,6 +142,61 @@ def load_source_manifest(path: Path) -> list[Path]:
     return resolved_paths
 
 
+def load_skill_manifest(path: Path, *, skill_root: Path, inventory_csv: Path) -> int:
+    """Verify the canonical skill files and inventory used by a scan."""
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot read skill manifest {path}: {exc}") from exc
+    if not isinstance(payload, dict) or payload.get("schema_version") != "skill-usage-skill-manifest.v1":
+        raise ValueError("skill manifest schema_version must be skill-usage-skill-manifest.v1")
+    expected_root = payload.get("skill_root")
+    expected_inventory = payload.get("inventory_csv")
+    resolved_root = skill_root.resolve()
+    resolved_inventory = inventory_csv.resolve()
+    if expected_root != str(resolved_root):
+        raise ValueError("skill manifest skill_root does not match --skill-root")
+    if expected_inventory != str(resolved_inventory):
+        raise ValueError("skill manifest inventory_csv does not match --inventory-csv")
+    inventory_hash = payload.get("inventory_sha256")
+    if not isinstance(inventory_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", inventory_hash):
+        raise ValueError("skill manifest inventory_sha256 must be 64 hexadecimal characters")
+    if not resolved_inventory.is_file() or sha256_file(resolved_inventory) != inventory_hash.lower():
+        raise ValueError("skill manifest inventory CSV hash mismatch")
+
+    entries = payload.get("files")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("skill manifest files must be a non-empty list")
+    expected_files: set[Path] = set()
+    for index, entry in enumerate(entries, start=1):
+        if not isinstance(entry, dict):
+            raise ValueError(f"skill manifest entry {index} must be an object")
+        raw_path = entry.get("path")
+        expected_hash = entry.get("sha256")
+        if not isinstance(raw_path, str) or not raw_path.startswith("/"):
+            raise ValueError(f"skill manifest entry {index} path must be absolute")
+        if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", expected_hash):
+            raise ValueError(f"skill manifest entry {index} sha256 must be 64 hexadecimal characters")
+        skill_path = Path(raw_path).resolve()
+        try:
+            skill_path.relative_to(resolved_root)
+        except ValueError as exc:
+            raise ValueError(f"skill manifest path escapes skill_root: {skill_path}") from exc
+        if skill_path.name != "SKILL.md" or not skill_path.is_file():
+            raise ValueError(f"skill manifest path is not an existing SKILL.md: {skill_path}")
+        if sha256_file(skill_path) != expected_hash.lower():
+            raise ValueError(f"skill manifest hash mismatch: {skill_path}")
+        if skill_path in expected_files:
+            raise ValueError(f"skill manifest contains duplicate path: {skill_path}")
+        expected_files.add(skill_path)
+
+    discovered_files = {path.resolve() for path in resolved_root.glob("*/SKILL.md")}
+    if discovered_files != expected_files:
+        raise ValueError("skill manifest does not exactly match the canonical skill directory")
+    return len(expected_files)
+
+
 def normalize_tokens(value: str) -> str:
     return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
 
@@ -304,6 +359,8 @@ def audit_usage(
     end: datetime,
     extra_skills: Iterable[str] = (),
     source_manifest: Path | None = None,
+    skill_manifest: Path | None = None,
+    skill_manifest_file_count: int | None = None,
 ) -> dict[str, Any]:
     """Collect usage evidence from Codex JSONL sessions."""
 
@@ -525,6 +582,8 @@ def audit_usage(
             "session_roots": [str(Path(root).resolve()) for root in session_roots],
             "source_manifest": str(source_manifest.resolve()) if source_manifest else None,
             "source_manifest_file_count": len(scanned_source_files) if source_manifest else None,
+            "skill_manifest": str(skill_manifest.resolve()) if skill_manifest else None,
+            "skill_manifest_file_count": skill_manifest_file_count if skill_manifest else None,
             "candidate_source_file_count": len(scanned_source_files),
             "active_source_file_count": len(active_source_files),
             "source_files": sorted(active_source_files),
@@ -559,6 +618,11 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Verified JSON source manifest; fails closed if any listed JSONL hash changes",
     )
+    parser.add_argument(
+        "--skill-manifest",
+        type=Path,
+        help="Verified skill/inventory manifest; fails closed if canonical skill inputs change",
+    )
     parser.add_argument("--extra-skill", action="append", default=[], help="External/plugin skill label; repeatable")
     parser.add_argument("--output", type=Path, help="Write JSON to this path instead of stdout")
     return parser
@@ -585,6 +649,16 @@ def main(argv: list[str] | None = None) -> int:
         session_roots = args.session_roots or [Path.home() / ".codex" / "sessions", Path.home() / ".codex" / "archived_sessions"]
     skill_root = args.skill_root or repo_root / "skills"
     inventory_csv = args.inventory_csv or repo_root / "docs" / "skill-inventory.csv"
+    skill_manifest = args.skill_manifest
+    skill_manifest_file_count = None
+    if skill_manifest:
+        try:
+            skill_manifest_file_count = load_skill_manifest(
+                skill_manifest, skill_root=skill_root, inventory_csv=inventory_csv
+            )
+        except (OSError, UnicodeError, ValueError) as exc:
+            print(f"ERROR: invalid skill manifest: {exc}", file=sys.stderr)
+            return 2
     result = audit_usage(
         session_roots=session_roots,
         skill_root=skill_root,
@@ -593,6 +667,8 @@ def main(argv: list[str] | None = None) -> int:
         end=end,
         extra_skills=args.extra_skill,
         source_manifest=source_manifest,
+        skill_manifest=skill_manifest,
+        skill_manifest_file_count=skill_manifest_file_count,
     )
     output = json.dumps(result, indent=2, sort_keys=False) + "\n"
     if args.output:
