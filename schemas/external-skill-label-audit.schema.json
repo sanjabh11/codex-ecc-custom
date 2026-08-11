@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/schemas/external-skill-label-audit.v1.json",
+  "title": "External skill label discovery audit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "status", "authenticated_loader_proof", "labels"],
+  "properties": {
+    "schema_version": {"const": "external-skill-label-audit.v1"},
+    "status": {"const": "discovery-only"},
+    "authenticated_loader_proof": {"const": false},
+    "labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/label"}
+    }
+  },
+  "$defs": {
+    "label": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "implementation_audit", "loader_status", "trigger_status", "candidates"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "implementation_audit": {"const": "discovery-only"},
+        "loader_status": {"const": "unverified"},
+        "trigger_status": {"const": "unverified"},
+        "candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/candidate"}
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["host_root", "skill_path", "status", "projection_kind", "resolved_target", "content_sha256", "frontmatter_name"],
+      "properties": {
+        "host_root": {"type": "string", "minLength": 1},
+        "skill_path": {"type": "string", "minLength": 1},
+        "status": {"enum": ["missing", "present", "present-invalid-frontmatter", "unreadable"]},
+        "projection_kind": {"enum": ["missing", "symlink", "directory", "file", "other"]},
+        "resolved_target": {"type": ["string", "null"]},
+        "content_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-fA-F]{64}$"},
+        "frontmatter_name": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
