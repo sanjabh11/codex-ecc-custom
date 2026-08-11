@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-10T17:11:22.436179Z",
+  "generated_at_utc": "2026-08-11T07:09:22.375459Z",
   "schema_version": "skill-optimization-manifest.v1",
   "skills": [
     {
@@ -49,14 +49,8 @@
     },
     {
       "after_metric": {
-        "after_score": 1.0,
-        "before_score": 0.75,
-        "delta": 0.25,
-        "host_activation": "unverified",
-        "newly_passing": [
-          "contract-ecc-niche-positioning-audit"
-        ],
-        "status": "promoted"
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "positioning-audit"
@@ -83,9 +77,7 @@
       "owner": "architect",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-02-ecc-niche-positioning-audit.json",
-        "docs/audits/skill-optimization-evidence/comparisons/ecc-niche-positioning-audit.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -99,19 +91,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "edit",
+      "status": "pilot",
       "target_sha256": "f7ce2d8c5b15970a666906583df29446387480767826ebff57949650d12f3990"
     },
     {
       "after_metric": {
-        "after_score": 1.0,
-        "before_score": 0.75,
-        "delta": 0.25,
-        "host_activation": "unverified",
-        "newly_passing": [
-          "contract-ecc-advisor"
-        ],
-        "status": "promoted"
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "advisor"
@@ -138,9 +124,7 @@
       "owner": "architect",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-03-ecc-advisor.json",
-        "docs/audits/skill-optimization-evidence/comparisons/ecc-advisor.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -154,7 +138,7 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "edit",
+      "status": "pilot",
       "target_sha256": "fd65b029433935e16e34cf630d58f3f06cc44007282c1ae6c634cee2ce820799"
     },
     {
@@ -249,13 +233,8 @@
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "slide-deck"
@@ -282,8 +261,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-06-slides.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -297,18 +275,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
-      "target_sha256": "9ad30da4796ebbd500086ce82cf4b9f479429030605f05fcc8070c7400e13c4f"
+      "status": "pilot",
+      "target_sha256": "3b0eba98712d487efbf5d09c8b51c86226023685a716f67172d35fece97956f1"
     },
     {
       "after_metric": {
-        "failed": 4,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 0,
-        "score": 0.0,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "last-30-days"
@@ -335,8 +308,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-07-last30days.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -350,7 +322,7 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "392d0b28adeb360d0f4fc797e13355c51fcee627bf8dd537c6dfa856190d43ed"
     },
     {
@@ -400,13 +372,8 @@
     },
     {
       "after_metric": {
-        "failed": 2,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 2,
-        "score": 0.5,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -431,8 +398,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-09-second-brain-ops.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -446,18 +412,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
-      "target_sha256": "9992d26daf0e7cf1315aa38a997e575ffdd884702f290a774deae55f6ae220bf"
+      "status": "pilot",
+      "target_sha256": "0783f771c28efa60247b0ceeb14b683766150e9c9666ae69399b5e523886c1a0"
     },
     {
       "after_metric": {
-        "failed": 2,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 2,
-        "score": 0.5,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -482,8 +443,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-10-ecc-explain.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -497,18 +457,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "b435954ad154be478567dfc694fda0fe2f04dba2b0c51533679c80d7ad4fa24f"
     },
     {
       "after_metric": {
-        "failed": 2,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 2,
-        "score": 0.5,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -533,8 +488,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-11-ecc-ml-engineering.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -548,18 +502,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "aab5e889217b7d4c98690cb7091f48ecae4f496fea317b56907532b151c1cf14"
     },
     {
       "after_metric": {
-        "failed": 4,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 0,
-        "score": 0.0,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -584,8 +533,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-12-ecc-multi-execute.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -599,7 +547,7 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "a80c4c4dcf8b3dded27d3e4c54ac0d0025ba5ee1c78d68f5f5e059292bb461b2"
     },
     {
@@ -649,21 +597,8 @@
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4,
-        "pilot": {
-          "status": "blocked",
-          "passed": 0,
-          "failed": 1,
-          "not_run": 2,
-          "total": 3,
-          "proof_level": "verified-local-clean-core-recheck"
-        }
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -688,8 +623,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-14-ecc-hormozi-funnel.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -703,7 +637,7 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "0480d4e2c55eac3b98f91ee12bd2d72b7394ab4ee4bfee49d051a16d37b924e8"
     },
     {
@@ -753,13 +687,8 @@
     },
     {
       "after_metric": {
-        "failed": 4,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 0,
-        "score": 0.0,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -784,8 +713,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-16-ecc-fable-loop.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -799,18 +727,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "79915fffa3c7c05c7b2d80fb5907fa4415b65551d2d5deb05e73c95b0c599440"
     },
     {
       "after_metric": {
-        "failed": 2,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 2,
-        "score": 0.5,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -835,8 +758,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-17-ecc-model-route.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -850,18 +772,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "e96ec3ca40a0186ea5b383391f7565cfc9b720c4f5f37d208e6bae71ebc0201a"
     },
     {
       "after_metric": {
-        "failed": 3,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 1,
-        "score": 0.25,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -886,8 +803,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-18-ecc-verify.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -901,18 +817,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "ce43d48ddbe6d39523ed86cab9de4c90375170ff70b11afd86c03cf1a2f18cd1"
     },
     {
       "after_metric": {
-        "failed": 4,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 0,
-        "score": 0.0,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [],
       "before_metric": {
@@ -937,8 +848,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-19-ecc-prompt-optimize.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -952,18 +862,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "fcf3f0376766fead07abb4054de6b148d577c224381f54e9e365a7300a1bfa0b"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "graph-engineering"
@@ -990,8 +895,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/top20-20-graph-engineer.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1005,18 +909,13 @@
       "rank_bucket": "top20",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "ff82e3e538b75b7e4a871326f6352fd441de552dcccbc1f27c4631952c20af34"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "graphify"
@@ -1043,9 +942,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-01-ecc-graphify.json",
-        "docs/audits/skill-optimization-evidence/under10-01-ecc-graphify-clean-core.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1064,13 +961,8 @@
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "plan-certificate"
@@ -1097,8 +989,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-02-plan-certificates.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1112,18 +1003,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "6950e0697183772de835c76583a584a5a2ad26d655728fb0f945fc1b3843922f"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "dst"
@@ -1150,8 +1036,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-03-deterministic-simulation-testing.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1165,18 +1050,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "3871d3df47a64d7f90a4f0eefb85be6c99bc1990eba3e01785dda0b106394f5d"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "a11y-audit"
@@ -1203,8 +1083,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-04-ecc-a11y-audit.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1218,18 +1097,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "3870e40d43c6fca8a26748bbe6387ddc5efce0f6fdd0a898f2e0489e1de172ed"
     },
     {
       "after_metric": {
-        "failed": 2,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 2,
-        "score": 0.5,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "buyer-pipeline"
@@ -1256,8 +1130,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-05-ecc-buyer-pipeline.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1271,18 +1144,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "203bd3afa6b95572aa99ab791980d37ba08c00e8a63bf4eead9229b921c8f314"
     },
     {
       "after_metric": {
-        "failed": 3,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 1,
-        "score": 0.25,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "conversion-audit"
@@ -1309,8 +1177,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-06-ecc-conversion-audit.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1324,18 +1191,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "d83256f075e67d92eb2a327b1ca4edaf632e5953e05c0b663c92c5d25445ed12"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "spec-first"
@@ -1362,8 +1224,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-07-spec-first-doctrine.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1377,18 +1238,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "a56cac0e54dbb6dfd3cb462e90e657448307de5697e75515a3994782c7607c19"
     },
     {
       "after_metric": {
-        "failed": 1,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 3,
-        "score": 0.75,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "agents-generator"
@@ -1415,8 +1271,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-08-agents-md-generator.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1430,18 +1285,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "3a867a0efcec1e7375288b60ee533e51825ea042d935c0b0b71260a2b667a012"
     },
     {
       "after_metric": {
-        "failed": 3,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 1,
-        "score": 0.25,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "content-quality"
@@ -1468,8 +1318,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-09-ecc-content-quality-ops.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1483,18 +1332,13 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "5ab148af430d1b38fe5194043a973fa0e72bd855875b3a3bde567dd73f2fa0c5"
     },
     {
       "after_metric": {
-        "failed": 4,
-        "host_activation": "unverified",
-        "not_run": 0,
-        "passed": 0,
-        "score": 0.0,
-        "status": "evidence",
-        "total": 4
+        "measurement": "no per-skill optimization run recorded yet",
+        "status": "not_run"
       },
       "aliases": [
         "cpp-review"
@@ -1521,8 +1365,7 @@
       "owner": "glm",
       "proof_ref": [
         "docs/skill-usage-audit-2026-08-10.md",
-        "docs/audits/skill-usage-audit-frozen-summary.json",
-        "docs/audits/skill-optimization-evidence/under10-10-ecc-cpp-review.json"
+        "docs/audits/skill-usage-audit-frozen-summary.json"
       ],
       "quality_signals": {
         "has_frontmatter": true,
@@ -1536,7 +1379,7 @@
       "rank_bucket": "under10",
       "risk": "contract-only",
       "source_kind": "canonical",
-      "status": "evidence",
+      "status": "pilot",
       "target_sha256": "cf578bc744eaf6fe82ab285485843ba8931f220098b862df22302de457cad0b1"
     }
   ],
@@ -1544,7 +1387,14 @@
     "inventory_path": "docs/skill-inventory.csv",
     "inventory_sha256": "83791e00dba2bea24713e63f7c9889153e6b09b4d7d32351c9c7c7d01d5e4cd8",
     "skill_manifest_path": "docs/audits/skill-usage-audit-skill-manifest.json",
-    "skill_manifest_sha256": "61401b1fc74a3d1ff98e8bae068dc9d2bdd6f3f5a30a36addc606a3e05502be8",
+    "skill_manifest_sha256": "9cda72395804d4c4d5f971f47999200946b99728dad0bf60ab3fb5881acf0e41",
+    "snapshot": {
+      "binding": "ancestor-commit",
+      "git_head": "51f4dcf753dd9c7ee6b0f0346140cbdb425d8cc5",
+      "scope": "working-tree",
+      "tracked_file_policy": "working-tree",
+      "worktree_status": "dirty"
+    },
     "summary_path": "docs/audits/skill-usage-audit-frozen-summary.json",
     "summary_sha256": "d65239e9fc5d462ba00f8a276859d8465490be357a90c3bcf525ec8f51b7cc95",
     "window_end": "2026-08-10T23:59:59.999999+00:00",
