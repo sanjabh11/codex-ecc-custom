@@ -46,7 +46,8 @@
         "inventory_path",
         "inventory_sha256",
         "window_start",
-        "window_end"
+        "window_end",
+        "snapshot"
       ],
       "properties": {
         "summary_path": {"type": "string", "minLength": 1},
@@ -56,7 +57,19 @@
         "inventory_path": {"type": "string", "minLength": 1},
         "inventory_sha256": {"$ref": "#/$defs/requiredSha256"},
         "window_start": {"type": "string", "format": "date-time"},
-        "window_end": {"type": "string", "format": "date-time"}
+        "window_end": {"type": "string", "format": "date-time"},
+        "snapshot": {"$ref": "#/$defs/snapshot"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "git_head", "worktree_status", "tracked_file_policy"],
+      "properties": {
+        "scope": {"enum": ["working-tree", "clean-checkout"]},
+        "git_head": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"},
+        "worktree_status": {"enum": ["clean", "dirty"]},
+        "tracked_file_policy": {"enum": ["working-tree", "tracked-only"]}
       }
     },
     "requiredSha256": {

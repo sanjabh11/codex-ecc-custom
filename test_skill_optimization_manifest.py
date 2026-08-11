@@ -16,6 +16,8 @@ from scripts.record_skill_optimization_result import record
 ROOT = Path(__file__).resolve().parent
 SCHEMA = ROOT / "schemas" / "skill-optimization-manifest.schema.json"
 TEMPLATE = ROOT / "docs" / "audits" / "skill-optimization-manifest.template.json"
+CURRENT_MANIFEST = ROOT / "docs" / "audits" / "skill-optimization-manifest.json"
+SUMMARY = ROOT / "docs" / "audits" / "skill-usage-audit-frozen-summary.json"
 
 
 class SkillOptimizationManifestTests(unittest.TestCase):
@@ -53,6 +55,32 @@ class SkillOptimizationManifestTests(unittest.TestCase):
             result = validate_manifest(path, schema_path=SCHEMA, root=ROOT, summary_path=None, check_sources=False)
         self.assertEqual(result["status"], "invalid")
         self.assertTrue(any("missing competing" in error for error in result["errors"]))
+
+    def test_snapshot_provenance_is_required(self) -> None:
+        data = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        del data["source_audit"]["snapshot"]
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "manifest.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = validate_manifest(path, schema_path=SCHEMA, root=ROOT, summary_path=None, check_sources=False)
+        self.assertEqual(result["status"], "invalid")
+        self.assertTrue(any("snapshot" in error for error in result["errors"]))
+
+    def test_snapshot_git_head_drift_is_rejected(self) -> None:
+        data = json.loads(CURRENT_MANIFEST.read_text(encoding="utf-8"))
+        data["source_audit"]["snapshot"]["git_head"] = "0" * 40
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "manifest.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            result = validate_manifest(
+                path,
+                schema_path=SCHEMA,
+                root=ROOT,
+                summary_path=SUMMARY,
+                check_sources=True,
+            )
+        self.assertEqual(result["status"], "invalid")
+        self.assertTrue(any("snapshot Git HEAD drift" in error for error in result["errors"]))
 
     def test_record_result_updates_one_canonical_row(self) -> None:
         data = json.loads(TEMPLATE.read_text(encoding="utf-8"))

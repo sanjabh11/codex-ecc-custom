@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -43,6 +44,33 @@ def _resolve(root: Path, raw: str) -> Path:
 
 def _error(errors: list[str], message: str) -> None:
     errors.append(message)
+
+
+def _validate_snapshot(snapshot: dict[str, Any], *, root: Path, errors: list[str]) -> None:
+    try:
+        head = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True, stderr=subprocess.STDOUT
+        ).strip()
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=all"],
+            cwd=root,
+            text=True,
+            stderr=subprocess.STDOUT,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        _error(errors, f"cannot verify Git snapshot: {exc}")
+        return
+    if snapshot["git_head"].casefold() != head.casefold():
+        _error(errors, f"snapshot Git HEAD drift: expected {snapshot['git_head']}, got {head}")
+    actual_status = "dirty" if status.strip() else "clean"
+    if snapshot["worktree_status"] != actual_status:
+        _error(errors, f"snapshot worktree status drift: expected {snapshot['worktree_status']}, got {actual_status}")
+    expected_scope = "working-tree" if actual_status == "dirty" else "clean-checkout"
+    if snapshot["scope"] != expected_scope:
+        _error(errors, f"snapshot scope does not match worktree: expected {expected_scope}, got {snapshot['scope']}")
+    expected_policy = "working-tree" if actual_status == "dirty" else "tracked-only"
+    if snapshot["tracked_file_policy"] != expected_policy:
+        _error(errors, f"snapshot tracked-file policy drift: expected {expected_policy}, got {snapshot['tracked_file_policy']}")
 
 
 def _validate_cross_file(
@@ -137,6 +165,7 @@ def validate_manifest(
     if isinstance(manifest, dict) and not errors:
         if check_sources:
             source = manifest["source_audit"]
+            _validate_snapshot(source["snapshot"], root=root, errors=errors)
             for field, expected_path in (
                 ("summary_sha256", source["summary_path"]),
                 ("skill_manifest_sha256", source["skill_manifest_path"]),

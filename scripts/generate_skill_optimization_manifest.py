@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -13,6 +14,30 @@ from typing import Any
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _git_snapshot(root: Path) -> dict[str, str]:
+    try:
+        head = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=root, text=True, stderr=subprocess.STDOUT
+        ).strip()
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=all"],
+            cwd=root,
+            text=True,
+            stderr=subprocess.STDOUT,
+        )
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise ValueError(f"cannot capture Git snapshot for {root}: {exc}") from exc
+    if len(head) != 40:
+        raise ValueError(f"unexpected Git HEAD format: {head!r}")
+    dirty = bool(status.strip())
+    return {
+        "scope": "working-tree" if dirty else "clean-checkout",
+        "git_head": head,
+        "worktree_status": "dirty" if dirty else "clean",
+        "tracked_file_policy": "working-tree" if dirty else "tracked-only",
+    }
 
 
 ALIASES: dict[str, list[str]] = {
@@ -163,6 +188,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             "inventory_sha256": _sha256(inventory_path),
             "window_start": summary["window"]["start"],
             "window_end": summary["window"]["end"],
+            "snapshot": _git_snapshot(root),
         },
         "skills": rows,
     }
