@@ -80,10 +80,21 @@ class SkillOptimizationManifestTests(unittest.TestCase):
 
     def test_ancestor_snapshot_binding_allows_release_commit_descendant(self) -> None:
         data = json.loads(TEMPLATE.read_text(encoding="utf-8"))
-        data["source_audit"]["snapshot"]["binding"] = "ancestor-commit"
+        snapshot = data["source_audit"]["snapshot"]
+        snapshot["binding"] = "ancestor-commit"
         data["source_audit"]["snapshot"]["git_head"] = subprocess.check_output(
             ["git", "rev-parse", "HEAD^"], cwd=ROOT, text=True
         ).strip()
+        dirty = bool(
+            subprocess.check_output(
+                ["git", "status", "--porcelain", "--untracked-files=all"],
+                cwd=ROOT,
+                text=True,
+            ).strip()
+        )
+        snapshot["worktree_status"] = "dirty" if dirty else "clean"
+        snapshot["scope"] = "working-tree" if dirty else "clean-checkout"
+        snapshot["tracked_file_policy"] = "working-tree" if dirty else "tracked-only"
         with tempfile.TemporaryDirectory() as raw:
             path = Path(raw) / "manifest.json"
             path.write_text(json.dumps(data), encoding="utf-8")
