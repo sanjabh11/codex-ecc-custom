@@ -1,0 +1,380 @@
+{
+  "authenticated_loader_proof": false,
+  "generated_at_utc": "2026-08-11T07:17:43.329836Z",
+  "labels": [
+    {
+      "candidates": [
+        {
+          "content_sha256": "27b362191546c783289ff6caac1cf9c5c21b2b7cfe09bd68c5f3b661229cf04d",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/deep-research",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/deep-research/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "27b362191546c783289ff6caac1cf9c5c21b2b7cfe09bd68c5f3b661229cf04d",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/deep-research",
+          "skill_path": "/Users/sanjayb/.codex/skills/deep-research/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "27b362191546c783289ff6caac1cf9c5c21b2b7cfe09bd68c5f3b661229cf04d",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/deep-research",
+          "skill_path": "/Users/sanjayb/.claude/skills/deep-research/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "2d631427fc9aba27a318735f930bdb49f5c6ce416506340025eac01648f1df09",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/deep-research",
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/deep-research/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "27b362191546c783289ff6caac1cf9c5c21b2b7cfe09bd68c5f3b661229cf04d",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/deep-research",
+          "skill_path": "/Users/sanjayb/.gemini/skills/deep-research/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "27b362191546c783289ff6caac1cf9c5c21b2b7cfe09bd68c5f3b661229cf04d",
+          "frontmatter_name": "deep-research",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/deep-research",
+          "skill_path": "/Users/sanjayb/.devin/skills/deep-research/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "deep-research",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    },
+    {
+      "candidates": [
+        {
+          "content_sha256": "c4e835c3e0c8175c7fb0375a2a4d32493a29c69003fcc3671611af6ed350db71",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c4e835c3e0c8175c7fb0375a2a4d32493a29c69003fcc3671611af6ed350db71",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/.codex/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c4e835c3e0c8175c7fb0375a2a4d32493a29c69003fcc3671611af6ed350db71",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/.claude/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "645df8819e848ddc131b7c61e87a99bdab15f2098a83a6dcabf44e155846e293",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c4e835c3e0c8175c7fb0375a2a4d32493a29c69003fcc3671611af6ed350db71",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/.gemini/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c4e835c3e0c8175c7fb0375a2a4d32493a29c69003fcc3671611af6ed350db71",
+          "frontmatter_name": "prompt-optimizer",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/prompt-optimizer",
+          "skill_path": "/Users/sanjayb/.devin/skills/prompt-optimizer/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "prompt-optimizer",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    },
+    {
+      "candidates": [
+        {
+          "content_sha256": "79b8184cb5aa66c8d2ec9680c007c53f178781e16469cfefb6d5da933c012fc2",
+          "frontmatter_name": "conformance-gate",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "79b8184cb5aa66c8d2ec9680c007c53f178781e16469cfefb6d5da933c012fc2",
+          "frontmatter_name": "conformance-gate",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate",
+          "skill_path": "/Users/sanjayb/.codex/skills/conformance-gate/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "79b8184cb5aa66c8d2ec9680c007c53f178781e16469cfefb6d5da933c012fc2",
+          "frontmatter_name": "conformance-gate",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate",
+          "skill_path": "/Users/sanjayb/.claude/skills/conformance-gate/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": null,
+          "frontmatter_name": null,
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "missing",
+          "resolved_target": null,
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/conformance-gate/SKILL.md",
+          "status": "missing"
+        },
+        {
+          "content_sha256": "79b8184cb5aa66c8d2ec9680c007c53f178781e16469cfefb6d5da933c012fc2",
+          "frontmatter_name": "conformance-gate",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate",
+          "skill_path": "/Users/sanjayb/.gemini/skills/conformance-gate/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "79b8184cb5aa66c8d2ec9680c007c53f178781e16469cfefb6d5da933c012fc2",
+          "frontmatter_name": "conformance-gate",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/conformance-gate",
+          "skill_path": "/Users/sanjayb/.devin/skills/conformance-gate/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "conformance-gate",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    },
+    {
+      "candidates": [
+        {
+          "content_sha256": "c5ed6c033014d7a513b6dc879921755abbf19d19189b399c37c707adca266aae",
+          "frontmatter_name": "agent-phase-ratchet",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c5ed6c033014d7a513b6dc879921755abbf19d19189b399c37c707adca266aae",
+          "frontmatter_name": "agent-phase-ratchet",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet",
+          "skill_path": "/Users/sanjayb/.codex/skills/agent-phase-ratchet/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c5ed6c033014d7a513b6dc879921755abbf19d19189b399c37c707adca266aae",
+          "frontmatter_name": "agent-phase-ratchet",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet",
+          "skill_path": "/Users/sanjayb/.claude/skills/agent-phase-ratchet/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": null,
+          "frontmatter_name": null,
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "missing",
+          "resolved_target": null,
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/agent-phase-ratchet/SKILL.md",
+          "status": "missing"
+        },
+        {
+          "content_sha256": "c5ed6c033014d7a513b6dc879921755abbf19d19189b399c37c707adca266aae",
+          "frontmatter_name": "agent-phase-ratchet",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet",
+          "skill_path": "/Users/sanjayb/.gemini/skills/agent-phase-ratchet/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "c5ed6c033014d7a513b6dc879921755abbf19d19189b399c37c707adca266aae",
+          "frontmatter_name": "agent-phase-ratchet",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/agent-phase-ratchet",
+          "skill_path": "/Users/sanjayb/.devin/skills/agent-phase-ratchet/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "agent-phase-ratchet",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    },
+    {
+      "candidates": [
+        {
+          "content_sha256": "1c5aba426fce150e911337cb6dc33f3d429a6a3e1cf52cc6de2b4e488c870729",
+          "frontmatter_name": "skill-optimizer",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "1c5aba426fce150e911337cb6dc33f3d429a6a3e1cf52cc6de2b4e488c870729",
+          "frontmatter_name": "skill-optimizer",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer",
+          "skill_path": "/Users/sanjayb/.codex/skills/skill-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "1c5aba426fce150e911337cb6dc33f3d429a6a3e1cf52cc6de2b4e488c870729",
+          "frontmatter_name": "skill-optimizer",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer",
+          "skill_path": "/Users/sanjayb/.claude/skills/skill-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": null,
+          "frontmatter_name": null,
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "missing",
+          "resolved_target": null,
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/skill-optimizer/SKILL.md",
+          "status": "missing"
+        },
+        {
+          "content_sha256": "1c5aba426fce150e911337cb6dc33f3d429a6a3e1cf52cc6de2b4e488c870729",
+          "frontmatter_name": "skill-optimizer",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer",
+          "skill_path": "/Users/sanjayb/.gemini/skills/skill-optimizer/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "1c5aba426fce150e911337cb6dc33f3d429a6a3e1cf52cc6de2b4e488c870729",
+          "frontmatter_name": "skill-optimizer",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/skill-optimizer",
+          "skill_path": "/Users/sanjayb/.devin/skills/skill-optimizer/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "skill-optimizer",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    },
+    {
+      "candidates": [
+        {
+          "content_sha256": "d8f543b5236b11cb36213d9370847314aa3af6f36dce5ca1e9fd5f8f81cd2577",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/.codeium/windsurf/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "d8f543b5236b11cb36213d9370847314aa3af6f36dce5ca1e9fd5f8f81cd2577",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/.codex/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/.codex/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "d8f543b5236b11cb36213d9370847314aa3af6f36dce5ca1e9fd5f8f81cd2577",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/.claude/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/.claude/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "716e42006634cc5c81a744f217452d2149bf768008df30500a349e3920d1e588",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills",
+          "projection_kind": "directory",
+          "resolved_target": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/plugins/everything-claude-code/.agents/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "d8f543b5236b11cb36213d9370847314aa3af6f36dce5ca1e9fd5f8f81cd2577",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/.gemini/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/.gemini/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        },
+        {
+          "content_sha256": "d8f543b5236b11cb36213d9370847314aa3af6f36dce5ca1e9fd5f8f81cd2577",
+          "frontmatter_name": "codebase-onboarding",
+          "host_root": "/Users/sanjayb/.devin/skills",
+          "projection_kind": "symlink",
+          "resolved_target": "/Users/sanjayb/.codeium/windsurf/skills/codebase-onboarding",
+          "skill_path": "/Users/sanjayb/.devin/skills/codebase-onboarding/SKILL.md",
+          "status": "present"
+        }
+      ],
+      "id": "codebase-onboarding",
+      "implementation_audit": "discovery-only",
+      "loader_status": "unverified",
+      "trigger_status": "unverified"
+    }
+  ],
+  "schema_version": "external-skill-label-audit.v1",
+  "status": "discovery-only"
+}

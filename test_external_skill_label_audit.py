@@ -36,6 +36,11 @@ class ExternalSkillLabelAuditTests(unittest.TestCase):
         self.assertEqual(candidate["projection_kind"], "symlink")
         self.assertEqual(len(candidate["content_sha256"]), 64)
 
+        import jsonschema
+
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(payload)
+
     def test_schema_rejects_loader_claim(self) -> None:
         import jsonschema
 

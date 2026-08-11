@@ -4,9 +4,10 @@
   "title": "External skill label discovery audit",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "status", "authenticated_loader_proof", "labels"],
+  "required": ["schema_version", "generated_at_utc", "status", "authenticated_loader_proof", "labels"],
   "properties": {
     "schema_version": {"const": "external-skill-label-audit.v1"},
+    "generated_at_utc": {"type": "string", "format": "date-time"},
     "status": {"const": "discovery-only"},
     "authenticated_loader_proof": {"const": false},
     "labels": {

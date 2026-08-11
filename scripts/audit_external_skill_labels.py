@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -84,6 +85,7 @@ def audit(labels: list[str], host_roots: list[Path]) -> dict[str, object]:
     expanded_roots = [root.expanduser().resolve() for root in host_roots]
     return {
         "schema_version": "external-skill-label-audit.v1",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "status": "discovery-only",
         "authenticated_loader_proof": False,
         "labels": [
