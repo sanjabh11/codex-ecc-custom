@@ -64,8 +64,9 @@
     "snapshot": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["scope", "git_head", "worktree_status", "tracked_file_policy"],
+      "required": ["binding", "scope", "git_head", "worktree_status", "tracked_file_policy"],
       "properties": {
+        "binding": {"enum": ["exact-head", "ancestor-commit"]},
         "scope": {"enum": ["working-tree", "clean-checkout"]},
         "git_head": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"},
         "worktree_status": {"enum": ["clean", "dirty"]},

@@ -16,7 +16,9 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _git_snapshot(root: Path) -> dict[str, str]:
+def _git_snapshot(root: Path, binding: str) -> dict[str, str]:
+    if binding not in {"exact-head", "ancestor-commit"}:
+        raise ValueError(f"unsupported Git snapshot binding: {binding}")
     try:
         head = subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=root, text=True, stderr=subprocess.STDOUT
@@ -33,6 +35,7 @@ def _git_snapshot(root: Path) -> dict[str, str]:
         raise ValueError(f"unexpected Git HEAD format: {head!r}")
     dirty = bool(status.strip())
     return {
+        "binding": binding,
         "scope": "working-tree" if dirty else "clean-checkout",
         "git_head": head,
         "worktree_status": "dirty" if dirty else "clean",
@@ -188,7 +191,7 @@ def generate(args: argparse.Namespace) -> dict[str, Any]:
             "inventory_sha256": _sha256(inventory_path),
             "window_start": summary["window"]["start"],
             "window_end": summary["window"]["end"],
-            "snapshot": _git_snapshot(root),
+            "snapshot": _git_snapshot(root, args.snapshot_binding),
         },
         "skills": rows,
     }
@@ -201,6 +204,12 @@ def main() -> int:
     parser.add_argument("--skill-manifest", type=Path, default=Path("docs/audits/skill-usage-audit-skill-manifest.json"))
     parser.add_argument("--inventory", type=Path, default=Path("docs/skill-inventory.csv"))
     parser.add_argument("--report", type=Path, default=Path("docs/skill-usage-audit-2026-08-10.md"))
+    parser.add_argument(
+        "--snapshot-binding",
+        choices=("exact-head", "ancestor-commit"),
+        default="exact-head",
+        help="Bind a working-tree artifact to the exact HEAD or allow a later release commit to descend from it",
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     data = generate(args)

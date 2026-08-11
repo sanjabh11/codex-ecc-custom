@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ecc.local/schemas/skill-optimization-roi-pilot.v1.json",
+  "title": "Skill optimization ROI pilot evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "pilot_id", "records"],
+  "properties": {
+    "schema_version": {"const": "skill-optimization-roi-pilot.v1"},
+    "pilot_id": {"type": "string", "minLength": 1},
+    "records": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/record"}
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+      ]
+    },
+    "metric": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "integer", "minimum": 0}
+      ]
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "skill_id",
+        "host_family",
+        "strictness",
+        "status",
+        "proof_level",
+        "started_at_utc",
+        "finished_at_utc",
+        "input_sha256",
+        "output_sha256",
+        "artifact_sha256",
+        "metrics",
+        "outcome",
+        "notes"
+      ],
+      "properties": {
+        "run_id": {"type": "string", "minLength": 1},
+        "skill_id": {"type": "string", "minLength": 1},
+        "host_family": {"type": "string", "minLength": 1},
+        "strictness": {"enum": ["supportive", "neutral", "competing"]},
+        "status": {"enum": ["not_run", "observed", "verified"]},
+        "proof_level": {"enum": ["metadata-only", "local", "host-unverified", "live", "unverified"]},
+        "started_at_utc": {"type": "string", "format": "date-time"},
+        "finished_at_utc": {"type": "string", "format": "date-time"},
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "output_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["latency_ms", "prompt_tokens", "completion_tokens", "total_tokens", "cost_usd"],
+          "properties": {
+            "latency_ms": {"$ref": "#/$defs/metric"},
+            "prompt_tokens": {"$ref": "#/$defs/metric"},
+            "completion_tokens": {"$ref": "#/$defs/metric"},
+            "total_tokens": {"$ref": "#/$defs/metric"},
+            "cost_usd": {"anyOf": [{"type": "null"}, {"type": "number", "minimum": 0}]}
+          }
+        },
+        "outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["success", "criteria", "reviewer_decision"],
+          "properties": {
+            "success": {"type": ["boolean", "null"]},
+            "criteria": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "reviewer_decision": {"enum": ["pass", "fail", "not_run"]}
+          }
+        },
+        "not_run_reason": {"type": ["string", "null"]},
+        "external_attestation": {"type": ["object", "null"]},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

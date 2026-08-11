@@ -151,13 +151,23 @@ def load_skill_manifest(path: Path, *, skill_root: Path, inventory_csv: Path) ->
         raise ValueError(f"cannot read skill manifest {path}: {exc}") from exc
     if not isinstance(payload, dict) or payload.get("schema_version") != "skill-usage-skill-manifest.v1":
         raise ValueError("skill manifest schema_version must be skill-usage-skill-manifest.v1")
-    expected_root = payload.get("skill_root")
-    expected_inventory = payload.get("inventory_csv")
     resolved_root = skill_root.resolve()
     resolved_inventory = inventory_csv.resolve()
-    if expected_root != str(resolved_root):
+    manifest_root = resolved_root.parent
+
+    def resolve_reference(raw_value: object, label: str) -> Path:
+        if not isinstance(raw_value, str) or not raw_value:
+            raise ValueError(f"skill manifest {label} must be a non-empty string")
+        candidate = Path(raw_value).expanduser()
+        if not candidate.is_absolute():
+            candidate = manifest_root / candidate
+        return candidate.resolve()
+
+    expected_root = resolve_reference(payload.get("skill_root"), "skill_root")
+    expected_inventory = resolve_reference(payload.get("inventory_csv"), "inventory_csv")
+    if expected_root != resolved_root:
         raise ValueError("skill manifest skill_root does not match --skill-root")
-    if expected_inventory != str(resolved_inventory):
+    if expected_inventory != resolved_inventory:
         raise ValueError("skill manifest inventory_csv does not match --inventory-csv")
     inventory_hash = payload.get("inventory_sha256")
     if not isinstance(inventory_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", inventory_hash):
@@ -174,11 +184,14 @@ def load_skill_manifest(path: Path, *, skill_root: Path, inventory_csv: Path) ->
             raise ValueError(f"skill manifest entry {index} must be an object")
         raw_path = entry.get("path")
         expected_hash = entry.get("sha256")
-        if not isinstance(raw_path, str) or not raw_path.startswith("/"):
-            raise ValueError(f"skill manifest entry {index} path must be absolute")
+        if not isinstance(raw_path, str) or not raw_path:
+            raise ValueError(f"skill manifest entry {index} path must be a non-empty string")
         if not isinstance(expected_hash, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", expected_hash):
             raise ValueError(f"skill manifest entry {index} sha256 must be 64 hexadecimal characters")
-        skill_path = Path(raw_path).resolve()
+        skill_path = Path(raw_path).expanduser()
+        if not skill_path.is_absolute():
+            skill_path = manifest_root / skill_path
+        skill_path = skill_path.resolve()
         try:
             skill_path.relative_to(resolved_root)
         except ValueError as exc:

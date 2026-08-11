@@ -60,8 +60,22 @@ def _validate_snapshot(snapshot: dict[str, Any], *, root: Path, errors: list[str
     except (OSError, subprocess.CalledProcessError) as exc:
         _error(errors, f"cannot verify Git snapshot: {exc}")
         return
-    if snapshot["git_head"].casefold() != head.casefold():
-        _error(errors, f"snapshot Git HEAD drift: expected {snapshot['git_head']}, got {head}")
+    binding = snapshot.get("binding")
+    if binding == "exact-head":
+        if snapshot["git_head"].casefold() != head.casefold():
+            _error(errors, f"snapshot Git HEAD drift: expected {snapshot['git_head']}, got {head}")
+    elif binding == "ancestor-commit":
+        result = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", snapshot["git_head"], head],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            _error(errors, f"snapshot commit is not an ancestor of current HEAD: {snapshot['git_head']} -> {head}")
+    else:
+        _error(errors, f"unsupported snapshot binding: {binding}")
     actual_status = "dirty" if status.strip() else "clean"
     if snapshot["worktree_status"] != actual_status:
         _error(errors, f"snapshot worktree status drift: expected {snapshot['worktree_status']}, got {actual_status}")

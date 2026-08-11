@@ -10,8 +10,9 @@
     "inventory_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "window_start": "2026-01-01T00:00:00Z",
     "window_end": "2026-01-31T23:59:59Z",
-    "snapshot": {
-      "scope": "working-tree",
+      "snapshot": {
+        "binding": "exact-head",
+        "scope": "working-tree",
       "git_head": "0000000000000000000000000000000000000000",
       "worktree_status": "dirty",
       "tracked_file_policy": "working-tree"

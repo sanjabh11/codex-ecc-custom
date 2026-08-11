@@ -5,11 +5,12 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.validate_skill_optimization_manifest import validate_manifest
+from scripts.validate_skill_optimization_manifest import _validate_snapshot, validate_manifest
 from scripts.record_skill_optimization_result import record
 
 
@@ -67,20 +68,29 @@ class SkillOptimizationManifestTests(unittest.TestCase):
         self.assertTrue(any("snapshot" in error for error in result["errors"]))
 
     def test_snapshot_git_head_drift_is_rejected(self) -> None:
-        data = json.loads(CURRENT_MANIFEST.read_text(encoding="utf-8"))
+        data = json.loads(TEMPLATE.read_text(encoding="utf-8"))
         data["source_audit"]["snapshot"]["git_head"] = "0" * 40
         with tempfile.TemporaryDirectory() as raw:
             path = Path(raw) / "manifest.json"
             path.write_text(json.dumps(data), encoding="utf-8")
-            result = validate_manifest(
-                path,
-                schema_path=SCHEMA,
-                root=ROOT,
-                summary_path=SUMMARY,
-                check_sources=True,
-            )
-        self.assertEqual(result["status"], "invalid")
-        self.assertTrue(any("snapshot Git HEAD drift" in error for error in result["errors"]))
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            errors: list[str] = []
+            _validate_snapshot(payload["source_audit"]["snapshot"], root=ROOT, errors=errors)
+        self.assertTrue(any("snapshot Git HEAD drift" in error for error in errors))
+
+    def test_ancestor_snapshot_binding_allows_release_commit_descendant(self) -> None:
+        data = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        data["source_audit"]["snapshot"]["binding"] = "ancestor-commit"
+        data["source_audit"]["snapshot"]["git_head"] = subprocess.check_output(
+            ["git", "rev-parse", "HEAD^"], cwd=ROOT, text=True
+        ).strip()
+        with tempfile.TemporaryDirectory() as raw:
+            path = Path(raw) / "manifest.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            errors: list[str] = []
+            _validate_snapshot(payload["source_audit"]["snapshot"], root=ROOT, errors=errors)
+        self.assertEqual(errors, [])
 
     def test_record_result_updates_one_canonical_row(self) -> None:
         data = json.loads(TEMPLATE.read_text(encoding="utf-8"))
