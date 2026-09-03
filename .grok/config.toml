@@ -1,0 +1,11 @@
+# Project-scoped Grok CLI / Grok Build config for this repo.
+# Team permission rules only — no secrets, PATs, or MCP env tokens.
+
+[permission]
+deny = [
+  "Bash(rm -rf *)",
+  "Bash(rm -rf /*)",
+  "Bash(git push --force *)",
+  "Bash(git push -f *)",
+  "Bash(git reset --hard *)",
+]
