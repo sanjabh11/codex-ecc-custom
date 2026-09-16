@@ -14,6 +14,22 @@ Work here is about adding, fixing, or documenting individual skills. It is not a
 - **Ship changes as pull requests via the cloud agent.** Do not apply work only locally and leave it unpushed.
 - **Branch off `main`.** Use a short, descriptive branch name. Keep the branch focused on one concern.
 
+## Syncing skills from the full ECC catalog
+
+This checkout contains only a subset of the full ECC skill catalog (the complete
+library lives in the `everything-claude-code` repo on the user's machine). To
+import the full catalog or refresh skills from it:
+
+```bash
+python3 scripts/sync_ecc_skills.py <path-or-git-URL> [--target skills] [--dry-run]
+```
+
+- Accepts a local path or a git URL (cloned shallowly to a temp dir).
+- Discovers every directory with a `SKILL.md`, validates frontmatter (`name` +
+  `description`), skips dot-directories and `.system`.
+- Idempotent: unchanged skills are left alone; changed ones are updated in place.
+- Run `--dry-run` first to review what would change before copying.
+
 ## Build, test, and lint
 
 There is **no application test suite** and **no project lint/CI stack** that skill PRs must pass.
