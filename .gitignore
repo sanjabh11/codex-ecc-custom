@@ -32,3 +32,4 @@ __pycache__/
 fable/advisor_state.json
 fable/scheduler.log
 fable/scheduler_daemon.log
+.env
