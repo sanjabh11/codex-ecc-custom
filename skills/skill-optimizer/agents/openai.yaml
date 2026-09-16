@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Optimizer"
+  short_description: "Validate and improve Codex/ECC skills with local scenarios."
+  default_prompt: "Optimize this SKILL.md using scenario evidence, bounded edits, and a validation gate."

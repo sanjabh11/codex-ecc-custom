@@ -1,0 +1,76 @@
+{
+  "skill": "human-understanding-gate",
+  "threshold": 3,
+  "rules": [
+    {
+      "id": "explicit-skill-name",
+      "points": 6,
+      "reason": "explicit human-understanding-gate request",
+      "pattern": "\\b(human-understanding-gate|understanding gate|teach-back|teach back)\\b"
+    },
+    {
+      "id": "quiz-or-restate",
+      "points": 4,
+      "reason": "user asks to quiz, restate, or verify understanding",
+      "pattern": "\\b(quiz me|restate|explain back|verify (that )?i understand|make sure i understand)\\b"
+    },
+    {
+      "id": "explain-level",
+      "points": 3,
+      "reason": "user requests an adaptive explanation level",
+      "pattern": "\\b(eli5|eli14|elii|explain like an intern|explain like i am an intern)\\b"
+    },
+    {
+      "id": "handoff-or-phase",
+      "points": 2,
+      "reason": "handoff or phase context needs shared understanding",
+      "pattern": "\\b(session handoff|phase handoff|audit handoff|before moving on|before merge|before continuing)\\b"
+    },
+    {
+      "id": "high-stakes-proof",
+      "points": 2,
+      "reason": "high-stakes proof boundary benefits from human comprehension",
+      "pattern": "\\b(proof boundary|claim boundary|high[- ]stakes|compliance|security|production|safety|approval)\\b"
+    },
+    {
+      "id": "complex-session",
+      "points": 1,
+      "reason": "complex session terms suggest a possible understanding gate",
+      "pattern": "\\b(root cause|tradeoff|edge case|design decision|broader context|impact|loophole|gap analysis)\\b"
+    }
+  ],
+  "suppressors": [
+    {
+      "id": "trivial-fix",
+      "reason": "trivial direct execution request",
+      "pattern": "\\b(typo|one-liner|one liner|quick fix|simple rename)\\b"
+    },
+    {
+      "id": "user-skips-explanation",
+      "reason": "user explicitly asks not to explain",
+      "pattern": "\\b(no explanation|do not explain|skip explanation|just implement)\\b"
+    }
+  ],
+  "depthRules": [
+    {
+      "depth": "ELI5",
+      "pattern": "\\beli5\\b"
+    },
+    {
+      "depth": "ELI14",
+      "pattern": "\\beli14\\b"
+    },
+    {
+      "depth": "intern",
+      "pattern": "\\b(elii|intern|explain like an intern)\\b"
+    },
+    {
+      "depth": "expert",
+      "pattern": "\\b(expert|deep technical|senior engineer)\\b"
+    },
+    {
+      "depth": "executive",
+      "pattern": "\\b(executive|business summary|nontechnical stakeholder)\\b"
+    }
+  ]
+}

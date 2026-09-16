@@ -1,108 +1,163 @@
 ---
 name: deep-research
-description: Multi-round, multi-source deep research on any topic. Iteratively searches the web, digs into primary sources, follows leads across rounds, and produces a cited research report with findings, evidence quality assessment, and open questions. Use for questions that need thorough investigation beyond a single search.
-argument-hint: 'question or topic to research in depth'
-allowed-tools: Bash, Read, Write, WebSearch, WebFetch, Agent
+description: 使用firecrawl和exa MCPs进行多源深度研究。搜索网络、综合发现并交付带有来源引用的报告。适用于用户希望对任何主题进行有证据和引用的彻底研究时。
+origin: ECC
 ---
 
-# deep-research: Thorough, Multi-Round Research with Citations
+# 深度研究
 
-Deep research on a topic or question. Unlike a quick search, this runs multiple
-research rounds, follows leads, checks sources against each other, and delivers
-a cited report the user can act on.
+使用 firecrawl 和 exa MCP 工具，从多个网络来源生成详尽且有引用的研究报告。
 
-## When to Use
+## 何时激活
 
-Load this skill when the user:
-- Asks an open question that needs investigation ("What's the current state of X?", "Compare A vs B and tell me which is right for us")
-- Explicitly says "research this", "dig into this", "do deep research on X"
-- Needs a decision backed by evidence, not one search result
+* 用户要求深入研究任何主题
+* 竞争分析、技术评估或市场规模测算
+* 对公司、投资者或技术的尽职调查
+* 任何需要综合多个来源信息的问题
+* 用户提到"研究"、"深入探讨"、"调查"或"当前状况如何"
 
-Do NOT use for simple factual lookups (one search answers it) or for
-last-30-days social-media research (use the `last30days` skill instead).
+## MCP 要求
 
-## Critical: Parse Intent First
+至少需要以下之一：
 
-Before searching, extract and display:
+* **firecrawl** — `firecrawl_search`, `firecrawl_scrape`, `firecrawl_crawl`
+* **exa** — `web_search_exa`, `web_search_advanced_exa`, `crawling_exa`
 
-```
-Deep research on {TOPIC}.
+两者结合可提供最佳覆盖范围。在 `~/.claude.json` 或 `~/.codex/config.toml` 中配置。
 
-- Core question: {the actual question to answer}
-- Scope: {boundaries — time range, geography, product category, etc.}
-- Success looks like: {what the user will do with the answer}
+## 工作流程
 
-Planning {3} research rounds. Starting now.
-```
+### 步骤 1：理解目标
 
-If the topic is ambiguous, pick the most reasonable interpretation and state
-your assumption — do not block on a clarifying question unless the topic is
-genuinely unresolvable.
+提出 1-2 个快速澄清性问题：
 
-## Research Loop
+* "您的目标是什么——学习、做决策还是撰写内容？"
+* "有任何特定的角度或深度要求吗？"
 
-Run up to 3 rounds. Each round: search, read, record findings, and identify
-what is still unknown.
+如果用户说"直接研究即可"——则跳过此步，使用合理的默认设置。
 
-**Round 1 — Map the territory**
-- Run 2-4 broad searches covering the core question
-- Identify key terms, players, competing viewpoints, and primary sources
-- List open questions the round did NOT answer
+### 步骤 2：规划研究
 
-**Round 2 — Chase the gaps**
-- Search specifically for the open questions from Round 1
-- Prefer primary sources: official docs, filings, papers, changelogs, original posts
-- Open and read the top pages in full — do not judge from search snippets alone
+将主题分解为 3-5 个研究子问题。例如：
 
-**Round 3 — Stress-test (only if the first two rounds left real uncertainty)**
-- Search for counter-evidence and critiques of what you found
-- Check dates: is each claim current or superseded?
-- Resolve contradictions between sources or flag them honestly
+* 主题："人工智能对医疗保健的影响"
+  * 目前医疗保健领域的主要人工智能应用有哪些？
+  * 测量到了哪些临床结果？
+  * 存在哪些监管挑战？
+  * 哪些公司在该领域处于领先地位？
+  * 市场规模和增长轨迹如何？
 
-Stop early if Rounds 1-2 answered the question with high confidence and no
-contradictions remain. Do not pad rounds to look thorough.
+### 步骤 3：执行多源搜索
 
-## Evidence Rules
+对**每个**子问题，使用可用的 MCP 工具进行搜索：
 
-- **Cite every claim.** Track source name + URL for each finding as you go.
-- **Prefer primary over secondary.** Official docs beat blog posts; the actual
-  paper beats a summary of the paper.
-- **Date everything.** A claim from 2023 about a fast-moving topic is weak.
-- **Separate fact from opinion.** Label what is established vs. contested vs. speculation.
-- **Note conflicts.** If two credible sources disagree, say so rather than picking a winner silently.
-
-## Report Format
+**使用 firecrawl：**
 
 ```
-# Research Report: {Topic}
-
-## Bottom Line
-2-4 sentences answering the core question directly. This is the part the
-user reads if they read nothing else.
-
-## Key Findings
-1. {Finding} — per {source}
-2. {Finding} — per {source}
-3. {Finding} — per {source}
-
-## Details
-{Expand on the findings where nuance matters. Use short subsections if the
-topic has natural parts. Include specifics: numbers, dates, names, versions.}
-
-## Confidence & Caveats
-- What is well-established (multiple independent sources)
-- What is single-source or uncertain
-- What changed recently or may change soon
-
-## Open Questions
-{What could not be determined and what would answer it}
-
-## Sources
-{Numbered list of source names with URLs}
+firecrawl_search(query: "<sub-question keywords>", limit: 8)
 ```
 
-## After the Report
+**使用 exa：**
 
-Offer 1-2 concrete next steps based on what you found (e.g., "Want a decision
-matrix comparing the top options?" or "Want me to monitor how X develops?").
-Then stop — do not keep researching unprompted.
+```
+web_search_exa(query: "<子问题关键词>", numResults: 8)
+web_search_advanced_exa(query: "<关键词>", numResults: 5, startPublishedDate: "2025-01-01")
+```
+
+**搜索策略：**
+
+* 每个子问题使用 2-3 个不同的关键词变体
+* 混合使用通用查询和新闻聚焦查询
+* 目标总共获取 15-30 个独特的来源
+* 优先级：学术、官方、知名新闻 > 博客 > 论坛
+
+### 步骤 4：深度阅读关键来源
+
+对于最有希望的 URL，获取完整内容：
+
+**使用 firecrawl：**
+
+```
+firecrawl_scrape(url: "<url>")
+```
+
+**使用 exa：**
+
+```
+crawling_exa(url: "<url>", tokensNum: 5000)
+```
+
+完整阅读 3-5 个关键来源以获得深度信息。不要仅依赖搜索片段。
+
+### 步骤 5：综合并撰写报告
+
+构建报告结构：
+
+```markdown
+# [主题]：研究报告
+*生成日期：[date] | 来源数量：[N] | 置信度：[高/中/低]*
+
+## 执行摘要
+[3-5 句关键发现概述]
+
+## 1. [第一个主要主题]
+[带有内联引用的发现]
+- 关键点 ([Source Name](url))
+- 支持性数据 ([Source Name](url))
+
+## 2. [第二个主要主题]
+...
+
+## 3. [第三个主要主题]
+...
+
+## 关键要点
+- [可执行的见解 1]
+- [可执行的见解 2]
+- [可执行的见解 3]
+
+## 来源
+1. [Title](url) — [一行摘要]
+2. ...
+
+## 方法论
+搜索了网络和新闻中的 [N] 个查询。分析了 [M] 个来源。
+调查的子问题：[列表]
+```
+
+### 步骤 6：交付
+
+* **简短主题**：在聊天中发布完整报告
+* **长篇报告**：发布执行摘要 + 关键要点，将完整报告保存到文件
+
+## 使用子代理进行并行研究
+
+对于广泛的主题，使用 Claude Code 的 Task 工具进行并行处理：
+
+```
+并行启动3个研究代理：
+1. 代理1：研究子问题1-2
+2. 代理2：研究子问题3-4
+3. 代理3：研究子问题5 + 交叉主题
+```
+
+每个代理负责搜索、阅读来源并返回发现结果。主会话将其综合成最终报告。
+
+## 质量规则
+
+1. **每个主张都需要有来源**。不要有无来源的断言。
+2. **交叉验证**。如果只有一个来源提及，请将其标记为未经验证。
+3. **时效性很重要**。优先选择过去 12 个月内的来源。
+4. **承认信息缺口**。如果某个子问题找不到好的信息，请如实说明。
+5. **不捏造信息**。如果不知道，就说"未找到足够的数据"。
+6. **区分事实与推断**。清楚标注估计、预测和观点。
+
+## 示例
+
+```
+"研究核聚变能源的当前现状"
+"深入探讨 2026 年 Rust 与 Go 在后端服务中的对比"
+"研究自举 SaaS 业务的最佳策略"
+"美国房地产市场目前情况如何？"
+"调查 AI 代码编辑器的竞争格局"
+```

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commercial Launch Readiness Orchestrator"
+  short_description: "Audit one repo for launch readiness"
+  default_prompt: "Use this skill to audit one repository for commercial launch readiness, market pain, target customers, outreach, and safe fixes."

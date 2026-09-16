@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Judgment"
+  short_description: "Apply repo-first, simple, surgical coding discipline."
+  default_prompt: "Use coding judgment: inspect the repo, state assumptions, keep changes surgical, and verify before claiming completion."

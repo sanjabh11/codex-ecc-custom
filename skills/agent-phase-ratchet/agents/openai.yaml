@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Phase Ratchet"
+  short_description: "Automatically benchmark non-trivial agent work with phase gates, evidence, reflection, and next-step adjustments"
+  default_prompt: "At task start, classify whether the work is Tier 0-3. For Tier 1 or higher, automatically use PhaseLoop_v2: select the smallest required skill set, capture a baseline, execute one focused lever, verify with concrete evidence, reflect on the delta, and state the next-phase adjustment before continuing."

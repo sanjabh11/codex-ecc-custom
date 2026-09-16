@@ -1,0 +1,4 @@
+interface:
+  display_name: "CASS Session Search"
+  short_description: "Recover prior session context and handoffs with CASS-backed search"
+  default_prompt: "Use this skill when a task depends on prior session context, an old fix, a handoff, or memory-derived evidence. Verify CASS availability first, search narrowly, summarize only relevant hits, and clearly mark stale or unverified context."

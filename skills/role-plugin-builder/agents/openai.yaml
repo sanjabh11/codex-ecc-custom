@@ -1,0 +1,4 @@
+interface:
+  display_name: "Role Plugin Builder"
+  short_description: "Convert role workflows into safe Codex plugin scaffolds."
+  default_prompt: "Use $role-plugin-builder to turn this role or workflow into a safe Codex plugin scaffold contract."

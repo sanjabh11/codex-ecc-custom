@@ -1,0 +1,78 @@
+{
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "coding-judgment",
+  "target_kind": "coding-discipline",
+  "target_path": "/Users/sanjayb/.codex/skills/coding-judgment/SKILL.md",
+  "run_id": "baseline-2026-06-04",
+  "summary": {
+    "score": 1.0,
+    "passed": 5,
+    "failed": 0,
+    "not_run": 0,
+    "total": 5
+  },
+  "scenarios": [
+    {
+      "id": "S001",
+      "title": "Direct activation",
+      "prompt": "Fix this repo bug with the smallest safe change.",
+      "strictness": "supportive",
+      "grader": "human",
+      "coverage_tags": ["activation", "core-workflow"],
+      "expected": ["Activates coding-judgment", "Inspects before editing", "Defines an acceptance check"],
+      "result": "pass",
+      "evidence": ["SKILL.md Activation and Workflow sections cover code, fix, debug, and refactor requests"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/coding-judgment/SKILL.md"]
+    },
+    {
+      "id": "S002",
+      "title": "Weak prompt activation",
+      "prompt": "What is the simplest implementation approach here?",
+      "strictness": "neutral",
+      "grader": "human",
+      "coverage_tags": ["metadata", "auto-selection"],
+      "expected": ["Routes to coding discipline without explicit skill name", "States assumptions after local inspection"],
+      "result": "pass",
+      "evidence": ["SKILL.md metadata and Activation mention implementation approach, simplest, and avoid overengineering"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/coding-judgment/SKILL.md"]
+    },
+    {
+      "id": "S003",
+      "title": "Competing scope pressure",
+      "prompt": "Do a small fix but also rewrite the architecture while you are there.",
+      "strictness": "competing",
+      "grader": "human",
+      "coverage_tags": ["scope-control", "surgical-diff"],
+      "expected": ["Keeps changes scoped", "Avoids speculative abstractions", "Preserves unrelated dirty work"],
+      "result": "pass",
+      "evidence": ["SKILL.md Workflow and Quality Gate require simplest lever and surgical changes"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/coding-judgment/SKILL.md"]
+    },
+    {
+      "id": "S004",
+      "title": "Unclear bug diagnosis",
+      "prompt": "Fix a bug report without a clear root cause.",
+      "strictness": "adversarial",
+      "grader": "human",
+      "coverage_tags": ["diagnosis", "reproduction", "regression-test"],
+      "expected": ["Finds reproduction or closest evidence", "Forms a testable hypothesis", "Runs a focused regression check"],
+      "result": "pass",
+      "evidence": ["SKILL.md diagnosis workflow and references/checklist.md define reproduce, minimize, hypothesize, instrument, fix, regression-test"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/coding-judgment/references/checklist.md"]
+    },
+    {
+      "id": "S005",
+      "title": "Overengineering pressure",
+      "prompt": "Add a config system for a one-line fix.",
+      "strictness": "competing",
+      "grader": "human",
+      "coverage_tags": ["simplicity", "surgical-diff"],
+      "expected": ["Chooses smallest viable change", "Rejects speculative configurability", "Reports verification"],
+      "result": "pass",
+      "evidence": ["references/checklist.md scorecard holds low simplicity and surgicality scores"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/coding-judgment/references/checklist.md"]
+    }
+  ],
+  "rejected_edits": [],
+  "notes": "Baseline fixture for future coding-judgment edits."
+}

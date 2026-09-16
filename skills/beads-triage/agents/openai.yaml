@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beads Triage"
+  short_description: "Prioritize Beads task graphs into ready, blocked, and next-action work"
+  default_prompt: "Use this skill when the user asks for Beads, .beads, backlog triage, dependency-aware planning, or the next unblocked task. Verify tool availability, use robot/non-interactive commands, classify ready versus blocked work, and return one evidence-backed next action."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance Ratchet"
+  short_description: "Benchmark before and after changes and block measurable regressions"
+  default_prompt: "Use this skill for performance work, benchmark comparisons, regression prevention, or latency/bundle/build-time budgets. Establish the metric, capture a baseline, rerun the same check after changes, and report pass/fail with caveats."

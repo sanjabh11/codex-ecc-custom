@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fuzz Regression"
+  short_description: "Convert edge cases and malformed inputs into durable regression tests"
+  default_prompt: "Use this skill for fuzzing, adversarial edge cases, malformed payloads, parser hardening, or crash reproducers. Identify the input boundary, seed from real failures, add a small durable test or fixture, and verify it with bounded commands."

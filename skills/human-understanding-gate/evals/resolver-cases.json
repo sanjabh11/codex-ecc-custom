@@ -1,0 +1,30 @@
+[
+  {
+    "id": "explicit-gate",
+    "task": "Use human-understanding-gate to teach back this session and quiz me before moving on.",
+    "expectInvoke": true,
+    "expectDepth": "intern"
+  },
+  {
+    "id": "eli5-bug",
+    "task": "ELI5 the root cause and make sure I understand the edge cases.",
+    "expectInvoke": true,
+    "expectDepth": "ELI5"
+  },
+  {
+    "id": "phase-handoff",
+    "task": "Before merge, verify I understand the design decision, proof boundary, and impact.",
+    "expectInvoke": true,
+    "expectDepth": "intern"
+  },
+  {
+    "id": "simple-typo",
+    "task": "Fix this typo in the heading.",
+    "expectInvoke": false
+  },
+  {
+    "id": "skip-explanation",
+    "task": "Just implement the simple rename, no explanation.",
+    "expectInvoke": false
+  }
+]

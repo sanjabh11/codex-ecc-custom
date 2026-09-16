@@ -1,0 +1,4 @@
+interface:
+  display_name: "Multi-Agent Swarm"
+  short_description: "Supervise complex coding tasks with decomposition and verification"
+  default_prompt: "Use this skill when a request is multi-step, ambiguous, risky, or benefits from explicit planning, fresh subagents, and evidence-based review. Build a minimal context pack, decompose the work, coordinate subagents only when useful and supported, and require evidence before claiming success."

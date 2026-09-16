@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conformance Gate"
+  short_description: "Gate claims and implementations against concrete proof evidence"
+  default_prompt: "Use this skill when a user asks to prove conformance, validate release claims, check contract behavior, or separate live/local/artifact-only proof. Inspect implementation paths first, run the narrowest relevant checks, and fail closed when evidence is missing."

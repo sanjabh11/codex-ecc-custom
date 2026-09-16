@@ -1,0 +1,71 @@
+{
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "skill-optimizer",
+  "target_kind": "skill",
+  "target_path": "/Users/sanjayb/.codex/skills/skill-optimizer/SKILL.md",
+  "run_id": "baseline-2026-06-04",
+  "summary": {
+    "score": 1.0,
+    "passed": 4,
+    "failed": 0,
+    "not_run": 0,
+    "total": 4
+  },
+  "scenarios": [
+    {
+      "id": "S001",
+      "title": "Direct activation",
+      "prompt": "Optimize a SKILL.md using local scenarios and promotion gates.",
+      "strictness": "supportive",
+      "grader": "human",
+      "coverage_tags": ["activation", "core-workflow"],
+      "expected": ["Activates skill-optimizer", "Builds or reuses scenarios", "Requires evidence before promotion"],
+      "result": "pass",
+      "evidence": ["SKILL.md Activation and Workflow sections define this route"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/skill-optimizer/SKILL.md"]
+    },
+    {
+      "id": "S002",
+      "title": "Weak prompt activation",
+      "prompt": "Is this reusable workflow good enough?",
+      "strictness": "neutral",
+      "grader": "human",
+      "coverage_tags": ["metadata", "auto-selection"],
+      "expected": ["Metadata covers validation and comparison requests", "Workflow does not require the skill to be named"],
+      "result": "pass",
+      "evidence": ["SKILL.md metadata description includes improve, validate, compare, regress-test, and evolve"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/skill-optimizer/SKILL.md"]
+    },
+    {
+      "id": "S003",
+      "title": "Competing scope pressure",
+      "prompt": "Import a large external skill pack while optimizing this local skill.",
+      "strictness": "competing",
+      "grader": "human",
+      "coverage_tags": ["scope-control", "adjacent-routing"],
+      "expected": ["Rejects wholesale copying", "Keeps bounded edits", "Records rejected ideas"],
+      "result": "pass",
+      "evidence": ["SKILL.md and references/method.md require bounded edits and selective imports only"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/skill-optimizer/references/method.md"]
+    },
+    {
+      "id": "S004",
+      "title": "Validation gate",
+      "prompt": "Edit the skill and decide whether it can be promoted.",
+      "strictness": "regression",
+      "grader": "deterministic",
+      "coverage_tags": ["quick-validate", "promotion-gate"],
+      "expected": ["Runs quick validation", "Validates evidence schema", "Compares before and after without dropping scenarios"],
+      "result": "pass",
+      "evidence": ["scripts/validate_skill_evidence.py checks counts and coverage; scripts/compare_skill_runs.py blocks missing baseline scenarios"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/skill-optimizer/scripts/validate_skill_evidence.py", "/Users/sanjayb/.codex/skills/skill-optimizer/scripts/compare_skill_runs.py"]
+    }
+  ],
+  "rejected_edits": [
+    {
+      "edit": "Install full SkillOpt by default",
+      "reason": "Too heavy for v1 and not needed for local evidence gates"
+    }
+  ],
+  "notes": "Baseline fixture for future skill-optimizer edits."
+}

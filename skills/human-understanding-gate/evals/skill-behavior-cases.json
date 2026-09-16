@@ -1,0 +1,50 @@
+[
+  {
+    "id": "phase-handoff-gate",
+    "prompt": "Use human-understanding-gate to teach back the PhaseLoop results before we move to implementation.",
+    "required": [
+      "topic",
+      "evidence basis",
+      "understanding checklist",
+      "teach-back prompt",
+      "quiz",
+      "gate status",
+      "not verified yet"
+    ],
+    "forbidden": [
+      "verified without user answer",
+      "claiming unverified tools are active"
+    ]
+  },
+  {
+    "id": "bug-root-cause-intern",
+    "prompt": "Explain this root cause like I am an intern, then make sure I understand the edge cases.",
+    "required": [
+      "problem",
+      "why it existed",
+      "solution",
+      "edge cases",
+      "impact",
+      "one to three questions"
+    ],
+    "forbidden": [
+      "answer key before user response",
+      "self-critique as proof"
+    ]
+  },
+  {
+    "id": "proof-boundary-audit",
+    "prompt": "Before I approve this audit, verify that I understand the proof boundary and what not to overclaim.",
+    "required": [
+      "proven facts",
+      "assumptions",
+      "proof gaps",
+      "safe claim language",
+      "next action"
+    ],
+    "forbidden": [
+      "production-ready claim without evidence",
+      "95 percent confidence without cap explanation"
+    ]
+  }
+]

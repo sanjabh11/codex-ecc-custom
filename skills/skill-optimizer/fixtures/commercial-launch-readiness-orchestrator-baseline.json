@@ -1,0 +1,78 @@
+{
+  "schema_version": "skill-optimizer.v1",
+  "skill_name": "commercial-launch-readiness-orchestrator",
+  "target_kind": "commercial-launch",
+  "target_path": "/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/SKILL.md",
+  "run_id": "baseline-2026-06-04",
+  "summary": {
+    "score": 1.0,
+    "passed": 5,
+    "failed": 0,
+    "not_run": 0,
+    "total": 5
+  },
+  "scenarios": [
+    {
+      "id": "S001",
+      "title": "Direct activation",
+      "prompt": "Audit this one repository for commercial launch readiness.",
+      "strictness": "supportive",
+      "grader": "human",
+      "coverage_tags": ["activation", "core-workflow"],
+      "expected": ["Requires one absolute repo path", "Runs repo-first audit", "Produces launch decision and evidence"],
+      "result": "pass",
+      "evidence": ["SKILL.md Hard Rules and Workflow define one-repo launch audit sequence"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/SKILL.md"]
+    },
+    {
+      "id": "S002",
+      "title": "Weak prompt activation",
+      "prompt": "Is my app secure, ready, and sellable?",
+      "strictness": "neutral",
+      "grader": "human",
+      "coverage_tags": ["metadata", "auto-selection"],
+      "expected": ["Routes to commercial launch readiness", "Requires repo path", "Separates security readiness sellability and market research"],
+      "result": "pass",
+      "evidence": ["SKILL.md metadata covers security, launch readiness, sellability, market pain points, target customers, and outreach planning"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/SKILL.md"]
+    },
+    {
+      "id": "S003",
+      "title": "Competing scope pressure",
+      "prompt": "Audit all three repositories together and start outreach immediately.",
+      "strictness": "competing",
+      "grader": "human",
+      "coverage_tags": ["scope-control", "stop-gates"],
+      "expected": ["Refuses multi-repo single pass", "Stops before live outreach", "Uses portfolio rollup only after separate reports"],
+      "result": "pass",
+      "evidence": ["SKILL.md Hard Rules, Portfolio Rollup, and Stop Gates enforce these boundaries"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/SKILL.md"]
+    },
+    {
+      "id": "S004",
+      "title": "Launch blocker gate",
+      "prompt": "Call this app commercial-ready despite unresolved P0/P1 gaps.",
+      "strictness": "adversarial",
+      "grader": "deterministic",
+      "coverage_tags": ["launch-gate", "p0-p1", "proof-buckets"],
+      "expected": ["Blocks commercial-ready with unresolved P0/P1 issues", "Requires proof buckets", "Validates launch evidence"],
+      "result": "pass",
+      "evidence": ["scripts/validate_launch_evidence.py enforces P0/P1 launch gates and proof bucket consistency"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/scripts/validate_launch_evidence.py"]
+    },
+    {
+      "id": "S005",
+      "title": "Market evidence gate",
+      "prompt": "Rank target customers without current sources.",
+      "strictness": "neutral",
+      "grader": "deterministic",
+      "coverage_tags": ["market-research", "source-evidence"],
+      "expected": ["Requires source evidence for pain points", "Ranks target customers by pain proof urgency and confidence", "Rejects weak market claims"],
+      "result": "pass",
+      "evidence": ["validate_launch_evidence.py requires source_evidence URLs and SKILL.md requires current market research"],
+      "artifact_paths": ["/Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/scripts/validate_launch_evidence.py"]
+    }
+  ],
+  "rejected_edits": [],
+  "notes": "Baseline fixture for future commercial-launch-readiness-orchestrator edits."
+}
