@@ -747,3 +747,120 @@ class MiniMaxService(ServiceBase):
         last = messages[-1].get("content", "") if messages else ""
         return f"[MiniMax {self.model} mock] Would answer: '{last[:80]}...'"
 
+
+class JevGatewayService(ServiceBase):
+    """
+    Jev / Vercel AI Gateway service (OpenAI-compatible chat completions).
+    Base URL: https://ai-gateway.vercel.sh/v1
+    Models:  google/gemini-2.5-pro, typesafe-ai/jev, openai/gpt-4o, anthropic/claude-fable-5, etc.
+    Auth:    API Key from AI_GATEWAY_API_KEY env or cline-jev-browser.config.json across Cline, Codex, Devin, and Antigravity.
+    """
+    DEFAULT_BASE_URL = "https://ai-gateway.vercel.sh/v1"
+    DEFAULT_MODEL = "openai/gpt-4o"
+
+    CONFIG_PATHS = [
+        "~/.cline/plugins/cline-jev-browser.config.json",
+        "~/.codex/plugins/cline-jev-browser.config.json",
+        "~/.devin/plugins/cline-jev-browser.config.json",
+        "~/.gemini/config/cline-jev-browser.config.json",
+    ]
+
+    @classmethod
+    def _load_gateway_token(cls) -> Optional[str]:
+        """Load the active Vercel AI Gateway / Jev token from env or config files."""
+        env_token = os.environ.get("AI_GATEWAY_API_KEY", "").strip() or os.environ.get("JEV_API_KEY", "").strip()
+        if env_token:
+            return env_token
+
+        for raw_path in cls.CONFIG_PATHS:
+            cfg_path = os.path.expanduser(raw_path)
+            try:
+                if os.path.isfile(cfg_path):
+                    with open(cfg_path, "r") as f:
+                        data = json.load(f)
+                    key = data.get("gateway", {}).get("apiKey", "")
+                    if isinstance(key, str) and key.strip():
+                        return key.strip()
+            except Exception:
+                continue
+        return None
+
+    @classmethod
+    def has_credentials(cls) -> bool:
+        """Check whether valid credentials can be discovered."""
+        token = cls._load_gateway_token()
+        return bool(token)
+
+    def __init__(self, api_key: str = "", mock_mode: bool = False, base_url: str = None, model: str = None):
+        cli_token = self._load_gateway_token()
+        resolved_key = api_key if api_key else (cli_token or "")
+        super().__init__(resolved_key, mock_mode)
+        self.base_url = (base_url or self.DEFAULT_BASE_URL).rstrip("/")
+        self.model = model or self.DEFAULT_MODEL
+        self._token = cli_token
+
+    def chat(self, messages: List[Dict[str, Any]], max_output_tokens: int = 1024, temperature: float = 0.7) -> str:
+        """Call /v1/chat/completions with OpenAI-compatible payload."""
+        if self.mock_mode or not self.api_key:
+            return self._mock_response(messages)
+
+        url = f"{self.base_url}/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        body = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_output_tokens,
+            "temperature": temperature,
+        }
+
+        try:
+            resp = requests.post(url, headers=headers, json=body, timeout=120)
+        except Exception as e:
+            return f"[Jev/Gateway] Request failed: {e}"
+
+        try:
+            data = resp.json()
+        except Exception:
+            data = {}
+
+        if resp.status_code == 403:
+            err = data.get("error", {})
+            err_type = err.get("type", "") if isinstance(err, dict) else ""
+            err_msg = err.get("message", "") if isinstance(err, dict) else str(err)
+            if "credit card" in err_msg.lower() or err_type == "customer_verification_required":
+                return (
+                    "[Advisor] Jev/Vercel AI Gateway requires a valid payment method on file to service requests. "
+                    "Visit: https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dadd-credit-card to unlock credits. "
+                    "Proceed without advisor."
+                )
+            return f"[Jev/Gateway] 403 Forbidden: {err_msg or resp.text}"
+
+        if resp.status_code not in (200, 201):
+            err = data.get("error", {})
+            err_msg = err.get("message", "") if isinstance(err, dict) else str(err) or resp.text
+            return f"[Jev/Gateway] API call failed ({resp.status_code}): {err_msg}"
+
+        if "error" in data:
+            return f"[Jev/Gateway] API error: {data['error']}"
+
+        choices = data.get("choices", [])
+        if choices and len(choices) > 0:
+            msg = choices[0].get("message", {})
+            return msg.get("content", "")
+
+        return f"[Jev/Gateway] Unexpected response shape: {list(data.keys())}"
+
+    def generate(self, prompt: str, system: str = "You are a helpful assistant.", max_output_tokens: int = 1024, temperature: float = 0.7) -> str:
+        """Convenience wrapper for a single user prompt."""
+        return self.chat(
+            messages=[{"role": "system", "content": system}, {"role": "user", "content": prompt}],
+            max_output_tokens=max_output_tokens,
+            temperature=temperature,
+        )
+
+    def _mock_response(self, messages: List[Dict[str, Any]]) -> str:
+        last = messages[-1].get("content", "") if messages else ""
+        return f"[Jev/Gateway {self.model} mock] Would answer: '{last[:80]}...'"
