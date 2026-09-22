@@ -1,5 +1,5 @@
 {
-  "advisor_model": "openai/gpt-4o",
+  "advisor_model": "google/gemini-2.5-flash-lite",
   "max_advisor_calls": 60,
   "max_tokens_advisor": 4096,
   "reset_period": "daily",
@@ -11,5 +11,6 @@
   "retry_attempts": 1,
   "revoked": false,
   "revocation_reason": "",
-  "revoked_until": null
+  "revoked_until": null,
+  "advisor_model_fallback": "openai/gpt-4o"
 }

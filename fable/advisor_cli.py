@@ -441,6 +441,24 @@ def get_advice(
     if response is None:
         return f"[Advisor] Failed after {retry_attempts + 1} attempts. Proceed without advisor."
 
+    # Fallback model: gateway returned an error string (not an exception) —
+    # retry once with the configured fallback model before giving up.
+    fallback_model = str(config.get("advisor_model_fallback", "")).strip()
+    if (
+        fallback_model
+        and selected_backend == "jev_gateway"
+        and isinstance(response, str)
+        and response.startswith(("[Jev/Gateway]", "[Advisor]"))
+    ):
+        fallback_svc = JevGatewayService(api_key="", mock_mode=False, model=fallback_model)
+        if fallback_svc.api_key:
+            fb = fallback_svc.generate(
+                prompt=user_prompt, system=system_prompt,
+                max_output_tokens=max_tokens, temperature=0.7,
+            )
+            if isinstance(fb, str) and not fb.startswith(("[Jev/Gateway]", "[Advisor]")):
+                response = f"[fallback: {fallback_model}] " + fb
+
     # Track call in state
     state["call_count"] += 1
     state["history"].append({

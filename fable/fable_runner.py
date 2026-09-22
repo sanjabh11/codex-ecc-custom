@@ -20,9 +20,10 @@ from fable.services import (
     SlackService, TwitterService, JiraService, LinearService,
     SalesforceService, OpsgenieService, GDriveService, BufferService,
     SubstackService, GSearchService, RedditService, DiscordService,
-    MiniMaxService, GrokService,
+    MiniMaxService, GrokService, JevGatewayService,
 )
 from fable.session_miner import Playbook
+from fable.governance import GovernanceError, GovernanceStop, RunGovernance
 
 
 # ─── ECC Operating Protocol Step Markers ────────────────────────────────────
@@ -79,6 +80,11 @@ class FableEngine:
         self.gsearch = GSearchService(keys.get("gsearch", ""), m)
         self.reddit = RedditService(keys.get("reddit", ""), m)
         self.discord = DiscordService(keys.get("discord", ""), m)
+        self.jev_gateway = JevGatewayService(
+            api_key="",
+            mock_mode=m,
+            model=keys.get("gateway_model") or "openai/gpt-4o",
+        )
         xai_key = keys.get("xai", "") or os.environ.get("XAI_API_KEY", "")
         self.grok = GrokService(
             api_key=xai_key,
@@ -94,8 +100,8 @@ class FableEngine:
         )
 
     def _get_ai_service(self):
-        """Return the first available configured AI model service (Grok > MiniMax)."""
-        for svc in (self.grok, self.minimax):
+        """Return the first available configured AI model service (Gateway > Grok > MiniMax)."""
+        for svc in (self.jev_gateway, self.grok, self.minimax):
             if not svc.mock_mode and svc.api_key:
                 return svc
         return None
@@ -567,21 +573,60 @@ class FableEngine:
                 "started_at": datetime.datetime.now(datetime.UTC).isoformat() + "Z",
             }
 
+        # Governance is deliberately scoped to this loop invocation.  The
+        # existing state-file write semantics remain unchanged; the new
+        # per-run ledger is the durable policy/provenance boundary.
+        try:
+            governance = RunGovernance.from_workflow(
+                workflow,
+                requested_iterations=iterations,
+                mock_mode=self.mock_mode,
+                config=self.config.get("governance", {}),
+                state_path=state_path,
+            )
+            governance.preflight(state)
+        except GovernanceError as exc:
+            print(f"[Governance] Run denied before execution: {exc}")
+            return state
+
         print(f"[ECC] {ECC_PHASES[2]}: Executing {iterations} iteration(s)\n")
 
+        governance_stopped = False
         for i in range(iterations):
+            try:
+                governance.before_step()
+            except GovernanceStop as exc:
+                governance_stopped = True
+                state["status"] = "governance_stopped"
+                print(f"  ⏹ Governance stop before next step: {exc.reason}.")
+                governance.finish("stopped", exc.reason)
+                break
+
             state["iteration"] += 1
             current_iter = state["iteration"]
             print(f"▶ Iteration #{current_iter}...")
 
             # Execute one atomic step (Gap 1)
-            step_output = self.execute_step(workflow, current_iter - 1, state)
+            try:
+                step_output = self.execute_step(workflow, current_iter - 1, state)
+            except Exception:
+                governance.finish("failed", "step_exception")
+                raise
             state["history"].append({
                 "iteration": current_iter,
                 "output": step_output,
                 "timestamp": datetime.datetime.now(datetime.UTC).isoformat() + "Z",
             })
             print(f"  → {step_output[:120]}")
+
+            governance_stopped = False
+            try:
+                governance.record_step()
+            except GovernanceStop as exc:
+                governance_stopped = True
+                state["status"] = "governance_stopped"
+                print(f"  ⏹ Governance stop after step: {exc.reason}.")
+                governance.finish("stopped", exc.reason)
 
             # Multi-criterion stop rule (Gap 4) — evaluate on BASE output to avoid playbook prefix false positives
             base_output = getattr(self, '_last_base_output', step_output)
@@ -594,7 +639,7 @@ class FableEngine:
                 json.dump(state, f, indent=2)
             print(f"  💾 State saved to {state_path.name}\n")
 
-            if state["status"] == "completed":
+            if state["status"] == "completed" or governance_stopped:
                 break
 
         # Gap 7: scheduling guidance
@@ -604,6 +649,12 @@ class FableEngine:
             print(f"   Or via PM2: pm2 start fable/fable_runner.py --cron '0 * * * *' -- --loop {workflow_name}")
 
         print(f"\n🏁 Loop finished. Final state: {state['status']}")
+        if not governance_stopped and not governance.finished:
+            final_status = "completed" if state["status"] == "completed" else "incomplete"
+            final_reason = (
+                "stop_rule" if final_status == "completed" else "requested_iterations_exhausted"
+            )
+            governance.finish(final_status, final_reason)
         return state
 
     # ─── Goal Runner (Gap 3: real judge, Gap 9: rich proof) ─────────────────
@@ -858,7 +909,7 @@ Examples:
     parser.add_argument("--self-improve", action="store_true", help="Run self-improvement prompt learning loop")
     parser.add_argument("--chain", type=str, help="Comma-separated workflow names to run in sequence (output pipes to next)")
     parser.add_argument("--config", type=str, help="Path to config file (default: fable/fable_config.json)")
-    parser.add_argument("--advisor", type=str, help="Ask the advisor (Grok 4.5) a question directly")
+    parser.add_argument("--advisor", type=str, help="Ask the advisor (Grok 4.6) a question directly")
 
     args = parser.parse_args()
 
