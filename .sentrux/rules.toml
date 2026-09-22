@@ -1,0 +1,25 @@
+[constraints]
+max_cycles = 0
+max_coupling = "C"
+max_cc = 30
+no_god_files = true
+
+[[layers]]
+name = "skills"
+paths = ["skills/*"]
+order = 0
+
+[[layers]]
+name = "scripts"
+paths = ["scripts/*"]
+order = 1
+
+[[layers]]
+name = "docs"
+paths = ["docs/*"]
+order = 2
+
+[[boundaries]]
+from = "docs/*"
+to = "skills/*/scripts/*"
+reason = "Docs must not depend on skill scripts"
