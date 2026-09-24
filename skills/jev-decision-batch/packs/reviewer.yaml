@@ -1,0 +1,34 @@
+name: reviewer
+version: '1'
+extractor: python3 label_review.py
+artifact: reviewer-labels.jsonl
+description: 'Independent-reviewer scorer: rubric-batch every canonical SKILL.md —'
+questions:
+  defect:
+    type: choice
+    instructions: Act as an independent quality reviewer. Find problems, do not approve.
+      Which defect best describes this skill file?
+    criteria:
+      none: No material defect found.
+      unsupported-claim: Asserts behavior or results that the content does not support.
+      missing-instructions: Body lacks the concrete steps/commands the description
+        promises.
+      internal-inconsistency: Sections contradict each other or the frontmatter.
+      broken-format: Malformed structure, truncated sections, or unusable formatting.
+  severity:
+    type: score
+    instructions: How much would the defect mislead an agent using this skill?
+    criteria:
+    - None
+    - Minor
+    - Material
+    - Severe
+  trustworthy:
+    type: noul
+    instructions: An agent can follow this skill's instructions and get the promised
+      outcome.
+    criteria:
+      'true': Instructions are concrete and supported.
+      'false': Instructions are vague, missing, or unsupported.
+decision:
+  kind: sift

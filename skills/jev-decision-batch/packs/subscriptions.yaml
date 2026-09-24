@@ -1,0 +1,30 @@
+name: subscriptions
+version: '1'
+extractor: python3 label_subscriptions.py
+artifact: subscriptions-labels.jsonl
+description: Subscription hunter — drop bank/CC statement exports (CSV or pasted text)
+questions:
+  recurring:
+    type: noul
+    instructions: This charge looks like a recurring subscription or membership.
+    criteria:
+      'true': Subscription/membership pattern.
+      'false': One-off purchase or transfer.
+  suspicious:
+    type: noul
+    instructions: This charge looks unwanted, duplicated, or forgotten — worth cancel-checking.
+    criteria:
+      'true': Possible zombie/unwanted charge.
+      'false': Looks legitimate.
+  category:
+    type: choice
+    instructions: Best category for this charge.
+    criteria:
+      software-saas: Software, SaaS, cloud, dev tools.
+      streaming-media: Streaming, news, media subscriptions.
+      utilities-bills: Utilities, telecom, insurance.
+      food-dining: Food, groceries, restaurants.
+      transfer-finance: Transfers, fees, finance.
+      other: Anything else.
+decision:
+  kind: sift

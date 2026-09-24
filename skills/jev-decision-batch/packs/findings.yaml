@@ -1,0 +1,32 @@
+name: findings
+version: '1'
+extractor: python3 label_findings.py
+artifact: findings-labels.jsonl
+description: 'Validator-finding triage: label avalanche t2a defect/gap/disposition'
+questions:
+  defect_class:
+    type: choice
+    instructions: What class of defect or finding does this artifact describe?
+    criteria:
+      crash: Runtime failure — exceptions, crashes, hangs.
+      exactness: Wrong values, precision drift, schema/exact-match violations.
+      consistency: Conflicting state, ordering bugs, stale fixtures, contract mismatches.
+      coverage: Untested surface, missing evidence, incomplete gates.
+      process: Coordination, handoff, or procedural defects — not code faults.
+      other: None of the above fit.
+  severity:
+    type: score
+    instructions: How severe is this finding for correctness claims?
+    criteria:
+    - Cosmetic — safe to defer
+    - Minor — fix in normal course
+    - Material — fix before the next gate
+    - Critical — blocks correctness claims
+  still_actionable:
+    type: noul
+    instructions: The finding looks unresolved or worth re-checking (not superseded/closed).
+    criteria:
+      'true': Open or worth re-checking.
+      'false': Clearly closed, superseded, or advisory-only.
+decision:
+  kind: sift

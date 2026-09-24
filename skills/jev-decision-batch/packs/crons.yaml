@@ -1,0 +1,26 @@
+name: crons
+version: '1'
+extractor: python3 label_crons.py
+artifact: crons-labels.jsonl
+questions:
+  output_kind:
+    type: choice
+    instructions: Classify this scheduled-job run's output. Judge what a human reviewer
+      would gain from reading it.
+    criteria:
+      actionable-signal: The run produced a concrete finding, deliverable, or state
+        change a human would want.
+      routine-signal: The run completed its intended work with normal, expected output.
+      echo-or-boilerplate: Output mostly restates the prompt/skill instructions without
+        doing the task.
+      error-or-empty: The run failed, produced nothing, or stalled on setup.
+      noise: Output exists but contains nothing worth human attention.
+  worth_running:
+    type: noul
+    instructions: Was this scheduled run worth its compute and the user's attention
+      budget — did it produce its intended value?
+    criteria:
+      'true': Run produced intended value (signal or useful routine work).
+      'false': Run was noise, echo, error, or empty.
+decision:
+  kind: sift

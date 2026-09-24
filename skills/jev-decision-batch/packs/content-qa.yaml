@@ -1,0 +1,27 @@
+name: content-qa
+version: '1'
+extractor: python3 label_packs.py --pack content
+artifact: content-qa.md
+questions:
+  clarity:
+    type: score
+    instructions: How clear is this content for its intended learner/viewer?
+    criteria:
+    - Confusing
+    - Muddled
+    - Clear
+    - Crisp
+  promise_payoff:
+    type: noul
+    instructions: The content delivers what its title/heading promises.
+    criteria:
+      'true': Pays off.
+      'false': Overpromises.
+  factual_risk:
+    type: noul
+    instructions: The content states facts that look wrong, outdated, or unsupported.
+    criteria:
+      'true': Contains risky claims.
+      'false': Looks sound.
+decision:
+  kind: sift

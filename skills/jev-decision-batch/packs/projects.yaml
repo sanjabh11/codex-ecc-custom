@@ -1,0 +1,22 @@
+name: projects
+version: '1'
+extractor: python3 label_projects.py
+artifact: projects-labels.jsonl
+description: GCP project strip queue — classify each project live/dead-suspect from
+questions:
+  verdict:
+    type: choice
+    instructions: 'Classify this GCP project for a cleanup sweep. Evidence given:
+      name, creation date, billable resources found.'
+    criteria:
+      live: Likely serves active work — do not touch.
+      review: Ambiguous — needs owner confirmation before any change.
+      strip-candidate: Probably dead — safe to propose for resource cleanup/shutdown.
+  billing_risk:
+    type: noul
+    instructions: The project's visible resources could produce recurring charges.
+    criteria:
+      'true': Billable resources present.
+      'false': Nothing billable visible.
+decision:
+  kind: sift

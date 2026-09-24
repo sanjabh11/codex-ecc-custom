@@ -1,0 +1,25 @@
+name: drift
+version: '1'
+extractor: python3 label_drift.py
+artifact: drift-labels.jsonl
+description: 'Project-drift detector: label each project''s session cluster for momentum'
+questions:
+  health:
+    type: choice
+    instructions: Given this project's session statistics and recent goals, classify
+      its trajectory.
+    criteria:
+      converging: Sessions show forward progress, resolving goals, declining corrections.
+      grinding: Work continues but sessions repeat fixes, corrections, or re-explanations.
+      stalling: Recent sessions show loops, blockers, or goals going unresolved.
+      abandonment-risk: Pattern matches prior abandoned projects — long effort, thinning
+        outcomes.
+  intervention_worth:
+    type: noul
+    instructions: A focused intervention (reset scope, fresh plan, or pause) would
+      likely change this trajectory.
+    criteria:
+      'true': Intervention would plausibly recover or redirect the project.
+      'false': Trajectory is healthy, or intervention unlikely to help.
+decision:
+  kind: sift

@@ -1,0 +1,97 @@
+name: project-triage
+version: 1
+extractor: python3 label_portfolio.py
+artifact: project-triage.jsonl
+description: >-
+  Verdict pack for the project portfolio at rotation boundaries — revive,
+  fix, or kill each project from its drift-pack health state. State must
+  carry project name, health summary, recent activity, and open blockers.
+questions:
+  recent_momentum:
+    type: score
+    instructions: >-
+      Rate the recent momentum of the project in `project` — sessions,
+      commits, or artifacts produced lately, not historical peaks.
+    criteria:
+      - Dead: no meaningful activity in months.
+      - Only stray touches; effectively stalled.
+      - Slow but alive; occasional real progress.
+      - Regular recent progress.
+      - Strong current momentum; shipping weekly.
+  durable_value:
+    type: score
+    instructions: >-
+      Rate whether finishing or continuing `project` still produces value
+      in the next quarter — aligned with the meta-builder system's goals.
+    criteria:
+      - Value expired; the reason it existed is gone.
+      - Marginal value; nice-to-have at best.
+      - Moderate value; useful but not load-bearing.
+      - Clear value to current systems or revenue paths.
+      - Load-bearing; other work depends on it.
+  completion_proximity:
+    type: score
+    instructions: >-
+      Rate how close `project` is to a shippable or finished state given
+      its health summary — small remaining distance scores high.
+    criteria:
+      - Early stage; most of the work remains.
+      - Roughly a third done with hard parts ahead.
+      - Half done; path visible but real work left.
+      - Mostly done; finishing is a bounded effort.
+      - Nearly done; a push would ship it.
+  low_blockers:
+    type: score
+    instructions: >-
+      Rate how unblocked `project` is — high score means nothing external
+      or unclear is holding it back.
+    criteria:
+      - Hard-blocked on something outside our control.
+      - Significant blockers needing decisions or dependencies.
+      - Some friction; partially blocked.
+      - Minor blockers; mostly clear path.
+      - Fully unblocked; nothing stands in the way.
+  strategic_fit:
+    type: score
+    instructions: >-
+      Rate how well `project` fits the current meta-builder priorities —
+      agent systems, skill ecosystems, automation leverage.
+    criteria:
+      - Off-strategy; unrelated to current direction.
+      - Tangential; weak connection to current systems.
+      - Partial fit; supports the ecosystem indirectly.
+      - Good fit; feeds the meta-system directly.
+      - Core fit; this IS the meta-system work.
+  is_stale:
+    type: noul
+    instructions: >-
+      The premise of `project` is stale — the world, tools, or goals it was
+      built for have changed enough that continuing as-is is wrong.
+    criteria:
+      "true": Premise expired or superseded.
+      "false": Premise still valid.
+  state_sufficient:
+    type: noul
+    instructions: >-
+      The health state for `project` contains enough signal — activity,
+      artifacts, blockers — to judge it without guessing.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    durable_value: 2
+    strategic_fit: 2
+    recent_momentum: 1
+    completion_proximity: 1
+    low_blockers: 1
+  max_level: 4
+  bands:
+    revive: 60
+    fix: 40
+    kill: 0
+  band_order: [kill, fix, revive]
+  veto_nouls:
+    is_stale: 0.8
+  veto_band: kill
+  clarity_question: state_sufficient
+  clarity_floor: 0.4

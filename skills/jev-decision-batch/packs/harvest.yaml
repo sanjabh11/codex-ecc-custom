@@ -1,0 +1,31 @@
+name: harvest
+version: '1'
+extractor: python3 label_harvest.py
+artifact: harvest-labels.jsonl
+description: Session artifact harvester — label each mined session for reusable
+questions:
+  reusable_output:
+    type: noul
+    instructions: This session produced durable reusable output — an artifact, script,
+      decision, or finished work that outlives the chat.
+    criteria:
+      'true': Something durable was produced.
+      'false': Exploration or ephemeral work only.
+  output_kind:
+    type: choice
+    instructions: What kind of reusable output did this session produce?
+    criteria:
+      code-or-script: Working code, scripts, or tools.
+      decision-or-spec: A settled decision, plan, or contract.
+      artifact-doc: Documentation, analysis, or report.
+      data-or-index: A dataset, index, or structured artifact.
+      none: Nothing durable.
+  worth_recovering:
+    type: noul
+    instructions: If the session was abandoned mid-way, its output is still worth
+      retrieving.
+    criteria:
+      'true': Recover it — real value left behind.
+      'false': Nothing lost worth recovering.
+decision:
+  kind: sift

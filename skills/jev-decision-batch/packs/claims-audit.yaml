@@ -1,0 +1,28 @@
+name: claims-audit
+version: '1'
+extractor: python3 label_packs.py --pack claims
+artifact: claim-audit.md
+questions:
+  has_verifiable_claims:
+    type: noul
+    instructions: The text makes specific checkable claims (numbers, citations, dates,
+      named entities).
+    criteria:
+      'true': Checkable claims present.
+      'false': Mostly uncheckable.
+  claims_supported:
+    type: noul
+    instructions: The checkable claims carry supporting evidence (DOI, link, data,
+      quoted source) in the text itself.
+    criteria:
+      'true': Claims cite support.
+      'false': Claims are bare.
+  integrity_risk:
+    type: score
+    instructions: Risk that this note propagates unverified claims downstream.
+    criteria:
+    - Low
+    - Moderate
+    - High
+decision:
+  kind: sift

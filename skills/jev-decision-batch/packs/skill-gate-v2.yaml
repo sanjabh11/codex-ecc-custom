@@ -1,0 +1,97 @@
+name: skill-gate-v2
+version: 1
+extractor: python3 label_skillgate.py
+artifact: skill-gate-results.jsonl
+description: >-
+  Verdict pack for new-skill proposals — replaces the 3-question gate with a
+  weighted multi-angle composite: create / extend / skip plus a review band.
+  State must carry proposal_target, lesson, and catalog_neighbors.
+questions:
+  durable_value:
+    type: score
+    instructions: >-
+      Rate the durable value of the proposal in `lesson`/`proposal_target`
+      as a reusable capability across many sessions and projects.
+    criteria:
+      - One-off, situational, or already handled by plain code.
+      - Narrowly useful in one project only.
+      - Useful in a handful of recurring situations.
+      - Clearly reusable across projects and agent platforms.
+      - A missing primitive the whole skill system would reuse.
+  novelty:
+    type: score
+    instructions: >-
+      Rate how uncovered this proposal is given `catalog_neighbors` — the
+      closest existing skill names. High novelty means nothing similar exists.
+    criteria:
+      - An existing neighbor already does this job.
+      - Mostly covered; only a small delta is new.
+      - Partially covered by neighbors, real gaps remain.
+      - Largely new territory with minor overlap.
+      - Nothing in the catalog comes close.
+  trigger_clarity:
+    type: score
+    instructions: >-
+      Rate how clearly a router could decide when to fire a skill built from
+      this proposal — a crisp trigger condition, not a vague theme.
+    criteria:
+      - No discernible trigger; overlaps everything.
+      - Trigger exists but collides with many other skills.
+      - Reasonable trigger with some collision risk.
+      - Distinct, nameable trigger condition.
+      - Unmistakable trigger — fires exactly when needed and never otherwise.
+  cheap_to_maintain:
+    type: score
+    instructions: >-
+      Rate how cheap this skill would be to keep correct over time — stable
+      domain, few external dependencies, low drift risk.
+    criteria:
+      - Depends on fast-moving APIs/tools that will rot quickly.
+      - Needs frequent updating to stay correct.
+      - Moderate maintenance; occasional drift.
+      - Mostly stable knowledge or process.
+      - Timeless convention — write once, stays true.
+  evidence_strength:
+    type: score
+    instructions: >-
+      Rate the evidence that this proposal is needed — real incidents,
+      repeated failures, or measured gaps behind it, not speculation.
+    criteria:
+      - Speculative; no incident or evidence cited.
+      - Weak anecdote or single occurrence.
+      - Some evidence; a few occurrences or a plausible pattern.
+      - Repeated failures or a measured gap.
+      - Hard evidence: logged incidents, metrics, or audit findings.
+  already_covered:
+    type: noul
+    instructions: >-
+      Given `catalog_neighbors`, an existing skill already covers this
+      proposal's purpose closely enough that a new skill would duplicate it.
+    criteria:
+      "true": An existing skill substantially covers this.
+      "false": No existing skill covers this purpose.
+  proposal_clear:
+    type: noul
+    instructions: >-
+      A reader can understand what is being proposed from
+      `proposal_target` and `lesson` without guessing.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    durable_value: 2
+    novelty: 2
+    trigger_clarity: 1
+    cheap_to_maintain: 1
+    evidence_strength: 1
+  max_level: 4
+  bands:
+    create: 65
+    extend: 40
+    skip: 0
+  band_order: [skip, extend, create]
+  veto_nouls:
+    already_covered: 0.7
+  veto_band: skip
+  clarity_question: proposal_clear
+  clarity_floor: 0.3

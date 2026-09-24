@@ -1,0 +1,32 @@
+name: traces
+version: '1'
+extractor: python3 label_traces.py
+artifact: traces-labels.jsonl
+description: 'Agent-trace evaluator (LangChain pattern): grade finished runs'' tool-call'
+questions:
+  trace_quality:
+    type: score
+    instructions: 'Grade this agent run''s tool-call trace: were calls efficient (no
+      redundant retries), did errors get handled, did the run converge on the goal?'
+    criteria:
+    - Thrashing — errors unhandled, loops, no convergence
+    - Messy — converged but wasteful or error-heavy
+    - Decent — mostly efficient, minor waste
+    - Clean — efficient, errors handled, clear convergence
+  dominant_issue:
+    type: choice
+    instructions: The trace's dominant problem, if any.
+    criteria:
+      none: No dominant issue.
+      retry-loop: Same tool retried repeatedly without progress.
+      error-blind: Tool failures ignored or unhandled.
+      scope-drift: Tool calls wandered off the goal.
+      tool-misuse: Wrong tool chosen for the task.
+  reusable_pattern:
+    type: noul
+    instructions: This trace demonstrates a tool-use sequence worth reusing as a pattern.
+    criteria:
+      'true': A clean, reusable sequence exists here.
+      'false': Nothing worth templating.
+decision:
+  kind: sift

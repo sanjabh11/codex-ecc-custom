@@ -1,0 +1,98 @@
+name: backlog-triage
+version: 1
+extractor: python3 label_backlog.py
+artifact: backlog-triage.jsonl
+description: >-
+  Verdict pack for backlog items — GSD parking-lot entries, upstream-sync
+  candidates, marketplace imports. adopt / adapt / reject plus a review band.
+  State must carry the item text, source, and nearest existing coverage.
+questions:
+  value:
+    type: score
+    instructions: >-
+      Rate the outcome value of the item in `item` if completed — real
+      capability gained, not activity for its own sake.
+    criteria:
+      - No discernible value on completion.
+      - Marginal polish; barely moves anything.
+      - Moderate value; one workflow improves.
+      - Clear value; removes real friction or adds capability.
+      - High leverage; unblocks or compounds other work.
+  low_effort:
+    type: score
+    instructions: >-
+      Rate how cheap the item in `item` is to complete — high score means
+      a small, bounded change.
+    criteria:
+      - Multi-week project of its own.
+      - Days of work with real unknowns.
+      - A focused day or two.
+      - Hours of bounded work.
+      - Near-trivial; minutes with known pattern.
+  alignment:
+    type: score
+    instructions: >-
+      Rate how well `item` fits the current architecture and priorities —
+      consistent with the batch/engine/skill direction, not a parallel
+      system.
+    criteria:
+      - Conflicts with current architecture or decisions.
+      - Parallel approach duplicating existing machinery.
+      - Neutral; neither helps nor conflicts.
+      - Consistent with current direction.
+      - Directly advances the current architecture.
+  risk_safety:
+    type: score
+    instructions: >-
+      Rate how safe `item` is to implement — blast radius, reversibility,
+      test coverage.
+    criteria:
+      - Dangerous: global writes, irreversible, or untestable.
+      - Risky: touches many systems, thin verification.
+      - Moderate risk with reasonable containment.
+      - Low risk; bounded and verifiable.
+      - Trivially safe; isolated and fully reversible.
+  novelty:
+    type: score
+    instructions: >-
+      Rate how uncovered `item` is given `nearest_coverage` — existing
+      skills, scripts, or systems that already do this.
+    criteria:
+      - Fully covered already.
+      - Mostly covered; thin delta.
+      - Partially covered.
+      - Mostly new.
+      - Completely uncovered need.
+  already_covered:
+    type: noul
+    instructions: >-
+      Given `nearest_coverage`, the item in `item` is already handled by an
+      existing skill, script, or system.
+    criteria:
+      "true": Already handled.
+      "false": Not handled anywhere.
+  item_clear:
+    type: noul
+    instructions: >-
+      The item in `item` is specific enough to judge — concrete scope and
+      outcome, not a vague wish.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    value: 2
+    alignment: 2
+    low_effort: 1
+    risk_safety: 1
+    novelty: 1
+  max_level: 4
+  bands:
+    adopt: 65
+    adapt: 40
+    reject: 0
+  band_order: [reject, adapt, adopt]
+  veto_nouls:
+    already_covered: 0.7
+  veto_band: reject
+  clarity_question: item_clear
+  clarity_floor: 0.3

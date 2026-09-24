@@ -1,0 +1,28 @@
+name: outreach
+version: '1'
+extractor: python3 label_packs.py --pack outreach
+artifact: outreach-gate.md
+questions:
+  spam_risk:
+    type: noul
+    instructions: This outreach message would read as generic spam to a busy consultant.
+    criteria:
+      'true': Reads templated/spammy.
+      'false': Reads specific and respectful.
+  fit:
+    type: score
+    instructions: How well does this draft match a consultant outreach context for
+      the Canada Energy Intelligence Platform?
+    criteria:
+    - Poor fit
+    - Partial
+    - Good
+    - Excellent
+  sendable:
+    type: noul
+    instructions: This draft could be sent as-is without embarrassing the sender.
+    criteria:
+      'true': Sendable as-is.
+      'false': Needs editing.
+decision:
+  kind: sift

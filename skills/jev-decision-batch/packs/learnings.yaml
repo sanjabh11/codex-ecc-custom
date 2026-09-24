@@ -1,0 +1,27 @@
+name: learnings
+version: '1'
+extractor: python3 label_learnings.py
+artifact: learnings-labels.jsonl
+description: 'Classify LEARNINGS.md entries + session-mined promotable lessons with
+  Jev:'
+questions:
+  promotion_decision:
+    type: choice
+    instructions: A self-improvement pipeline must decide whether this lesson should
+      become durable agent instructions. Choose the best fate.
+    criteria:
+      promote-to-skill: Create a new dedicated skill or major section — the lesson
+        is broad, reusable, and has no home.
+      update-existing-skill: Patch an existing skill/rule file — the lesson refines
+        something that already exists.
+      keep-as-log: Valuable context but too narrow or situational to encode as instructions.
+      stale-skip: Already covered, outdated, or not actionable — no promotion value.
+  promotion_value:
+    type: noul
+    instructions: Would encoding this lesson as agent instructions plausibly prevent
+      a real repeated failure or repeat a proven success?
+    criteria:
+      'true': Concrete, transferable, would change future behavior.
+      'false': Too specific to one session, or generic advice.
+decision:
+  kind: sift

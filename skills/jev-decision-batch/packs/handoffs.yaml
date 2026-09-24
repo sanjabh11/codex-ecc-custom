@@ -1,0 +1,32 @@
+name: handoffs
+version: '1'
+extractor: python3 label_handoffs.py
+artifact: handoffs-labels.jsonl
+description: 'Multi-agent handoff gate: score t2a handoff artifacts for contract'
+questions:
+  contract_complete:
+    type: noul
+    instructions: 'This handoff states enough for the receiving agent to act safely:
+      explicit scope, expected artifacts, verification steps, and authority/limits.'
+    criteria:
+      'true': Complete contract — scope, artifacts, verification, limits.
+      'false': Missing one or more contract elements.
+  defect_type:
+    type: choice
+    instructions: Dominant defect class in this handoff, if any.
+    criteria:
+      none: No defect evident.
+      ambiguous-scope: Receiver could act on the wrong target.
+      missing-verification: No stated way to confirm completion.
+      stale-or-conflicting: Contradicts other stated state or prior versions.
+      authority-gap: Unclear who may approve/execute what.
+  actability:
+    type: score
+    instructions: How safely could a receiving agent execute this handoff as written?
+    criteria:
+    - Unsafe — would likely cause a defect
+    - Risky — needs clarification first
+    - Sound — minor gaps only
+    - Solid — fully executable as written
+decision:
+  kind: sift

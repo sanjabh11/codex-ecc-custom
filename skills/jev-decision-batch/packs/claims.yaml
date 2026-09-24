@@ -1,0 +1,28 @@
+name: claims
+version: '1'
+extractor: python3 label_claims_extract.py
+artifact: claims-labels.jsonl
+description: 'Claim extraction pass: pull candidate checkable claims from vault notes'
+questions:
+  checkable:
+    type: noul
+    instructions: This sentence makes a specific, verifiable factual claim.
+    criteria:
+      'true': A fact that could be verified or falsified.
+      'false': Opinion, procedure, or uncheckable.
+  supported:
+    type: noul
+    instructions: The sentence carries its own support (DOI, URL, citation, quoted
+      source).
+    criteria:
+      'true': Support present in the sentence.
+      'false': Bare claim, no citation.
+  needs_source:
+    type: choice
+    instructions: What does this claim need?
+    criteria:
+      none: Fine as-is — supported or not a claim.
+      citation: Needs a DOI/link/reference added.
+      verify: Needs re-checking — possibly wrong or stale.
+decision:
+  kind: sift

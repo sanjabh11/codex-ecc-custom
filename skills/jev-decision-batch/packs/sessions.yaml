@@ -1,0 +1,40 @@
+name: sessions
+version: '1'
+extractor: python3 label_sessions.py
+artifact: sessions-labels.jsonl
+questions:
+  failure_mode:
+    type: choice
+    instructions: Which single failure pattern best describes this session? Judge
+      only the dominant observed pattern; insufficient-evidence when the record is
+      too thin.
+    criteria:
+      stuck-loop: The session repeated attempts or circled without converging.
+      wrong-tool: Progress failed mainly because an unsuitable tool, model, or approach
+        was used.
+      context-rot: Long or accumulated context caused drift, forgotten instructions,
+        or contradictions.
+      user-correction-storm: The user repeatedly corrected direction or output.
+      external-blocker: Work stalled on credentials, services, rate limits, or other
+        external factors.
+      clean: The session progressed without a dominant failure pattern.
+      insufficient-evidence: Too little signal in the record to judge a failure mode.
+  promotable_lesson:
+    type: noul
+    instructions: Does this session contain a specific, reusable lesson worth promoting
+      into a skill, rule, or checklist — something that would prevent a repeat failure
+      or repeat a proven success?
+    criteria:
+      'true': A concrete transferable lesson is present.
+      'false': Nothing reusable, or only generic/obvious takeaways.
+  session_quality:
+    type: score
+    instructions: How well did the session resolve its documented goal?
+    criteria:
+    - Goal unresolved or abandoned.
+    - Partial progress only; outcome unclear or incomplete.
+    - Completion claimed without corroborating check evidence.
+    - Completion with relevant check or verification evidence.
+    - Explicit user acceptance or clearly verified success.
+decision:
+  kind: sift
