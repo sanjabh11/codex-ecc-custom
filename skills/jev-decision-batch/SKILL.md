@@ -75,6 +75,7 @@ tokens, `est_cost_usd`, decision histogram — the audit/rollback record).
 | pack | corpus | artifact | kind |
 |---|---|---|---|
 | reviewer | artifact files / SKILL.mds | review-report | sift |
+| chief-handoff | interactive goal + notes (chief.py `run_one`) | research/write/review | single item — governed path only, never batch |
 | skill-gate-v2 | skill proposals + roster | create/extend/skip | verdict |
 | project-triage | project-health.json | revive/fix/kill | verdict |
 | backlog-triage | backlog/upstream/marketplace items | adopt/adapt/reject | verdict |
