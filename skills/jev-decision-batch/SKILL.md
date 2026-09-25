@@ -106,6 +106,25 @@ tokens, `est_cost_usd`, decision histogram — the audit/rollback record).
 - `build_criteria.py`: generated per-skill `not_for` sibling lists from
   dedup/confusion data → `routing-criteria.json` → router table v2.
 
+## Decision infrastructure (meta-attention blueprint layer)
+
+Modules in `~/jev-starter` — each is a standard library CLI + importable module:
+
+| module | what it does |
+|---|---|
+| `contract.py` | `decision-contract.v1`: pins question types, confidence bands, sensitivity, cache namespace. `contract_from_pack()` derives it from any pack; its hash rides inside `schema_version` → every cache key. |
+| `telemetry.py` | append-only `artifacts/telemetry.jsonl`: model, tokens, latency, cache status, cost per request — never state content. `codex_rollout_telemetry.py` mines `~/.codex/sessions` rollouts into the same shape + MCP usage summary. |
+| `task_packet.py` | `task-packet.v1`: goal, scope, read/write paths, allowed tools, model policy, budget, checkpoint cadence, completion evidence. `--emit-template`, `--validate`, `--conflicts` (parallel-write safety). `packs.py --task-packet` validates before any spend. |
+| `exec_gate.py` | `allow/ask/deny` on command strings with script-content inspection (egress, env-secret reads, out-of-root writes, destructive ops, shared state). `scripts/jev-exec -- <cmd>` wrapper; `JEV_EXEC_CONFIRM=1` approves ask. |
+| `sensitivity.py` | classify paths/text → `public/standard/restricted/proprietary`. |
+| `route_decision.py` | context-rebuild-cost routing (blueprint X/Y/Z math) + trust tiers. Cheap route wins only with a small purpose-built context AND no frontier re-read. |
+| `build_compact_index.py` | 3-tier disclosure index (one-liner → schema pointer → docs) over roster + `~/.codex/config.toml` MCP/agents → `artifacts/compact-index.json`. |
+| `instructions_manifest.py` | conditional instruction loading: glob/intent → fragment paths; `emit_global_core` for slim AGENTS.md cores. Live manifest: `~/.codex/instructions/manifest.yaml`. |
+| `chunks.py` | immutable reversible context blocks (hidden/short/long/full renders; raw never deleted) — visibility-ladder substrate. |
+| `goals.py` | goal-key dedup registry + ro/rw declarations for parallel work. |
+| `policy_flags.py` | rollback switch: `policy.json` or `JEV_FEATURES=off|-telemetry,...` disables contract/telemetry/exec_gate/route_decision/visibility/goal_dedup. |
+| `audit_health.py` | monthly drift audit: pack health, undocumented packs, artifact staleness (>45d → recalibrate), zero-use MCP signal, disabled features. |
+
 ## Rules
 
 - One-shot only: extract → label → artifact → done. No per-turn Jev.
