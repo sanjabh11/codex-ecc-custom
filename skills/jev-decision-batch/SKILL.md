@@ -113,15 +113,15 @@ Modules in `~/jev-starter` — each is a standard library CLI + importable modul
 | module | what it does |
 |---|---|
 | `contract.py` | `decision-contract.v1`: pins question types, confidence bands, sensitivity, cache namespace. `contract_from_pack()` derives it from any pack; its hash rides inside `schema_version` → every cache key. |
-| `telemetry.py` | append-only `artifacts/telemetry.jsonl`: model, tokens, latency, cache status, cost per request — never state content. Emitted centrally by `BatchRunner.run` so every engine caller is covered. `codex_rollout_telemetry.py` mines `~/.codex/sessions` rollouts into the same shape + MCP usage summary. |
+| `telemetry.py` | append-only `artifacts/telemetry.jsonl`: model, tokens, latency, cache status, cost per request — never state content. Emitted centrally by `BatchRunner.run` so every engine caller is covered; write failures surface on `runner.last_telemetry_error` and `packs.py` exits non-zero. `extra` keys are redacted (`SENSITIVE_EXTRA_KEYS`). `codex_rollout_telemetry.py` mines `~/.codex/sessions` rollouts into the same shape + MCP usage summary. |
 | `task_packet.py` | `task-packet.v1`: goal, scope, read/write paths, allowed tools, model policy, budget, checkpoint cadence, completion evidence. `--emit-template`, `--validate`, `--conflicts` (parallel-write safety). `packs.py --task-packet` enforces `token_budget` (caps spend) and `sensitivity_ceiling` (refuses packs above it). |
 | `exec_gate.py` | `allow/ask/deny` on command strings with script-content inspection (egress, env-secret reads, out-of-root writes, destructive ops, shared state). `scripts/jev-exec -- <cmd>` wrapper; `JEV_EXEC_CONFIRM=1` approves ask. Also wired as a real Codex `PreToolUse` Bash hook (`~/.codex/hooks/jev-exec-gate.sh`): deny→block, ask→allow+telemetry, fail-open on errors. |
 | `sensitivity.py` | classify paths/text → `public/standard/restricted/proprietary`. |
-| `route_decision.py` | context-rebuild-cost routing (blueprint X/Y/Z math) + trust tiers. Cheap route wins only with a small purpose-built context AND no frontier re-read. |
+| `route_decision.py` | context-rebuild-cost routing (blueprint X/Y/Z math) + trust tiers. Cheap route wins only with a small purpose-built context AND no frontier re-read. Prices/trust live in `artifacts/routing-policy.json` (routing-policy.v1). |
 | `build_compact_index.py` | 3-tier disclosure index (one-liner → schema pointer → docs) over roster + `~/.codex/config.toml` MCP/agents → `artifacts/compact-index.json`. |
 | `instructions_manifest.py` | conditional instruction loading: glob/intent → fragment paths; `emit_global_core` for slim AGENTS.md cores. Live manifest: `~/.codex/instructions/manifest.yaml`. |
-| `chunks.py` | immutable reversible context blocks (hidden/short/long/full renders; raw never deleted) — visibility-ladder substrate. |
-| `goals.py` | goal-key dedup registry + ro/rw declarations for parallel work. |
+| `chunks.py` | **DORMANT substrate** — immutable reversible context blocks (hidden/short/long/full renders; raw never deleted). No production consumer wired yet; do not claim the visibility ladder is live until a context-assembly caller exists. |
+| `goals.py` | **DORMANT substrate** — goal-key dedup registry + ro/rw declarations for parallel work. No native Codex-goal or dispatcher integration yet; treat as infrastructure, not a live control. |
 | `policy_flags.py` | rollback switch: `policy.json` or `JEV_FEATURES=off|-telemetry,...` disables contract/telemetry/exec_gate/route_decision/visibility/goal_dedup. |
 | `audit_health.py` | monthly drift audit: pack health, undocumented packs, artifact staleness (>45d → recalibrate), zero-use MCP signal, disabled features. |
 
@@ -133,3 +133,12 @@ Modules in `~/jev-starter` — each is a standard library CLI + importable modul
 - New corpus = new extractor + new pack YAML. Bump `version` when question
   or verdict semantics change (it re-keys the cache).
 - Approval auto-triage stays code-only: `gate_check.py` + `risk-policy.json`.
+- **Hard gates**: `tests/test_governed_callers.py` freezes the direct
+  `BatchRunner`/`TypeSafeClient` caller list — new engine callers are a test
+  failure, not a convention. `enrich_skills --advisory` requires
+  `JEV_ADVISORY_ACK=1` (recorded to telemetry) — no implicit bypass of a
+  failed calibration gate. Session bulk labeling (`label_sessions.py`) needs
+  its own 20–30-item calibration pass before any large run.
+- **Budgets are pre-reserved**: `jev_batch` estimates input tokens before
+  submit and halts when `live + in-flight estimates > max_tokens`, so the
+  worker pool can't overshoot the cap.
