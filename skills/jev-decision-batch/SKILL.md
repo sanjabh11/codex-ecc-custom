@@ -113,9 +113,9 @@ Modules in `~/jev-starter` — each is a standard library CLI + importable modul
 | module | what it does |
 |---|---|
 | `contract.py` | `decision-contract.v1`: pins question types, confidence bands, sensitivity, cache namespace. `contract_from_pack()` derives it from any pack; its hash rides inside `schema_version` → every cache key. |
-| `telemetry.py` | append-only `artifacts/telemetry.jsonl`: model, tokens, latency, cache status, cost per request — never state content. `codex_rollout_telemetry.py` mines `~/.codex/sessions` rollouts into the same shape + MCP usage summary. |
-| `task_packet.py` | `task-packet.v1`: goal, scope, read/write paths, allowed tools, model policy, budget, checkpoint cadence, completion evidence. `--emit-template`, `--validate`, `--conflicts` (parallel-write safety). `packs.py --task-packet` validates before any spend. |
-| `exec_gate.py` | `allow/ask/deny` on command strings with script-content inspection (egress, env-secret reads, out-of-root writes, destructive ops, shared state). `scripts/jev-exec -- <cmd>` wrapper; `JEV_EXEC_CONFIRM=1` approves ask. |
+| `telemetry.py` | append-only `artifacts/telemetry.jsonl`: model, tokens, latency, cache status, cost per request — never state content. Emitted centrally by `BatchRunner.run` so every engine caller is covered. `codex_rollout_telemetry.py` mines `~/.codex/sessions` rollouts into the same shape + MCP usage summary. |
+| `task_packet.py` | `task-packet.v1`: goal, scope, read/write paths, allowed tools, model policy, budget, checkpoint cadence, completion evidence. `--emit-template`, `--validate`, `--conflicts` (parallel-write safety). `packs.py --task-packet` enforces `token_budget` (caps spend) and `sensitivity_ceiling` (refuses packs above it). |
+| `exec_gate.py` | `allow/ask/deny` on command strings with script-content inspection (egress, env-secret reads, out-of-root writes, destructive ops, shared state). `scripts/jev-exec -- <cmd>` wrapper; `JEV_EXEC_CONFIRM=1` approves ask. Also wired as a real Codex `PreToolUse` Bash hook (`~/.codex/hooks/jev-exec-gate.sh`): deny→block, ask→allow+telemetry, fail-open on errors. |
 | `sensitivity.py` | classify paths/text → `public/standard/restricted/proprietary`. |
 | `route_decision.py` | context-rebuild-cost routing (blueprint X/Y/Z math) + trust tiers. Cheap route wins only with a small purpose-built context AND no frontier re-read. |
 | `build_compact_index.py` | 3-tier disclosure index (one-liner → schema pointer → docs) over roster + `~/.codex/config.toml` MCP/agents → `artifacts/compact-index.json`. |
