@@ -94,6 +94,12 @@ tokens, `est_cost_usd`, decision histogram — the audit/rollback record).
 | subscriptions | subscription candidates | subscription-labels | sift |
 | traces | tool-call traces | trace-labels | sift |
 | approvals | approval-gate decisions | approval-labels | sift |
+| browser-verify | rendered page/artifact captures | browser-verify | verdict |
+| security-findings | static-analysis findings | security-findings | verdict |
+| tool-route | single tool/command calls | tool-route | verdict |
+| browser-verify | rendered page/artifact captures | browser-verify | verdict |
+| security-findings | static-analysis findings | security-findings | verdict |
+| tool-route | single tool/command calls | tool-route | verdict |
 
 ## Engine capabilities (jev_batch.BatchRunner)
 
