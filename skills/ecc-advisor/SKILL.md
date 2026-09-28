@@ -34,12 +34,13 @@ You (the harness model) are the **executor**. A stronger model is your **advisor
 
 The skill automatically selects the best available advisor backend:
 
-| Priority | Backend | Harness | Advisor Model | How | API Key Needed |
-|---|---|---|---|---|---|
-| 1 | **Native Claude Advisor API** | Claude Code | Opus 4.6 or Fable 5 | `advisor_20260301` server-side tool | No (uses Claude subscription) |
-| 2 | **Codex-Orchestration plugin** | Codex | Fable 5 via MCP | `codex-orchestration` plugin seats | No (uses Codex subscription) |
-| 3 | **Grok CLI** | Any harness | Grok 4.5 | `python3 "$(git root)/fable/advisor_cli.py"` or `python3 "$ADVISOR_CLI_PATH"` | No (Super Grok CLI OAuth token) |
-| 4 | **Graceful fallback** | Any | None | Proceed without advisor | N/A |
+| Priority | Backend | Harness | Advisor Model | How | API Key Needed | CLI Status |
+|---|---|---|---|---|---|---|
+| 1 | **Native Claude Advisor API** | Claude Code | Opus 4.6 or Fable 5 | `advisor_20260301` server-side tool | No (uses Claude subscription) | Detection only — CLI returns fallback; harness calls advisor directly |
+| 2 | **Codex-Orchestration plugin** | Codex | Fable 5 via MCP | `codex-orchestration` plugin seats | No (uses Codex subscription) | Detection only — CLI falls back to grok_cli |
+| 3 | **Jev / Vercel AI Gateway** | Cline, Codex, Devin, Antigravity | gemini-2.5-flash-lite (fallback gpt-4o) | `bash skills/ecc-advisor/scripts/call_advisor.sh` | No (`AI_GATEWAY_API_KEY`/`JEV_API_KEY` env or `cline-jev-browser.config.json` plugin config) | **Fully implemented** |
+| 4 | **Grok CLI** | Any harness | Grok 4.5 | same wrapper | No (Super Grok CLI OAuth token at `~/.grok/auth.json`) | **Fully implemented** |
+| 5 | **Graceful fallback** | Any | None | Proceed without advisor | N/A | Always available |
 
 ### Backend 1: Native Claude Advisor API (preferred for Claude Code)
 
@@ -70,14 +71,16 @@ When the `codex-orchestration` plugin is installed, it provides explicit seat as
 
 The PLAN_APPROVED/PLAN_REVISE protocol supports up to 5 review rounds. Use truthful route states from `ecc-model-route` to report which model actually ran.
 
-### Backend 3: Grok CLI (cross-harness fallback)
+### Backend 3/4: CLI backends (Jev Gateway primary, Grok fallback)
 
-Works on any harness. The executor calls a CLI script that sends context to Grok 4.5:
+Works on any harness. The executor calls a wrapper script that resolves the canonical `fable/advisor_cli.py` and sends context to the detected backend (Jev / Vercel AI Gateway when gateway credentials exist, else Grok CLI when `~/.grok/auth.json` exists):
+
+**Path Resolution:** always invoke via `bash skills/ecc-advisor/scripts/call_advisor.sh` — never `python3 fable/advisor_cli.py` directly (that path is CWD/git-root relative and breaks outside the canonical repo). The wrapper resolves, in order: `$FABLE_DIR`, the skill's own repo sibling path, `~/codex-ecc-custom/fable/advisor_cli.py`, then the git root.
 
 1. Work on the task normally — read files, run commands, orient
 2. **Before substantive work** (writing code, committing to an approach), call the advisor:
    ```bash
-   python3 fable/advisor_cli.py "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
+   bash skills/ecc-advisor/scripts/call_advisor.sh "I'm working on X. My current approach is Y. The key decision is Z. Should I proceed?"
    ```
 3. Read the advisor's response and give it serious weight
 4. If the advisor points out a flaw, adapt. If it confirms your approach, proceed with confidence
@@ -118,18 +121,19 @@ If you've already retrieved data pointing one way and the advisor points another
 - Advisor calls are capped per session (configurable)
 - The executor decides when to call — not every turn, only at decision points
 - Advisor output is concise (200-700 tokens depending on backend)
+- Nudge turn: config `nudge_turn` (default 2) controls when the executor is reminded to call the advisor if it hasn't yet
 
 ### Grok CLI Backend
 - Max 3 advisor calls per session (configurable in `fable/advisor_config.json`)
-- Check status: `python3 fable/advisor_cli.py --status`
-- Reset counter: `python3 fable/advisor_cli.py --reset`
+- Check status: `bash skills/ecc-advisor/scripts/call_advisor.sh --status`
+- Reset counter: `bash skills/ecc-advisor/scripts/call_advisor.sh --reset`
 - Advisor output capped at 2048 tokens per call
 - Timeout: 120s per call (configurable via `timeout_seconds` in config)
 - Retry: 1 retry on failure (configurable via `retry_attempts` in config)
-- Dry run: `python3 fable/advisor_cli.py --dry-run "<context>"` (no call budget consumed)
-- JSON output: `python3 fable/advisor_cli.py --json "<context>"` (for programmatic use)
-- Context from file: `python3 fable/advisor_cli.py --context-file <path> "<question>"`
-- Session isolation: `python3 fable/advisor_cli.py --session <id> "<context>"`
+- Dry run: `bash skills/ecc-advisor/scripts/call_advisor.sh --dry-run "<context>"` (no call budget consumed)
+- JSON output: `bash skills/ecc-advisor/scripts/call_advisor.sh --json "<context>"` (for programmatic use)
+- Context from file: `bash skills/ecc-advisor/scripts/call_advisor.sh --context-file <path> "<question>"`
+- Session tagging: `bash skills/ecc-advisor/scripts/call_advisor.sh --session <id> "<context>"` (tags history entries for audit trail; call count is global)
 
 ### Native Claude Advisor API Backend
 - `max_uses` parameter caps calls per API request (primary cost control)
@@ -151,7 +155,7 @@ The advisor sees ONLY what you pass in the CLI argument, so include:
 
 Example:
 ```bash
-python3 fable/advisor_cli.py "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
+bash skills/ecc-advisor/scripts/call_advisor.sh "Building a REST API for a large dataset. Considering offset pagination vs cursor-based. Dataset is 50M rows, needs real-time inserts. Which approach and why?"
 ```
 
 ## Dependency Gating
@@ -216,11 +220,27 @@ as `evidence_limited` in this case.
 Works across all harnesses with automatic backend selection:
 
 - **Cascade / Claude Code** → Native Advisor API (Opus/Fable 5 advisor) — preferred
-- **Codex** → Codex-Orchestration plugin (Fable 5 advisor) — preferred, or Grok CLI fallback
-- **Windsurf / Devin** → Grok CLI (Grok 4.5 advisor) — cross-harness fallback
-- **Anti-Gravity** → Grok CLI (Grok 4.5 advisor) — cross-harness fallback
+- **Codex** → Codex-Orchestration plugin (Fable 5 advisor) — preferred, or Jev Gateway / Grok CLI fallback
+- **Windsurf / Devin** → Jev Gateway or Grok CLI — cross-harness fallback
+- **Autogravity (Anti-Gravity)** → Jev Gateway or Grok CLI — cross-harness fallback
+
+**Windows note:** The CLI uses `signal.alarm()` for timeout on Unix. On Windows, the signal-based timeout is skipped and the underlying `requests` library timeout is used instead.
 
 The advisor is always a stronger model than the executor. The specific pairing depends on which backend is available in the current harness.
+
+## Auto-Revocation
+
+The advisor can be remotely disabled — checked before any backend call:
+
+- `fable/advisor_config.json` → `"revoked": true` (+ optional `revocation_reason`, `revoked_until` ISO timestamp for temporary revocation)
+- `ECC_ADVISOR_REVOKED=1` env var
+- A missing/corrupt config file **fails closed** — calls are treated as revoked rather than allowed.
+
+When revoked, `get_advice` returns a `[Advisor] Revoked:` message and the executor proceeds without advisor. Use `--unrevoke` (CLI flag) to clear a manual revocation.
+
+## Portability Note
+
+Skill copies exist under several roots (`~/.agents/skills/` symlinked, `~/.windsurf/skills/`, this repo). Only `scripts/call_advisor.sh` is location-safe: it resolves `$FABLE_DIR`, then the skill's own repo sibling, then `~/codex-ecc-custom/fable/advisor_cli.py`, then the git root. Any copy of this skill can be invoked from any CWD; all copies share the one canonical `fable/` state file.
 
 ## Backing Skills
 
@@ -232,40 +252,3 @@ The advisor is always a stronger model than the executor. The specific pairing d
 - [Claude API Advisor Tool docs](https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool)
 - [The Advisor Strategy blog post](https://claude.com/blog/the-advisor-strategy)
 - [advisor-middleware (fallback mode pattern)](https://github.com/emanueleielo/advisor-middleware)
-
-## Optimization Contract v1
-
-This contract makes the advisor result auditable without confusing advice with
-execution proof.
-
-```yaml
-contract_version: skill-optimization.v1
-scope: decision-point second opinion for the executing harness
-inputs:
-  - task_context
-  - key_decision
-  - constraints_and_risks
-  - available_backend_status
-outputs:
-  - backend_used
-  - decision
-  - rationale
-  - calls_remaining
-  - unverified_assumptions
-  - next_action
-evidence_policy:
-  advisor_text_is_guidance_not_execution_proof: true
-  record_backend_and_call_budget: true
-  record_fallback_or_unavailability: true
-completion_gate:
-  before_edits: advisor_decision_or_explicit_fallback_record
-  before_done: final_advisor_review_or_explicit_fallback_record
-stop_conditions:
-  - missing_task_context
-  - missing_required_approval
-  - advisor_result_conflicts_with_primary_evidence
-```
-
-The executor must preserve this distinction in its handoff: an advisor can
-recommend, rerank, or identify a risk, but only a command, test, artifact, or
-human approval proves that the recommendation was executed or accepted.

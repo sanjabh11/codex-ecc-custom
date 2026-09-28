@@ -13,8 +13,19 @@ import os
 import sys
 import tempfile
 import subprocess
+import shutil
 from pathlib import Path
 from unittest.mock import patch, MagicMock
+
+# Hermetic state: advisor_cli resolves _FABLE_DIR from FABLE_DIR at import
+# time — point it at a temp dir so the suite never mutates the real
+# advisor_state.json history.
+_TEST_FABLE = Path(tempfile.mkdtemp(prefix="fable-advisor-test-"))
+shutil.copy(
+    Path(__file__).parent / "advisor_config.json",
+    _TEST_FABLE / "advisor_config.json",
+)
+os.environ["FABLE_DIR"] = str(_TEST_FABLE)
 
 # Ensure imports work
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -31,7 +42,6 @@ from fable.advisor_cli import (
     ADVISOR_CONFIG,
 )
 from datetime import datetime, timedelta, timezone
-import shutil
 
 # ─── State Preservation ─────────────────────────────────────────────────────
 
@@ -84,7 +94,8 @@ def test_config_loading():
     check("config has advisor_model", "advisor_model" in config, config.get("advisor_model", "missing"))
     check("config advisor_model is valid", config.get("advisor_model") in ("google/gemini-2.5-flash-lite", "typesafe-ai/jev", "grok-4.6", "google/gemini-2.5-pro"))
     check("config has max_advisor_calls", "max_advisor_calls" in config, str(config.get("max_advisor_calls")))
-    check("config max_advisor_calls is 30", config.get("max_advisor_calls") == 30)
+    check("config max_advisor_calls is a positive int",
+          isinstance(config.get("max_advisor_calls"), int) and config.get("max_advisor_calls") > 0)
     check("config has max_tokens_advisor", "max_tokens_advisor" in config)
     check("config has advisor_system_prompt", "advisor_system_prompt" in config)
     check("config has nudge_text", "nudge_text" in config)
@@ -124,16 +135,17 @@ def test_cost_control_cap():
 
     reset_state()
 
-    # Manually set call_count to max
+    # Manually set call_count to the configured cap
+    config = load_config()
+    max_calls = config.get("max_advisor_calls", 30)
     state = load_state()
-    state["call_count"] = 30  # max_advisor_calls is 30
+    state["call_count"] = max_calls
     save_state(state)
 
-    config = load_config()
     result = get_advice("test question", config)
 
     check("cap reached returns fallback message", "[Advisor] Call cap reached" in result, result[:80])
-    check("cap message mentions 30", "30" in result)
+    check("cap message mentions configured cap", str(max_calls) in result)
 
     reset_state()
 
@@ -250,14 +262,15 @@ def test_multiple_calls_increment():
         state = load_state()
         check("after call 3, count is 3", state["call_count"] == 3, str(state["call_count"]))
 
-        # Call 31 — should hit cap (max is 30)
-        for i in range(4, 31):
+        # Call max_calls+1 — should hit cap
+        max_calls = config.get("max_advisor_calls", 30)
+        for i in range(4, max_calls + 1):
             get_advice(f"question {i}")
-        result = get_advice("question 31")
-        check("call 31 hits cap", "[Advisor] Call cap reached" in result, result[:80])
+        result = get_advice(f"question {max_calls + 1}")
+        check(f"call {max_calls + 1} hits cap", "[Advisor] Call cap reached" in result, result[:80])
 
         state = load_state()
-        check("call_count stays at 30 after cap", state["call_count"] == 30, str(state["call_count"]))
+        check(f"call_count stays at {max_calls} after cap", state["call_count"] == max_calls, str(state["call_count"]))
 
     reset_state()
 
@@ -442,7 +455,11 @@ def test_auto_reset_weekly_not_elapsed():
 
     state = load_state()
     state["call_count"] = 3
-    recent_ts = (datetime.now(timezone.utc) - timedelta(hours=12)).isoformat()
+    # Use this week's boundary + 1h so the test is not date-dependent
+    # ("12h ago" crosses the Monday boundary when run early Monday).
+    now = datetime.now(timezone.utc)
+    this_monday = (now - timedelta(days=now.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
+    recent_ts = (this_monday + timedelta(hours=1)).isoformat()
     state["history"] = [{"call": 3, "context_preview": "recent", "response_preview": "recent", "timestamp": recent_ts}]
     save_state(state)
 

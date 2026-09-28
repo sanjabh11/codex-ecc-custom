@@ -265,10 +265,13 @@ def detect_backend() -> str:
     if os.environ.get("CLAUDE_ADVISOR_ENABLED") == "true":
         return "claude_native"
 
-    # Check for Codex-Orchestration plugin
-    codex_plugin = Path.home() / ".codex" / "plugins" / "codex-orchestration"
-    if codex_plugin.exists():
-        return "codex_orchestration"
+    # Check for Codex-Orchestration plugin (installed under plugins/cache)
+    for codex_plugin in (
+        Path.home() / ".codex" / "plugins" / "codex-orchestration",
+        Path.home() / ".codex" / "plugins" / "cache" / "codex-orchestration",
+    ):
+        if codex_plugin.exists():
+            return "codex_orchestration"
 
     # Check for Jev / Vercel AI Gateway credentials
     if JevGatewayService.has_credentials():
@@ -361,6 +364,37 @@ def get_advice(
 
     advisor_model = str(config.get("advisor_model", "")).strip()
 
+    # --- Stage 1: Jev evaluation model decides (probabilities + verdicts) ---
+    # When enabled and the Jev gateway is active, typesafe-ai/jev evaluates the
+    # context first. The language model below is only the communicator: it must
+    # faithfully phrase Jev's verdict, not make its own decision.
+    eval_answers = None
+    if selected_backend == "jev_gateway" and config.get("advisor_eval_enabled", False):
+        eval_model = str(config.get("advisor_eval_model", "typesafe-ai/jev")).strip()
+        eval_questions = config.get("advisor_eval_questions") or {
+            "sound": {
+                "type": "boolean",
+                "instructions": "Is the executor's stated plan, reasoning, or position sound and safe to proceed with as described?",
+            },
+            "verdict": {
+                "type": "choice",
+                "instructions": "What should the executor do?",
+                "criteria": {
+                    "proceed": "the plan is sound; continue as described",
+                    "revise": "there is a specific flaw or a better approach; change course",
+                    "stop": "blocked, unsafe, or fundamentally wrong; halt",
+                },
+            },
+            "unaddressed_risk": {
+                "type": "boolean",
+                "instructions": "Is there a material failure mode or bias the executor has not addressed?",
+            },
+        }
+        ev_svc = JevGatewayService(api_key="", mock_mode=False, model=eval_model)
+        ev_res = ev_svc.evaluate(context, eval_questions, timeout=int(config.get("timeout_seconds", 120)))
+        if isinstance(ev_res, dict) and ev_res.get("answers"):
+            eval_answers = ev_res["answers"]
+
     if selected_backend == "jev_gateway":
         model = advisor_model or "openai/gpt-4o"
         svc = JevGatewayService(api_key="", mock_mode=False, model=model)
@@ -379,15 +413,34 @@ def get_advice(
             )
 
     # Build advisor prompt from template
-    system_prompt = config.get(
-        "advisor_system_prompt",
-        "You are a high-capability advisor. Provide focused guidance in under 200 words.",
-    )
-    user_prompt = (
-        f"Context from executor:\n{context}\n\n"
-        "Provide focused guidance (under 200 words). "
-        "Do not write code — direct the executor to the right approach."
-    )
+    if eval_answers is not None:
+        # Stage 2: the language model is ONLY the communicator. Jev's structured
+        # verdict is authoritative; the LM phrases it for the executor.
+        system_prompt = config.get(
+            "advisor_communicator_prompt",
+            "You are the communication layer for an evaluation model that already made the decision. "
+            "Your job is to faithfully interpret its signals into clear, actionable guidance for the executor. "
+            "Never override, soften, or contradict the verdict. If verdict=proceed, confirm briefly. "
+            "If verdict=revise, identify the precise flaw. If verdict=stop, state what is blocked. "
+            "If unaddressed_risk is true, name the most likely risk. Under 200 words. Do not write code.",
+        )
+        user_prompt = (
+            f"Context from executor:\n{context}\n\n"
+            f"Authoritative evaluation signals (from the decision model — do not contradict):\n"
+            f"{json.dumps(eval_answers, indent=2)}\n\n"
+            "Communicate these signals as focused guidance (under 200 words). "
+            "Make the verdict unmistakable. If unaddressed_risk is true, name the specific risk."
+        )
+    else:
+        system_prompt = config.get(
+            "advisor_system_prompt",
+            "You are a high-capability advisor. Provide focused guidance in under 200 words.",
+        )
+        user_prompt = (
+            f"Context from executor:\n{context}\n\n"
+            "Provide focused guidance (under 200 words). "
+            "Do not write code — direct the executor to the right approach."
+        )
 
     max_tokens = config.get("max_tokens_advisor", 2048)
     timeout_seconds = config.get("timeout_seconds", 120)
@@ -458,6 +511,21 @@ def get_advice(
             )
             if isinstance(fb, str) and not fb.startswith(("[Jev/Gateway]", "[Advisor]")):
                 response = f"[fallback: {fallback_model}] " + fb
+
+    # Prefix the Jev decision signals so they are visible and logged verbatim
+    if eval_answers is not None and isinstance(response, str) and not response.startswith("[Advisor]"):
+        parts = []
+        for qname, ans in eval_answers.items():
+            if not isinstance(ans, dict):
+                continue
+            if ans.get("type") == "boolean" and "probability" in ans:
+                parts.append(f"{qname}={ans['probability']:.2f}")
+            elif ans.get("type") == "choice" and "choice" in ans:
+                conf = ans.get("confidence")
+                parts.append(f"{qname}={ans['choice']}" + (f"({conf:.2f})" if isinstance(conf, (int, float)) else ""))
+            elif ans.get("type") == "score" and "score" in ans:
+                parts.append(f"{qname}={ans['score']}")
+        response = f"[Jev eval: {' | '.join(parts)}]\n{response}"
 
     # Track call in state
     state["call_count"] += 1

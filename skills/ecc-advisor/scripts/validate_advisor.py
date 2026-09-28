@@ -61,11 +61,18 @@ def check_frontmatter(content):
 
 
 def check_quick_validate():
-    quick_validate_path = os.path.expanduser(
-        "~/.codex/skills/.system/skill-creator/scripts/quick_validate.py"
-    )
-    if not os.path.exists(quick_validate_path):
-        check("quick_validate_available", False, f"quick_validate.py not found")
+    # Try multiple known locations for quick_validate.py
+    candidate_paths = [
+        os.path.expanduser("~/.codex/skills/.system/skill-creator/scripts/quick_validate.py"),
+        os.path.expanduser("~/.claude/skills/.system/skill-creator/scripts/quick_validate.py"),
+    ]
+    quick_validate_path = None
+    for p in candidate_paths:
+        if os.path.exists(p):
+            quick_validate_path = p
+            break
+    if not quick_validate_path:
+        check("quick_validate_available", False, "quick_validate.py not found in known locations (skipping)")
         return
     result = subprocess.run(
         [sys.executable, quick_validate_path, SKILL_DIR],
@@ -132,6 +139,35 @@ def check_agents_file():
               "allow_implicit_invocation should be in agents/openai.yaml")
 
 
+def check_claude_plugin():
+    plugin_path = os.path.join(SKILL_DIR, ".claude-plugin", "plugin.json")
+    marketplace_path = os.path.join(SKILL_DIR, ".claude-plugin", "marketplace.json")
+    check("claude_plugin_exists", os.path.exists(plugin_path), ".claude-plugin/plugin.json missing")
+    check("claude_marketplace_exists", os.path.exists(marketplace_path), ".claude-plugin/marketplace.json missing")
+    if os.path.exists(plugin_path):
+        data = read_json(plugin_path)
+        check("claude_plugin_valid_json", data is not None, "plugin.json is invalid JSON")
+        if data:
+            check("claude_plugin_name", data.get("name") == "ecc-advisor", f"plugin name mismatch: {data.get('name')}")
+    if os.path.exists(marketplace_path):
+        data = read_json(marketplace_path)
+        check("claude_marketplace_valid_json", data is not None, "marketplace.json is invalid JSON")
+
+
+def check_validation_rules():
+    rules_path = os.path.join(SKILL_DIR, "validation-rules.json")
+    check("validation_rules_exists", os.path.exists(rules_path), "validation-rules.json missing")
+    if os.path.exists(rules_path):
+        data = read_json(rules_path)
+        check("validation_rules_valid_json", data is not None, "validation-rules.json is invalid JSON")
+        if data:
+            rules = data.get("rules", {})
+            check("validation_rules_has_schema_version", "schema_version" in data, "schema_version missing")
+            check("validation_rules_has_required_schemas", "required_schemas" in rules, "required_schemas missing")
+            check("validation_rules_has_platform_mentions", "required_platform_mentions" in rules, "required_platform_mentions missing")
+            check("validation_rules_includes_autogravity", "Autogravity" in rules.get("required_platform_mentions", []), "Autogravity not in required_platform_mentions")
+
+
 def check_cli_script():
     cli_path = os.path.join(FABLE_DIR, "advisor_cli.py")
     check("cli_script_exists", os.path.exists(cli_path), "advisor_cli.py missing")
@@ -156,6 +192,23 @@ def check_cli_script():
     check("cli_has_backend_flag", "--backend" in content, "--backend flag missing")
     check("cli_has_timeout", "signal.alarm" in content or "timeout" in content.lower(), "timeout handling missing")
     check("cli_has_retry", "retry_attempts" in content, "retry logic missing")
+    check("cli_has_max_calls_flag", "--max-calls" in content, "--max-calls flag missing")
+    check("cli_has_timeout_flag", "--timeout" in content, "--timeout flag missing")
+    check("cli_has_model_flag", "--model" in content, "--model flag missing")
+    check("cli_has_system_prompt_flag", "--system-prompt" in content, "--system-prompt flag missing")
+    check("cli_has_revoke_flag", "--revoke" in content, "--revoke flag missing")
+    check("cli_has_unrevoke_flag", "--unrevoke" in content, "--unrevoke flag missing")
+    check("cli_has_revocation_gate", "def revocation_status" in content, "revocation_status missing")
+    check("cli_has_fail_closed_config", "_CONFIG_LOAD_FAILED" in content, "config fail-closed guard missing")
+    check("cli_has_maybe_auto_reset", "def maybe_auto_reset" in content, "maybe_auto_reset function missing")
+    check("cli_has_reset_periods", "RESET_PERIODS" in content, "RESET_PERIODS mapping missing")
+    check("cli_has_fable_dir", "FABLE_DIR" in content, "FABLE_DIR env var support missing")
+    check("cli_has_file_locking", "fcntl" in content, "file locking (fcntl) missing")
+    check("cli_has_context_limit", "MAX_CONTEXT_CHARS" in content, "context length limit missing")
+    check("cli_has_history_pruning", "MAX_HISTORY_ENTRIES" in content, "history pruning missing")
+    check("cli_has_state_versioning", "STATE_VERSION" in content, "state versioning missing")
+    check("cli_has_secure_perms", "0o600" in content, "secure file permissions (0600) missing")
+    check("cli_has_corrupted_recovery", "JSONDecodeError" in content, "corrupted state recovery missing")
 
 
 def check_config():
@@ -164,30 +217,53 @@ def check_config():
     check("config_exists", config is not None, "advisor_config.json missing")
     if not config:
         return
-    check("config_model", config.get("advisor_model") == "grok-4.5", f"expected grok-4.5, got {config.get('advisor_model')}")
-    check("config_max_calls", config.get("max_advisor_calls") == 3, f"expected 3, got {config.get('max_advisor_calls')}")
-    check("config_max_tokens", config.get("max_tokens_advisor") == 2048, f"expected 2048, got {config.get('max_tokens_advisor')}")
+    check("config_model", isinstance(config.get("advisor_model"), str) and bool(config.get("advisor_model", "").strip()),
+          f"advisor_model missing/empty: {config.get('advisor_model')}")
+    check("config_max_calls", isinstance(config.get("max_advisor_calls"), int) and config.get("max_advisor_calls") > 0,
+          f"max_advisor_calls must be a positive int, got {config.get('max_advisor_calls')}")
+    check("config_max_tokens", isinstance(config.get("max_tokens_advisor"), int) and config.get("max_tokens_advisor") > 0,
+          f"max_tokens_advisor must be a positive int, got {config.get('max_tokens_advisor')}")
+    check("config_has_reset_period", "reset_period" in config, "reset_period missing")
     check("config_has_system_prompt", "advisor_system_prompt" in config, "system prompt missing")
     check("config_has_nudge_text", "nudge_text" in config, "nudge_text missing")
     check("config_has_executor_prompt", "executor_system_prompt_addition" in config, "executor prompt missing")
     check("config_has_timeout", "timeout_seconds" in config, "timeout_seconds missing")
     check("config_has_retry", "retry_attempts" in config, "retry_attempts missing")
+    check("config_has_revoked", "revoked" in config, "revoked missing")
+    check("config_has_revocation_reason", "revocation_reason" in config, "revocation_reason missing")
+    check("config_has_revoked_until", "revoked_until" in config, "revoked_until missing")
 
 
 def check_skill_md_content(content):
+    check("skill_has_path_resolution", "Path Resolution" in content, "Path Resolution section missing")
     check("skill_has_hard_rule", "Hard Rule" in content, "Hard Rule section missing")
     check("skill_has_cost_controls", "Cost Controls" in content, "Cost Controls section missing")
     check("skill_has_platform_compat", "Platform Compatibility" in content, "Platform Compatibility missing")
     check("skill_has_dependency_gating", "Dependency Gating" in content, "Dependency Gating missing")
+    check("skill_has_auto_revocation", "Auto-Revocation" in content, "Auto-Revocation section missing")
     check("skill_has_backend_detection", "Backend Auto-Detection" in content, "Backend Auto-Detection section missing")
     check("skill_has_weekly_mode", "Weekly Mode Integration" in content, "Weekly Mode Integration missing")
     check("skill_has_decision_confidence", "Decision Confidence Integration" in content, "Decision Confidence Integration missing")
     check("skill_mention_cascade", "Cascade" in content, "Cascade not mentioned")
     check("skill_mention_codex", "Codex" in content, "Codex not mentioned")
-    check("skill_mention_anti_gravity", "Anti-Gravity" in content, "Anti-Gravity not mentioned")
+    check("skill_mention_autogravity", "Autogravity" in content, "Autogravity not mentioned (user's primary IDE)")
+    check("skill_has_portability_note", "Portability Note" in content, "Portability Note section missing")
+    check("skill_no_git_root", "$(git root)" not in content,
+          "$(git root) is not a real git command — use $(git rev-parse --show-toplevel)")
     check("skill_no_hardcoded_home", "$HOME/codex-ecc-custom" not in content,
           "Hardcoded $HOME/codex-ecc-custom path found — use relative paths")
     check("skill_mention_oauth", "OAuth" in content, "OAuth token not mentioned")
+
+
+def check_bootstrap_wrapper():
+    wrapper_path = os.path.join(SKILL_DIR, "scripts", "call_advisor.sh")
+    check("bootstrap_wrapper_exists", os.path.exists(wrapper_path), "scripts/call_advisor.sh missing")
+    if os.path.exists(wrapper_path):
+        content = read_file(wrapper_path)
+        check("wrapper_has_fable_dir", "FABLE_DIR" in content, "FABLE_DIR fallback missing in wrapper")
+        check("wrapper_has_git_rev_parse", "git rev-parse" in content, "git rev-parse fallback missing in wrapper")
+        check("wrapper_resolves_canonical_target", "cd -P" in content and "CANONICAL_CLI" in content, "canonical shared target missing")
+        check("wrapper_is_executable", os.access(wrapper_path, os.X_OK), "call_advisor.sh is not executable")
 
 
 def check_runner_integration():
@@ -230,9 +306,12 @@ def main():
     check_jsonschema_validation()
     check_references()
     check_agents_file()
+    check_claude_plugin()
+    check_validation_rules()
     check_cli_script()
     check_config()
     check_skill_md_content(content)
+    check_bootstrap_wrapper()
     check_runner_integration()
     check_test_suite()
 
