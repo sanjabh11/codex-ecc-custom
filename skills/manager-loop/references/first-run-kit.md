@@ -87,3 +87,28 @@ do not mark it done, do not silently re-scope.
   is the plan of record.
 - Inside a phase needing a hard quality bar, run `gauntlet-loop` on the
   deliverable before the phase is reported complete.
+
+## 7. Degraded single-session starter (no second session available)
+
+Announce to the human that the run is degraded, then run both roles in
+this one session using `loop/checklist.md` as the only channel:
+
+```
+This is a degraded Manager Loop run in a single session. The checklist
+file is the only channel between roles.
+
+Header rule: append entries under a named `MANAGER:` or `IMPLEMENTER:`
+header only. No role may rely on memory for the other.
+
+Turn rule: strict alternating turns.
+- MANAGER turn: read the file; plan, approve, or change phases; write
+  the next assignment. Never execute work.
+- IMPLEMENTER turn: read the file; execute the current phase; append
+  results + evidence links. Never re-plan or re-scope.
+
+Gate rule: no phase advances without evidence written to the file first.
+On each turn, re-read loop/checklist.md before acting.
+```
+
+Re-read the file at the start of every turn; compact or reset context
+between role switches where the host allows.

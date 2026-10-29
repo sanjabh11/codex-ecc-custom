@@ -29,4 +29,6 @@ Have it use subagents and ultracode. Do not prescribe the architecture, exact de
 Adaptation note for harness-agnostic use: where it says "Claude Code or
 Codex", substitute the current host; where it says "ultracode", substitute the
 host's highest reasoning effort; where it says "/loop", substitute the host's
-repeat mechanism or explicit re-invocation.
+repeat mechanism or explicit re-invocation. The embedded GitHub URL may be
+replaced with this repo's local `references/canonical-prompt.md` to avoid
+fetching live web content mid-run.

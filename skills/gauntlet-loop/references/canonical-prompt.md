@@ -12,6 +12,10 @@ Fan out sub-agents and have sub-agents tackle each one individually so that the 
 Don't stop until each sub-agent is utterly wowed with the quality when compared with the actual Call of Duty game. It should literally compare them side by side blind and say which one looks better. Do this in ThreeJS. /loop until it's utterly perfect. Fan out sub-agents and ultracode.
 ```
 
+Harness-agnostic note: `/loop` = the host's repeat mechanism or explicit
+re-invocation; `ultracode` = the host's highest reasoning effort. Copying
+the prompt verbatim to a non-Claude host ships Claude-isms — adapt first.
+
 Anatomy of why it works:
 
 - Goal only, no architecture: "a first-person shooter at the level of the most
