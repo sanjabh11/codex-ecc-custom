@@ -1,0 +1,7 @@
+interface:
+  display_name: "Manager Loop"
+  short_description: "Two-session coordinator/implementer pattern for long-horizon goals"
+  default_prompt: "Use $manager-loop: run this project with a Manager session that plans phases and assigns them one at a time to a separate Implementer session."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Gauntlet Loop"
+  short_description: "Build/critic quality ratchet against a concrete external bar"
+  default_prompt: "Use $gauntlet-loop: split this goal into judgeable pieces, give each a builder and a fresh-context blind critic, and loop until the output beats the reference bar."
+
+policy:
+  allow_implicit_invocation: true
