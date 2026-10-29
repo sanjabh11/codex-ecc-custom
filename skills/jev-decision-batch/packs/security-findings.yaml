@@ -1,0 +1,64 @@
+name: security-findings
+version: '1'
+artifact: security-findings.jsonl
+description: >-
+  Verdict pack for static-analysis findings (semgrep or equivalent) —
+  JEV judges whether a finding is a real security problem in context,
+  then code bands it block/fix/accept. State must carry rule id,
+  severity, message, file path, the matched code snippet, and what the
+  surrounding code does. Never asks JEV to re-derive the rule match.
+questions:
+  is_real:
+    type: noul
+    instructions: >-
+      Is this finding a true positive in context — a real security defect
+      rather than a safe pattern, test fixture, vendored code, or an
+      intentionally sandboxed use?
+    criteria:
+      'true': Real defect worth acting on.
+      'false': False positive or acceptable-by-design.
+  severity_context:
+    type: score
+    instructions: >-
+      Rate the effective severity of this finding given reachability —
+      internet-facing secrets and injection score high; test-only or
+      unreachable patterns score low.
+    criteria:
+      - Cosmetic; no realistic impact.
+      - Hygiene issue; bad practice, no exploitable path.
+      - Moderate; exploitable under narrow conditions.
+      - High; reachable injection, secret, or auth defect.
+      - Critical; exposed credentials or trivially exploitable.
+  fix_clarity:
+    type: noul
+    instructions: >-
+      Is the correct remediation obvious and contained (parameterize,
+      redact, move to env, validate input) without redesigning the module?
+    criteria:
+      'true': Fix is small and well-understood.
+      'false': Needs design discussion or risk trade-off.
+  state_sufficient:
+    type: noul
+    instructions: >-
+      Does the state (rule, snippet, surrounding purpose) contain enough
+      signal to judge without guessing?
+    criteria:
+      'true': Enough signal to judge.
+      'false': Too thin; judgment would be a guess.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    severity_context: 2
+    fix_clarity: 1
+  max_level: 4
+  bands:
+    accept: 60
+    fix: 25
+    block: 0
+  band_order: [block, fix, accept]
+  veto_nouls:
+    is_real: 0.8
+  veto_band: block
+  clarity_question: state_sufficient
+  clarity_floor: 0.4

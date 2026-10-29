@@ -1,6 +1,6 @@
 ---
 name: ecc-loop-status
-description: Codex adaptation of ECC `/loop-status`. Codex adaptation of ECC /loop-status.
+description: "Use when the user asks for the ECC /loop-status workflow inside Codex; adapts the upstream Claude command using autonomous-loops and enterprise-agent-ops."
 ---
 
 # ecc-loop-status

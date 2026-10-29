@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 Hooks",
+  "description": "Schema for weekly-mode hooks (array of 3 ranked hooks). v8 hook schema expects a single object; weekly-v1 wraps them in an array.",
+  "type": "array",
+  "minItems": 3,
+  "maxItems": 3,
+  "items": {
+    "type": "object",
+    "required": ["hook_id", "formula_type", "pain_id", "segment_id", "hook_text", "word_count", "awareness_level", "ranking_score", "evidence_citation", "schema_version", "weekly_mode"],
+    "properties": {
+      "schema_version": { "const": "weekly-v1" },
+      "weekly_mode": { "const": true },
+      "hook_id": { "type": "string", "pattern": "^HK-\\d{3}$" },
+      "formula_type": { "type": "string", "enum": ["pain", "desire", "proof", "curiosity"] },
+      "pain_id": { "type": "string" },
+      "segment_id": { "type": "string" },
+      "hook_text": { "type": "string", "maxLength": 200 },
+      "word_count": { "type": "integer", "minimum": 3, "maximum": 30 },
+      "awareness_level": { "type": "string", "enum": ["unaware", "problem_aware", "solution_aware", "product_aware"] },
+      "ranking_score": {
+        "type": "object",
+        "required": ["clarity", "curiosity", "pull", "composite"],
+        "properties": {
+          "clarity": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "curiosity": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "pull": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "composite": { "type": "number" }
+        }
+      },
+      "evidence_citation": { "type": "string" },
+      "rank": { "type": "integer", "minimum": 1 }
+    }
+  }
+}

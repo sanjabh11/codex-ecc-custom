@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 to v8 Promotion Mapping",
+  "description": "Defines which fields must be added to promote a weekly-v1 artifact to a full v8 artifact. Promotion is only allowed when all required evidence is present.",
+  "type": "object",
+  "properties": {
+    "offer": {
+      "type": "object",
+      "description": "Fields required to promote weekly-offer to v8 offer",
+      "required_for_promotion": ["price", "total_value_stack"],
+      "optional_for_promotion": ["value_ratio", "offer_name", "offer_presentation", "rewrite_notes"],
+      "evidence_required": {
+        "price": "Evidence-backed pricing data from positioning audit",
+        "total_value_stack": "Sum of evidence-backed bonus dollar values plus core offer value"
+      },
+      "promotion_rule": "price and total_value_stack must be present with evidence_citations. evidence_unavailable must be false or absent."
+    },
+    "hooks": {
+      "type": "object",
+      "description": "Hooks are already v8-compatible individually; promotion unwraps the array",
+      "required_for_promotion": [],
+      "promotion_rule": "Unwrap array; each hook object already matches v8 hook.schema.json. Add format_variants for top 10 if promoting to full v8."
+    },
+    "content-calendar": {
+      "type": "object",
+      "description": "Fields required to promote weekly content-calendar to v8",
+      "required_for_promotion": ["audit_id", "pillars", "entries", "proof_density"],
+      "evidence_required": {
+        "audit_id": "Positioning audit ID",
+        "pillars": "5-7 content pillars from positioning audit",
+        "entries": "30-day content entries with platform, content_type, title, has_proof",
+        "proof_density": "Fraction of entries with has_proof=true, must be >= 0.50"
+      },
+      "promotion_rule": "Must expand from 7-day to 30-day calendar with full pillars and entries."
+    },
+    "funnel-audit": {
+      "type": "object",
+      "description": "Fields required to promote weekly funnel-audit to v8",
+      "required_for_promotion": ["positioning_audit_id", "awareness_audit", "lead_capture_audit", "overall_score"],
+      "evidence_required": {
+        "positioning_audit_id": "Positioning audit ID",
+        "awareness_audit": "Full awareness audit with hook/messaging/proof scores and attention leaks",
+        "lead_capture_audit": "Full lead capture audit with opt-in/value scores and friction items",
+        "overall_score": "Weighted average score"
+      },
+      "promotion_rule": "Must conduct full awareness and lead-capture audit, not just 3 fixes."
+    },
+    "proof-library": {
+      "type": "object",
+      "description": "Fields required to promote weekly proof-library to v8",
+      "required_for_promotion": ["audit_id", "assets", "proof_stories"],
+      "evidence_required": {
+        "audit_id": "Positioning audit ID",
+        "assets": "Full proof asset library with short/mid/long formats",
+        "proof_stories": "At least 20 proof stories with 150-300 word narratives"
+      },
+      "promotion_rule": "Must build full asset library and 20+ proof stories with evidence."
+    }
+  }
+}

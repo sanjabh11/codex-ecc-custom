@@ -1,0 +1,11 @@
+{
+  "name": "ecc-advisor",
+  "description": "Multi-provider advisor pattern for cost-optimized multi-model orchestration",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanjayb"
+  },
+  "license": "MIT",
+  "keywords": ["advisor", "multi-model", "grok", "fable", "cost-optimization", "second-opinion"],
+  "skills": ["./"]
+}

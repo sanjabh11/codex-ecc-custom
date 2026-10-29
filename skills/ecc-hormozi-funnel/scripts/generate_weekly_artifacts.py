@@ -92,6 +92,36 @@ def reject_synthetic_claims(artifact, artifact_type):
                 print(f"ERROR: {artifact_type} has forbidden synthetic guarantee: '{forbidden}'", file=sys.stderr)
                 sys.exit(1)
 
+    # Recursive check for nested is_real without evidence
+    _check_nested_is_real(artifact, artifact_type, [])
+
+
+def _check_nested_is_real(obj, artifact_type, path, parent_has_evidence=False):
+    """Recursively check for is_real: true without evidence in nested objects.
+
+    Evidence can be on the parent object (evidence_citations) or on the nested
+    object itself. We pass parent_has_evidence down to allow nested is_real
+    when the parent has evidence citations.
+    """
+    if isinstance(obj, dict):
+        has_own_evidence = (
+            obj.get("evidence_citations") or
+            obj.get("evidence_citation") or
+            obj.get("evidence_ids")
+        )
+        if obj.get("is_real") is True:
+            if not has_own_evidence and not parent_has_evidence:
+                loc = ".".join(path) if path else "root"
+                print(f"ERROR: {artifact_type} has nested is_real=true at {loc} without evidence", file=sys.stderr)
+                sys.exit(1)
+        # Pass down whether this level or any ancestor has evidence
+        child_parent_evidence = parent_has_evidence or bool(has_own_evidence)
+        for k, v in obj.items():
+            _check_nested_is_real(v, artifact_type, path + [k], child_parent_evidence)
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            _check_nested_is_real(item, artifact_type, path + [str(i)], parent_has_evidence)
+
 
 def compute_offer_composite(dream, likelihood, time_delay, effort):
     """Value Equation composite, capped at 100."""
@@ -107,7 +137,7 @@ def compute_hook_composite(clarity, curiosity, pull):
     return round((clarity + curiosity + pull) / 3, 2)
 
 
-def generate_weekly_offer(segment, pain, evidence_ids, valid_evidence_ids, rank=1):
+def generate_weekly_offer(segment, pain, evidence_ids, valid_evidence_ids, rank=1, evidence_unavailable=False):
     """Generate an evidence-backed offer from positioning audit data."""
     validate_evidence_citations(evidence_ids, valid_evidence_ids, "offer")
 
@@ -148,8 +178,9 @@ def generate_weekly_offer(segment, pain, evidence_ids, valid_evidence_ids, rank=
         },
         "evidence_citations": evidence_ids,
         "rank": rank,
-        "schema_version": "v8",
+        "schema_version": "weekly-v1",
         "weekly_mode": True,
+        "evidence_unavailable": evidence_unavailable,
     }
 
     reject_synthetic_claims(offer, "offer")
@@ -180,7 +211,7 @@ def generate_weekly_hook(formula_type, pain, segment, text, clarity, curiosity,
         },
         "evidence_citation": evidence_id,
         "rank": rank,
-        "schema_version": "v8",
+        "schema_version": "weekly-v1",
         "weekly_mode": True,
     }
 
@@ -210,7 +241,7 @@ def generate_content_calendar(segment, hooks, start_date, evidence_ids, valid_ev
         "horizon_days": 7,
         "start_date": start_date,
         "days": days,
-        "schema_version": "v8",
+        "schema_version": "weekly-v1",
         "weekly_mode": True,
     }
 
@@ -246,7 +277,7 @@ def generate_funnel_audit(segment, evidence_ids, valid_evidence_ids):
         "audit_id": "FA-WEEKLY-001",
         "segment_id": segment.get("segment_id", "SEG-UNKNOWN"),
         "fixes": fixes[:3],
-        "schema_version": "v8",
+        "schema_version": "weekly-v1",
         "weekly_mode": True,
     }
 
@@ -259,7 +290,7 @@ def generate_proof_library_update(evidence_ids, valid_evidence_ids):
         "library_id": "PL-WEEKLY-001",
         "evidence_cited": evidence_ids,
         "update_type": "weekly_refresh",
-        "schema_version": "v8",
+        "schema_version": "weekly-v1",
         "weekly_mode": True,
     }
 
@@ -289,10 +320,14 @@ def main():
     pains = positioning.get("pains", [])
     pain = pains[0] if pains else {}
 
-    segment_evidence = segment.get("evidence_ids", list(valid_evidence_ids)[:2])
+    segment_evidence = segment.get("evidence_ids", [])
+    evidence_unavailable = len(segment_evidence) == 0
+    if evidence_unavailable:
+        segment_evidence = list(valid_evidence_ids)[:1] if valid_evidence_ids else ["EV-UNAVAILABLE"]
+        print(f"WARNING: Segment {segment.get('segment_id', 'UNKNOWN')} has no evidence_ids — marking evidence_unavailable", file=sys.stderr)
 
     # Generate 1 offer
-    offer = generate_weekly_offer(segment, pain, segment_evidence, valid_evidence_ids)
+    offer = generate_weekly_offer(segment, pain, segment_evidence, valid_evidence_ids, evidence_unavailable=evidence_unavailable)
 
     # Generate 3 hooks
     hook_data = segment.get("hooks", [])
@@ -343,6 +378,43 @@ def main():
         filepath = os.path.join(output_dir, filename)
         with open(filepath, "w") as f:
             json.dump(data, f, indent=2)
+
+    # Write evidence ledger
+    evidence_ledger = {
+        "claims": [],
+        "evidence_ids_used": sorted(set(segment_evidence)),
+        "evidence_ids_available": sorted(valid_evidence_ids),
+        "evidence_unavailable": evidence_unavailable,
+    }
+
+    # Track claims for each artifact
+    for name, data in artifacts.items():
+        if isinstance(data, dict):
+            citations = data.get("evidence_citations", data.get("evidence_cited", []))
+            if isinstance(citations, str):
+                citations = [citations]
+            for ev_id in citations:
+                evidence_ledger["claims"].append({
+                    "claim_id": f"CLM-{name.replace('.json', '').upper()}",
+                    "artifact": name,
+                    "evidence_id": ev_id,
+                    "evidence_type": "positioning_audit",
+                    "status": "available" if ev_id in valid_evidence_ids else "unknown",
+                })
+
+    with open(os.path.join(output_dir, "evidence-ledger.json"), "w") as f:
+        json.dump(evidence_ledger, f, indent=2)
+
+    # Write unavailable.json if evidence is missing
+    if evidence_unavailable:
+        unavailable = {
+            "missing": ["segment_evidence_ids"],
+            "reason": "Segment has no evidence_ids in positioning export",
+            "affected_stage": "Stage 2 — artifact generation",
+            "mitigation": "Run positioning audit with deeper research depth or provide evidence manually",
+        }
+        with open(os.path.join(output_dir, "unavailable.json"), "w") as f:
+            json.dump(unavailable, f, indent=2)
 
     # Verify constraints
     assert len(hooks) == 3, f"Expected 3 hooks, got {len(hooks)}"

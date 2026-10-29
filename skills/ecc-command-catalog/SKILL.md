@@ -73,3 +73,8 @@ Use this skill when the user asks what ECC command-equivalent workflows are avai
 ## Important Constraint
 
 These are Codex skill adaptations of upstream Claude commands. They are not literal slash commands and should never be presented as Claude command UI inside Codex.
+
+## Dependency Gating
+
+### Advisory tools (optional — silent skip if missing):
+- `kotlin`, `gradle`: Referenced in command descriptions only. No direct invocation required — skip if absent.

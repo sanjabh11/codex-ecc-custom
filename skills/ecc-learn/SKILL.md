@@ -1,11 +1,12 @@
 ---
 name: ecc-learn
 description: Read what the self-improvement agent has learned from LEARNINGS.md, summarise patterns, and offer to promote high-confidence learnings into the relevant SKILL.md files.
-argument-hint: 'what did we learn, show learnings, promote instincts'
 allowed-tools: Read, Write, Bash
 ---
 
 # ecc-learn — Review & Promote Learnings
+
+> **Usage hint:** `what did we learn, show learnings, promote instincts`
 
 Surface what the self-improvement flywheel has captured from past sessions,
 give you an intelligible summary, and let you selectively promote findings

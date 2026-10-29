@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 Proof Library Update",
+  "description": "Schema for weekly-mode proof-library update. v8 expects full library with 20+ stories and assets; weekly-v1 is an update-only delta.",
+  "type": "object",
+  "required": ["library_id", "evidence_cited", "update_type", "schema_version", "weekly_mode"],
+  "properties": {
+    "schema_version": { "const": "weekly-v1" },
+    "weekly_mode": { "const": true },
+    "library_id": { "type": "string" },
+    "evidence_cited": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "update_type": { "type": "string", "enum": ["weekly_refresh", "new_evidence", "revalidation"] },
+    "evidence_unavailable": { "type": "boolean", "description": "True when evidence for full proof stories is not yet available" }
+  }
+}

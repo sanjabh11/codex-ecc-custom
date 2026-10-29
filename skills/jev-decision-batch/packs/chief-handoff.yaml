@@ -1,0 +1,18 @@
+name: chief-handoff
+version: 1
+description: >-
+  Single-item interactive pack for chief.py — routes a goal + completed work
+  to the next worker. Governed path: contract identity, telemetry, cache.
+questions:
+  next_worker:
+    type: choice
+    instructions: >-
+      Choose the next step for a research briefing given `goal` and
+      `completed_work` in the state.
+    criteria:
+      research: Collect evidence still needed for the goal.
+      write: Draft the briefing from sufficient evidence.
+      review: Goal unclear, outside scope, or work complete.
+confidence_bands:
+  auto: 0.85
+  review: 0.6

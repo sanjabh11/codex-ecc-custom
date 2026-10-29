@@ -278,6 +278,75 @@ def check_weekly_mode(content, rules):
               "reject_synthetic_economic_claims not set to true")
 
 
+def check_e2e_weekly_v1_schemas():
+    """Run the e2e schema test that validates weekly artifacts against weekly-v1 schemas."""
+    import subprocess
+    e2e_test = os.path.join(SKILL_DIR, "tests", "e2e_schema_test.py")
+    if not os.path.exists(e2e_test):
+        check("e2e_weekly_v1_test", False, "e2e_schema_test.py not found")
+        return
+    result = subprocess.run(
+        [sys.executable, e2e_test],
+        capture_output=True, text=True, cwd=os.path.dirname(SKILL_DIR),
+    )
+    check("e2e_weekly_v1_schemas", result.returncode == 0,
+          f"e2e schema test failed: {result.stderr.strip() or result.stdout.strip()}")
+
+
+def check_mutation_test():
+    """Mutate a generated artifact and verify the validator catches it."""
+    import tempfile
+    try:
+        import jsonschema
+    except ImportError:
+        check("mutation_test", False, "jsonschema not installed")
+        return
+
+    schema_path = os.path.join(SKILL_DIR, "schemas", "weekly-v1", "weekly-offer.schema.json")
+    if not os.path.exists(schema_path):
+        check("mutation_test", False, "weekly-offer.schema.json not found")
+        return
+
+    with open(schema_path) as f:
+        schema = json.load(f)
+
+    # Create a mutated artifact that should fail validation
+    mutated = {
+        "offer_id": "INVALID",  # Wrong pattern
+        "segment_id": "SEG-001",
+        "pain_id": "P-001",
+        "dream_outcome": {"statement": "test", "specificity_score": 7},
+        "value_equation_scores": {"dream_outcome": 7, "likelihood": 7, "time_delay": 7, "effort_sacrifice": 7, "composite": 7.0},
+        "bonus_stack": [],
+        "guarantee": {"type": "conditional", "terms": "test"},
+        "scarcity_urgency": {"scarcity_type": "none", "is_real": False},
+        "evidence_citations": ["EV-001"],
+        "schema_version": "weekly-v1",
+        "weekly_mode": True,
+    }
+
+    try:
+        jsonschema.validate(instance=mutated, schema=schema)
+        check("mutation_test", False, "Invalid offer_id pattern was not caught by schema")
+    except jsonschema.ValidationError:
+        check("mutation_test", True, "Schema correctly rejected mutated artifact")
+
+
+def check_negative_claim_tests():
+    """Run the negative claim boundary tests."""
+    import subprocess
+    test_path = os.path.join(SKILL_DIR, "tests", "negative_claim_tests.py")
+    if not os.path.exists(test_path):
+        check("negative_claim_tests", False, "negative_claim_tests.py not found")
+        return
+    result = subprocess.run(
+        [sys.executable, test_path],
+        capture_output=True, text=True, cwd=os.path.dirname(SKILL_DIR),
+    )
+    check("negative_claim_tests", result.returncode == 0,
+          f"Negative claim tests failed: {result.stderr.strip() or result.stdout.strip()}")
+
+
 def main():
     print("=== ecc-hormozi-funnel Validator v8.1 ===\n")
 
@@ -320,6 +389,9 @@ def main():
     check_quick_validate()
     check_jsonschema_validation()
     check_weekly_mode(content, rules)
+    check_e2e_weekly_v1_schemas()
+    check_mutation_test()
+    check_negative_claim_tests()
 
     print(f"\n{'ALL CHECKS PASSED' if checks_failed == 0 else f'{checks_failed} CHECK(S) FAILED'}")
     if checks_failed > 0:

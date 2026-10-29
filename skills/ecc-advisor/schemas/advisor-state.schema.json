@@ -5,6 +5,7 @@
   "type": "object",
   "required": ["call_count", "history"],
   "properties": {
+    "version": { "type": "integer", "minimum": 1, "description": "State file schema version" },
     "call_count": { "type": "integer", "minimum": 0 },
     "history": {
       "type": "array",
@@ -16,7 +17,7 @@
           "context_preview": { "type": "string" },
           "response_preview": { "type": "string" },
           "timestamp": { "type": "string", "description": "ISO 8601 UTC" },
-          "session_id": { "type": "string", "description": "Optional session identifier" }
+          "session_id": { "type": ["string", "null"], "description": "Optional session identifier" }
         }
       }
     },

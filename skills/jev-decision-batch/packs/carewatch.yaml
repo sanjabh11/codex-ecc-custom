@@ -1,0 +1,90 @@
+name: carewatch
+version: '1'
+model: jev-1.14.0
+artifact: carewatch.jsonl
+description: >-
+  Caregiver sentinel — Jev judges a camera frame (asset `shot`) for a
+  welfare event against the stated expectation of normal activity. Built
+  for elderly-independence monitoring: the only output that matters is a
+  confirmed emergency, so the pack abstains aggressively — pass = ignore,
+  review = capture another frame, fail = confirm-then-alert. Every fail
+  carries a box localization as visual evidence for the alert receipt.
+questions:
+  scene_ok:
+    type: score
+    instructions: >-
+      Rate how clearly `shot` shows the scene is normal and the person
+      (if visible) is safe — weight against falls, prolonged floor
+      stillness, distress posture, and empty frames during an expected
+      occupancy window.
+    criteria:
+      - "Definite emergency: person on floor motionless, distress posture, or clearly unsafe."
+      - "Strong concern: possible fall or person in unusual stillness."
+      - "Ambiguous: partial view, occlusion, or odd posture that could be normal."
+      - "Probably normal: routine posture/activity, minor uncertainty."
+      - "Clearly normal: person active and upright, or empty room during an expected absence."
+  activity_class:
+    type: choice
+    instructions: >-
+      What best describes what `shot` shows? Judge the dominant
+      observable state.
+    criteria:
+      person-upright-active: Person standing, walking, or clearly active.
+      person-seated-reclined: Person sitting, reclining, or resting in a
+        normal resting pose.
+      person-lying-floor: Person lying on the floor — cannot distinguish
+        rest from collapse from this frame alone.
+      person-partial: Person partially visible or heavily occluded.
+      empty-room: No person visible.
+      insufficient-evidence: Frame too dark, blurred, or thin to judge.
+  fall_detected:
+    type: noul
+    instructions: >-
+      Does `shot` show a person who has fallen and is lying on the floor
+      motionless or in distress — NOT someone lying on a bed, sofa, or
+      in a normal resting pose?
+    criteria:
+      'true': Fallen to floor and motionless or distressed.
+      'false': Upright, normally resting, or no person visible.
+  scene_unsafe:
+    type: noul
+    instructions: >-
+      Does `shot` show a likely emergency of ANY kind — injured or
+      unresponsive person, fire/smoke, severe distress posture —
+      regardless of whether it fits the fall pattern? Answer 'true'
+      only when the danger signal is clear enough that a caregiver
+      should be alerted without waiting for more frames.
+    criteria:
+      'true': Likely emergency; alert the caregiver.
+      'false': Scene is safe, or ambiguous but not alarming.
+  person_box:
+    type: box
+    instructions: >-
+      the person in `shot`, or the region where a person should be if
+      the expectation says one is present — locate even if partially
+      visible
+  frame_sufficient:
+    type: noul
+    instructions: >-
+      Does `shot` contain enough signal to judge welfare without
+      guessing (adequate light, the monitored area visible)?
+    criteria:
+      'true': Enough signal to judge.
+      'false': Too thin; judgment would be a guess.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    scene_ok: 3
+  max_level: 4
+  bands:
+    pass: 60
+    review: 25
+    fail: 0
+  band_order: [fail, review, pass]
+  veto_nouls:
+    fall_detected: 0.65
+    scene_unsafe: 0.85
+  veto_band: fail
+  clarity_question: frame_sufficient
+  clarity_floor: 0.4

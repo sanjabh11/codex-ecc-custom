@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hermes Research"
+  short_description: "Personal research assistant with vault-first gate, cost caps, and HermesBrain output contract"
+  default_prompt: "Use $ecc-hermes-research to run personal research with vault-first gate and provenance-bound output."

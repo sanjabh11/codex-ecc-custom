@@ -1,6 +1,6 @@
 ---
 name: ecc-code-review
-description: Codex adaptation of ECC `/code-review`. Codex adaptation of ECC /code-review.
+description: "Use when the user asks for the ECC /code-review workflow inside Codex; adapts the upstream Claude command using security-review, verification-loop, and coding-standards."
 ---
 
 # ecc-code-review

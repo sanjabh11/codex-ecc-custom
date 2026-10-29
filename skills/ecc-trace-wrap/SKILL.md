@@ -1,11 +1,12 @@
 ---
 name: ecc-trace-wrap
 description: Session wrap-up skill. Records failures, corrections, and discoveries from the current session into LEARNINGS.md for the self-improvement flywheel. Run at the end of every work session.
-argument-hint: 'wrap up, end session, record learnings'
 allowed-tools: Read, Write, Bash
 ---
 
 # ecc-trace-wrap — Session Wrap-Up & Trace Recorder
+
+> **Usage hint:** `wrap up, end session, record learnings`
 
 Run this at the END of every session to feed the self-improvement flywheel.
 It turns your session's corrections and retries into structured evidence that

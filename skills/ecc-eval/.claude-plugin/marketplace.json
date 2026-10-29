@@ -1,0 +1,15 @@
+{
+  "name": "ecc-eval",
+  "owner": {
+    "name": "sanjayb"
+  },
+  "metadata": {
+    "description": "Eval-driven development framework with codex exec / claude -p automation"
+  },
+  "plugins": [
+    {
+      "name": "ecc-eval",
+      "source": "."
+    }
+  ]
+}

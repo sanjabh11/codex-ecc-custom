@@ -1,0 +1,24 @@
+interface:
+  display_name: "ECC Eval"
+  short_description: "Eval-driven development with codex exec / claude -p automation"
+  default_prompt: "Use $ecc-eval to define and run evals for skill quality, regression testing, and CI gates."
+
+policy:
+  allow_implicit_invocation: true
+
+invocation:
+  # Codex uses codex exec for non-interactive eval runs.
+  # The runner script auto-detects the best available backend.
+  locate_runner: |
+    # Method 1: from repo root
+    EVAL_RUNNER="bash skills/ecc-eval/scripts/run_eval.sh"
+    # Method 2: git rev-parse (works if inside the repo)
+    # EVAL_RUNNER="bash $(git rev-parse --show-toplevel)/skills/ecc-eval/scripts/run_eval.sh"
+    # Method 3: EVAL_DIR env var
+    # export EVAL_DIR=/path/to/skills/ecc-eval
+    # EVAL_RUNNER="bash $EVAL_DIR/scripts/run_eval.sh"
+  check_available: 'bash skills/ecc-eval/scripts/run_eval.sh --help'
+  single_eval: 'bash skills/ecc-eval/scripts/run_eval.sh --eval <file> --output <out.json>'
+  batch_eval: 'bash skills/ecc-eval/scripts/run_eval.sh --batch "skills/*/SKILL.md" --prompt "Validate" --output-dir /tmp/evals/'
+  pinned_model: 'bash skills/ecc-eval/scripts/run_eval.sh --eval <file> --model o3 --output <out.json>'
+  clean_room: 'bash skills/ecc-eval/scripts/run_eval.sh --eval <file> --ignore-config --ignore-rules --output <out.json>'

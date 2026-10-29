@@ -1,0 +1,60 @@
+{
+  "contract_version": "1",
+  "tool": "graphify",
+  "audited_version": "0.9.46",
+  "core_commands": [
+    "extract",
+    "query",
+    "path",
+    "explain",
+    "update",
+    "export"
+  ],
+  "exports": {
+    "obsidian": {
+      "status": "verified-local",
+      "command": "graphify export obsidian --graph PATH --dir DIR"
+    },
+    "neo4j": {
+      "status": "verified-local-offline",
+      "command": "graphify export neo4j --graph PATH"
+    },
+    "falkordb": {
+      "status": "verified-local-offline",
+      "command": "graphify export falkordb --graph PATH"
+    },
+    "wiki": {
+      "status": "preconditioned-unverified",
+      "command": "graphify export wiki --graph PATH"
+    },
+    "svg": {
+      "status": "optional-dependency-unverified",
+      "command": "graphify export svg --graph PATH"
+    },
+    "graphml": {
+      "status": "blocked-on-audited-version",
+      "command": "graphify export graphml --graph PATH"
+    }
+  },
+  "mcp": {
+    "entrypoint": "python -m graphify.serve GRAPH_PATH",
+    "top_level_flag": false,
+    "runtime_status": "module-help-verified-live-handshake-unverified"
+  },
+  "proof_boundary": {
+    "verified": [
+      "local CLI version and help contract",
+      "temporary code-only extract/query/path/explain cycle",
+      "temporary Obsidian export",
+      "offline Neo4j and FalkorDB Cypher export"
+    ],
+    "manual_or_unverified": [
+      "MCP client handshake and host loader integration",
+      "wiki export with matching analysis sidecar",
+      "SVG dependency installation",
+      "GraphML export on a fixed upstream version",
+      "remote database push",
+      "native or authenticated platform runtime"
+    ]
+  }
+}

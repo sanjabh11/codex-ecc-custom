@@ -1,6 +1,6 @@
 ---
 name: ecc-checkpoint
-description: Codex adaptation of ECC `/checkpoint`. Codex adaptation of ECC /checkpoint.
+description: "Use when the user asks for the ECC /checkpoint workflow inside Codex; adapts the upstream Claude command using strategic-compact and continuous-learning-v2."
 ---
 
 # ecc-checkpoint

@@ -1,0 +1,68 @@
+{
+  "schema_version": "v1",
+  "description": "Machine-readable validation rules for ecc-eval validator",
+  "rules": {
+    "required_schemas": [
+      "eval-definition.schema.json",
+      "eval-result.schema.json"
+    ],
+    "required_references": [
+      "eval-templates.md",
+      "ci-examples.md",
+      "cli-flags.md"
+    ],
+    "required_sections": [
+      "## When to Use",
+      "## How It Works",
+      "## Eval Types",
+      "## Metrics",
+      "## Eval Workflow",
+      "## Top 10 Use Cases",
+      "## CI Integration",
+      "## Dependency Gating",
+      "## Auto-Revocation",
+      "## Backend Auto-Detection",
+      "## Platform Compatibility",
+      "## Path Resolution",
+      "## Portability Note"
+    ],
+    "required_trigger_phrases": [
+      "eval harness",
+      "eval-driven development",
+      "EDD",
+      "pass@k",
+      "regression eval",
+      "capability eval",
+      "model grader",
+      "batch validation",
+      "CI eval",
+      "prompt A/B testing",
+      "codex exec eval",
+      "skill quality gate"
+    ],
+    "required_anti_trigger": "DO NOT TRIGGER when: task is trivially one-line, or no non-interactive runner is available.",
+    "required_platform_mentions": ["Codex", "Claude Code", "Windsurf", "Devin", "Autogravity"],
+    "required_runner_features": [
+      "codex exec",
+      "claude -p",
+      "ephemeral",
+      "sandbox",
+      "json",
+      "batch",
+      "model",
+      "output",
+      "backend",
+      "EVAL_DIR",
+      "--ignore-config",
+      "--ignore-rules",
+      "--skip-git-check",
+      "--workdir",
+      "--no-ephemeral",
+      "--extra-args"
+    ],
+    "required_agents_file": true,
+    "required_claude_plugin": true,
+    "max_description_length": 1024,
+    "max_body_lines": 1200
+  }
+}

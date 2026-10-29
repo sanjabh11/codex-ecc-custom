@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Eval Result",
+  "description": "Schema for eval execution results",
+  "type": "object",
+  "required": ["eval_name", "status", "criteria_results"],
+  "additionalProperties": false,
+  "properties": {
+    "eval_name": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["pass", "fail", "error", "pending"]
+    },
+    "criteria_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion", "result"],
+        "properties": {
+          "criterion": { "type": "string" },
+          "result": { "type": "string", "enum": ["pass", "fail", "skip"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "model": { "type": "string" },
+    "backend": { "type": "string", "enum": ["codex", "claude", "fallback"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "duration_seconds": { "type": "number" },
+    "pass_at_k": {
+      "type": "object",
+      "properties": {
+        "k": { "type": "integer" },
+        "passed": { "type": "integer" },
+        "total": { "type": "integer" },
+        "rate": { "type": "number" }
+      }
+    },
+    "score": { "type": "number", "minimum": 0, "maximum": 5 },
+    "reasoning": { "type": "string" }
+  }
+}

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Scenario: Session isolation — different sessions have independent state.
+"""Scenario: Session tagging — session IDs are tracked in history entries.
 
-Tests that --session flag provides state isolation between concurrent tasks.
+Tests that --session flag tags history entries with the session_id
+for audit trail purposes. Call count is global (not per-session).
 """
 
 import json

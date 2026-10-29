@@ -1,6 +1,6 @@
 ---
 name: ecc-multi-frontend
-description: Codex adaptation of ECC `/multi-frontend`. Codex adaptation of ECC /multi-frontend.
+description: "Use when the user asks for the ECC /multi-frontend workflow inside Codex; adapts the upstream Claude command via dmux-workflows and autonomous-loops; needs codeagent-wrapper/ccg prompts."
 ---
 
 # ecc-multi-frontend

@@ -2,15 +2,24 @@
 
 ## Fully Implemented
 
+### jev_gateway
+- **Status:** Production-ready (Primary cross-harness backend)
+- **Implementation:** `fable/advisor_cli.py` → `fable/services.py::JevGatewayService`
+- **Auth:** API key (`vck_...`) via `AI_GATEWAY_API_KEY` or config discovery in `~/.cline/plugins/`, `~/.codex/plugins/`, `~/.devin/plugins/`, or `~/.gemini/config/`
+- **API:** Vercel AI Gateway Chat Completions (`https://ai-gateway.vercel.sh/v1/chat/completions`)
+- **Model:** `typesafe-ai/jev` (configurable, supports OpenAI/Anthropic/Google models on Vercel AI Gateway)
+- **Cost control:** Call cap, timeout, retry, dry-run
+- **Harness support:** Cline, Codex, Devin, Antigravity
+
 ### grok_cli
-- **Status:** Production-ready
+- **Status:** Production-ready (Legacy fallback)
 - **Implementation:** `fable/advisor_cli.py` → `fable/services.py::GrokService`
 - **Auth:** OAuth token from `~/.grok/auth.json` (Super Grok CLI)
 - **Token refresh:** Automatic via `_refresh_oauth_token()` when token expires
 - **API:** xAI Responses API (`/v1/responses`) with Chat Completions fallback (`/v1/chat/completions`)
-- **Model:** `grok-4.5` (configurable)
+- **Model:** `grok-4.6` (configurable)
 - **Cost control:** Call cap, timeout, retry, dry-run
-- **Tested:** 51/51 tests pass including live integration test
+- **Tested:** 67/67 tests pass including live integration test
 
 ## Detected but Not Yet Implemented in CLI
 

@@ -26,7 +26,10 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 ## Dependency Gating
 
-- None for the baseline guidance path.
+### Workflow tools (required — fail loud if missing):
+- `cargo`: `command -v cargo >/dev/null 2>&1 || { echo 'cargo not found — cannot complete. Install: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh'; return 1; }`
+
+If a workflow tool is missing, report the limitation — do NOT silently succeed.
 
 ## Upstream Source
 

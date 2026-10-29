@@ -1,0 +1,49 @@
+{
+  "offer_id": "OFF-001",
+  "segment_id": "SEG-001",
+  "pain_id": "H-SEG1-001",
+  "dream_outcome": {
+    "statement": "Reduce weekly reporting time from 3 hours to 15 minutes",
+    "specificity_score": 9
+  },
+  "value_equation_scores": {
+    "dream_outcome": 9,
+    "likelihood": 8,
+    "time_delay": 8,
+    "effort_sacrifice": 7,
+    "composite": 60.0
+  },
+  "bonus_stack": [
+    {
+      "bonus_name": "Template Library",
+      "solves": "speed",
+      "dollar_value": 500,
+      "description": "Pre-built report templates"
+    },
+    {
+      "bonus_name": "Automation Kit",
+      "solves": "effort",
+      "dollar_value": 300,
+      "description": "Reduces manual work"
+    }
+  ],
+  "guarantee": {
+    "type": "conditional",
+    "terms": "See pilot agreement terms",
+    "duration_days": 30
+  },
+  "scarcity_urgency": {
+    "scarcity_type": "cohort",
+    "scarcity_detail": "Quarterly pilot cohort",
+    "urgency_type": "none",
+    "urgency_detail": "",
+    "is_real": true
+  },
+  "evidence_citations": [
+    "E-001",
+    "E-003"
+  ],
+  "rank": 1,
+  "schema_version": "v8",
+  "weekly_mode": true
+}

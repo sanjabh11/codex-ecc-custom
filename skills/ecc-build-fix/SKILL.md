@@ -1,6 +1,6 @@
 ---
 name: ecc-build-fix
-description: Codex adaptation of ECC `/build-fix`. Codex adaptation of ECC /build-fix.
+description: "Use when the user asks for the ECC /build-fix workflow inside Codex; adapts the upstream Claude command using verification-loop and search-first, with an npx dependency check."
 ---
 
 # ecc-build-fix
@@ -26,7 +26,10 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 ## Dependency Gating
 
-- `npx package`: This flow may rely on an external package; confirm the runtime/tool exists before execution.
+### Workflow tools (required — fail loud if missing):
+- `npx`: `command -v npx >/dev/null 2>&1 || { echo 'npx not found — cannot complete. Install: npm install -g npx'; return 1; }`
+
+If a workflow tool is missing, report the limitation — do NOT silently succeed.
 
 ## Upstream Source
 

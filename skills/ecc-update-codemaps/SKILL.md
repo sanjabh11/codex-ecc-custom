@@ -1,6 +1,6 @@
 ---
 name: ecc-update-codemaps
-description: Codex adaptation of ECC `/update-codemaps`. Codex adaptation of ECC /update-codemaps.
+description: "Use when the user asks for the ECC /update-codemaps workflow inside Codex; adapts the upstream Claude command using repo-scan and codebase-onboarding."
 ---
 
 # ecc-update-codemaps

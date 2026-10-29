@@ -1,0 +1,7 @@
+interface:
+  display_name: "CASS Session Search"
+  short_description: "Cross-tool agent session search with sub-ms lexical index"
+  default_prompt: "Use $ecc-cass to search all agent histories before solving from scratch."
+
+policy:
+  allow_implicit_invocation: true

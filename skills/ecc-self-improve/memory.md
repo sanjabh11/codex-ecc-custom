@@ -126,7 +126,7 @@ fi
 
 ## Tier C: Semantic Search (cass)
 
-**Optional. Used to strengthen signal with cross-session patterns.**
+**Auto-invocable. Health check runs automatically during Stage 1 mining. If unhealthy, skips silently.**
 
 ### Health Check
 ```bash

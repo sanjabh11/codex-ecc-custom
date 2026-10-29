@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Eval Definition",
+  "description": "Schema for eval definition files",
+  "type": "object",
+  "required": ["eval_type", "name", "task", "success_criteria"],
+  "additionalProperties": false,
+  "properties": {
+    "eval_type": {
+      "type": "string",
+      "enum": ["capability", "regression", "model_grader", "skill_validation", "prompt_ab", "mcp_audit"]
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "task": { "type": "string", "minLength": 10 },
+    "success_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "expected_output": { "type": "string" },
+    "grader": {
+      "type": "string",
+      "enum": ["code", "model", "human"],
+      "default": "model"
+    },
+    "baseline": { "type": "string" },
+    "models": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "pass_at_k": {
+      "type": "object",
+      "properties": {
+        "k": { "type": "integer", "minimum": 1 },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

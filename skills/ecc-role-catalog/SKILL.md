@@ -43,3 +43,8 @@ Use this skill when the user wants to know which adapted ECC roles are available
 ## Selection Rule
 
 Pick the narrowest role that matches the task. If no specialized role fits, fall back to the general Codex workflow and cite the nearest matching ECC role as guidance.
+
+## Dependency Gating
+
+### Advisory tools (optional — silent skip if missing):
+- `kotlin`: Referenced in role descriptions only. No direct invocation required — skip if absent.

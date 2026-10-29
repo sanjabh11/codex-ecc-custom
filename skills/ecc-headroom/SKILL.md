@@ -36,3 +36,8 @@ Provide specific, calculated numbers for the work done in the session.
 - If files exceed 1000 lines and are not fully read, compress them before processing.
 - Maintain original content in local workspace cache and only query full text via Lossless Retrieval (CCR) when specific detail is required.
 
+
+## Dependency Gating
+
+### Advisory tools (optional — silent skip if missing):
+- `npm`: `command -v npm >/dev/null 2>&1 && npm <args> 2>/dev/null || true` — used for compression utilities. Skip if absent.

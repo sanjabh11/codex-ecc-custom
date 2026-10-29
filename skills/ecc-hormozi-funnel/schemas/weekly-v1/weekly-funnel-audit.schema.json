@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 Funnel Audit",
+  "description": "Schema for weekly-mode funnel audit with 3 prioritized fixes. v8 expects full awareness/lead-capture audit; weekly-v1 is a simplified delta.",
+  "type": "object",
+  "required": ["audit_id", "segment_id", "fixes", "schema_version", "weekly_mode"],
+  "properties": {
+    "schema_version": { "const": "weekly-v1" },
+    "weekly_mode": { "const": true },
+    "audit_id": { "type": "string" },
+    "segment_id": { "type": "string" },
+    "fixes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["fix_id", "defect", "fix_description", "impact", "confidence", "effort"],
+        "properties": {
+          "fix_id": { "type": "string" },
+          "defect": { "type": "string" },
+          "fix_description": { "type": "string" },
+          "impact": { "type": "string", "enum": ["high", "medium", "low"] },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+          "effort": { "type": "string", "enum": ["high", "medium", "low"] },
+          "evidence_citations": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "evidence_citations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

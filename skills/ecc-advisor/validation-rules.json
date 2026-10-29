@@ -1,0 +1,85 @@
+{
+  "schema_version": "v1",
+  "description": "Machine-readable validation rules for ecc-advisor validator",
+  "rules": {
+    "required_schemas": [
+      "advisor-config.schema.json",
+      "advisor-state.schema.json",
+      "advisor-response.schema.json"
+    ],
+    "required_references": [
+      "backend-status.md",
+      "cli-flags.md"
+    ],
+    "required_sections": [
+      "## When to Use",
+      "## How It Works",
+      "## Hard Rule",
+      "## Cost Controls",
+      "## Dependency Gating",
+      "## Auto-Revocation",
+      "## Backend Auto-Detection",
+      "## Platform Compatibility",
+      "## Path Resolution",
+      "## Portability Note"
+    ],
+    "required_trigger_phrases": [
+      "advisor",
+      "two-model",
+      "cascade",
+      "escalation",
+      "consult stronger model",
+      "cost optimization model",
+      "Grok advisor",
+      "second opinion",
+      "advisor tool",
+      "advisor strategy",
+      "Sonnet Opus pairing",
+      "Fable advisor"
+    ],
+    "required_anti_trigger": "DO NOT TRIGGER when: task is trivially one-line, or no advisor backend is available.",
+    "required_platform_mentions": ["Cascade", "Claude Code", "Codex", "Windsurf", "Devin", "Autogravity"],
+    "required_cli_features": [
+      "load_config",
+      "load_state",
+      "save_state",
+      "reset_state",
+      "get_advice",
+      "detect_backend",
+      "argparse",
+      "--json",
+      "--context-file",
+      "--dry-run",
+      "--session",
+      "--backend",
+      "--max-calls",
+      "--timeout",
+      "--model",
+      "--system-prompt",
+      "maybe_auto_reset",
+      "RESET_PERIODS",
+      "FABLE_DIR",
+      "fcntl",
+      "MAX_CONTEXT_CHARS",
+      "MAX_HISTORY_ENTRIES",
+      "STATE_VERSION",
+      "0o600",
+      "JSONDecodeError"
+    ],
+    "config_defaults": {
+      "advisor_model": "grok-4.6",
+      "max_advisor_calls": 30,
+      "max_tokens_advisor": 4096,
+      "reset_period": "daily",
+      "timeout_seconds": 180,
+      "retry_attempts": 1,
+      "revoked": false,
+      "revocation_reason": "",
+      "revoked_until": null
+    },
+    "required_agents_file": true,
+    "required_claude_plugin": true,
+    "max_description_length": 1024,
+    "max_body_lines": 1200
+  }
+}

@@ -1,6 +1,6 @@
 ---
 name: ecc-multi-backend
-description: Codex adaptation of ECC `/multi-backend`. Codex adaptation of ECC /multi-backend.
+description: "Use when the user asks for the ECC /multi-backend workflow inside Codex; adapts the upstream Claude command via dmux-workflows and autonomous-loops; needs codeagent-wrapper/ccg prompts."
 ---
 
 # ecc-multi-backend

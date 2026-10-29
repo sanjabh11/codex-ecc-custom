@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 Offer",
+  "description": "Schema for weekly-mode offers (7-day delta). Does not require price or total_value_stack — those require full evidence and are promoted to v8 only when complete.",
+  "type": "object",
+  "required": ["offer_id", "segment_id", "pain_id", "dream_outcome", "value_equation_scores", "bonus_stack", "guarantee", "scarcity_urgency", "evidence_citations", "schema_version", "weekly_mode"],
+  "properties": {
+    "schema_version": { "const": "weekly-v1" },
+    "weekly_mode": { "const": true },
+    "offer_id": { "type": "string", "pattern": "^OFF-\\d{3}$" },
+    "segment_id": { "type": "string" },
+    "pain_id": { "type": "string" },
+    "dream_outcome": {
+      "type": "object",
+      "required": ["statement", "specificity_score"],
+      "properties": {
+        "statement": { "type": "string" },
+        "specificity_score": { "type": "integer", "minimum": 1, "maximum": 10 }
+      }
+    },
+    "value_equation_scores": {
+      "type": "object",
+      "required": ["dream_outcome", "likelihood", "time_delay", "effort_sacrifice", "composite"],
+      "properties": {
+        "dream_outcome": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "likelihood": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "time_delay": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "effort_sacrifice": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "composite": { "type": "number" }
+      }
+    },
+    "bonus_stack": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "bonus_name": { "type": "string" },
+          "solves": { "type": "string" },
+          "dollar_value": { "type": "number", "minimum": 0 },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "guarantee": {
+      "type": "object",
+      "required": ["type", "terms"],
+      "properties": {
+        "type": { "type": "string" },
+        "terms": { "type": "string" },
+        "duration_days": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "scarcity_urgency": {
+      "type": "object",
+      "properties": {
+        "scarcity_type": { "type": "string" },
+        "scarcity_detail": { "type": "string" },
+        "urgency_type": { "type": "string" },
+        "urgency_detail": { "type": "string" },
+        "is_real": { "type": "boolean" },
+        "evidence_unavailable": { "type": "boolean", "description": "True when scarcity evidence is not yet available" }
+      }
+    },
+    "evidence_citations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "evidence_unavailable": { "type": "boolean", "description": "True when required evidence for full v8 promotion is missing" },
+    "rank": { "type": "integer", "minimum": 1 }
+  }
+}

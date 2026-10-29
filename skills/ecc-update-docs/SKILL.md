@@ -1,6 +1,6 @@
 ---
 name: ecc-update-docs
-description: Codex adaptation of ECC `/update-docs`. Codex adaptation of ECC /update-docs.
+description: "Use when the user asks for the ECC /update-docs workflow inside Codex; adapts the upstream Claude command using documentation-lookup and codebase-onboarding."
 ---
 
 # ecc-update-docs

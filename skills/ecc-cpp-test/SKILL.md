@@ -26,7 +26,11 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 ## Dependency Gating
 
-- None for the baseline guidance path.
+### Workflow tools (required — fail loud if missing):
+- `gcov`: `command -v gcov >/dev/null 2>&1 || { echo 'gcov not found — cannot complete. Install: brew install gcov lcov'; return 1; }`
+- `lcov`: `command -v lcov >/dev/null 2>&1 || { echo 'lcov not found — cannot complete. Install: brew install gcov lcov'; return 1; }`
+
+If a workflow tool is missing, report the limitation — do NOT silently succeed.
 
 ## Upstream Source
 

@@ -27,7 +27,10 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 ## Dependency Gating
 
-- None for the baseline guidance path.
+### Workflow tools (required — fail loud if missing):
+- `gradle`: `command -v gradle >/dev/null 2>&1 || { echo 'gradle not found — cannot complete. Install: brew install gradle'; return 1; }`
+
+If a workflow tool is missing, report the limitation — do NOT silently succeed.
 
 ## Upstream Source
 

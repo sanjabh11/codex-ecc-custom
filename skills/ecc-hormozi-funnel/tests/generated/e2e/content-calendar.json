@@ -1,0 +1,80 @@
+{
+  "calendar_id": "CAL-WEEKLY-001",
+  "segment_id": "SEG-001",
+  "horizon_days": 7,
+  "start_date": "2026-07-20",
+  "days": [
+    {
+      "day": 1,
+      "date": "2026-07-20",
+      "hook_id": "HK-001",
+      "action_type": "content",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2026-07-21",
+      "hook_id": "HK-002",
+      "action_type": "content",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2026-07-22",
+      "hook_id": "HK-003",
+      "action_type": "content",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 4,
+      "date": "2026-07-23",
+      "hook_id": "HK-001",
+      "action_type": "content",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 5,
+      "date": "2026-07-24",
+      "hook_id": "HK-002",
+      "action_type": "content",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 6,
+      "date": "2026-07-25",
+      "hook_id": "HK-003",
+      "action_type": "engagement",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    },
+    {
+      "day": 7,
+      "date": "2026-07-26",
+      "hook_id": "HK-001",
+      "action_type": "engagement",
+      "evidence_citations": [
+        "E-001",
+        "E-003"
+      ]
+    }
+  ],
+  "schema_version": "v8",
+  "weekly_mode": true
+}

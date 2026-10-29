@@ -1,6 +1,6 @@
 ---
 name: ecc-pm2
-description: Codex adaptation of ECC `/pm2`. Codex adaptation of ECC /pm2.
+description: "Use when the user asks for the ECC /pm2 workflow inside Codex; adapts the upstream Claude command via enterprise-agent-ops and deployment-patterns; requires pm2 installed."
 ---
 
 # ecc-pm2

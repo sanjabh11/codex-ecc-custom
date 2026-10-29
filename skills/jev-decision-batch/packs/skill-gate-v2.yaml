@@ -95,3 +95,4 @@ verdict:
   veto_band: skip
   clarity_question: proposal_clear
   clarity_floor: 0.3
+  review_margin: 5

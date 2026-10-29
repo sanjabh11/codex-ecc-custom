@@ -1,0 +1,11 @@
+{
+  "name": "ecc-eval",
+  "description": "Eval-driven development framework with codex exec / claude -p automation",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanjayb"
+  },
+  "license": "MIT",
+  "keywords": ["eval", "edd", "codex-exec", "regression", "capability", "pass-at-k", "ci", "batch"],
+  "skills": ["./"]
+}

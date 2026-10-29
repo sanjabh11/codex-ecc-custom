@@ -1,0 +1,64 @@
+name: param-watch
+version: '1'
+model: jev-1.13.0
+artifact: param-watch.jsonl
+description: >-
+  Parametric sentinel — judges a breached-parameter breach SET against
+  context and picks severity + channel. IMPORTANT: a crossed red line is
+  call-eligible regardless of this verdict — Jev refines (severity,
+  channel, script), it can upgrade but never downgrade a deterministic
+  breach. Bands: call / notify / log.
+questions:
+  severity:
+    type: score
+    instructions: >-
+      Rate how dangerous this breach set is for the monitored site —
+      weight combined breaches, exceedance size over the red line, and
+      sustained-breach counts.
+    criteria:
+      - No real danger — spurious or within-margin breach.
+      - Minor — one marginal breach, likely transient.
+      - Notable — breach real but bounded; monitor closely.
+      - Serious — one clear breach or several marginal ones.
+      - Critical — multiple breaches or a large single exceedance.
+  alert_needed:
+    type: noul
+    instructions: >-
+      Should the on-duty officer be CALLED (not just notified) about
+      this breach set right now?
+    criteria:
+      'true': Yes — danger is real and immediate enough for a call.
+      'false': No — notification or log is sufficient.
+  action_class:
+    type: choice
+    instructions: >-
+      Which channel best fits this breach set?
+    criteria:
+      monitor: Log only; check next poll.
+      notify: Send a quiet notification; no call.
+      call-primary: Call the primary duty officer.
+      call-escalation: Call primary, escalate to fallback if unacknowledged.
+  flap_risk:
+    type: noul
+    instructions: >-
+      Is this breach likely boundary flapping (hovering at the red line,
+      low exceedance, single-sample spike) rather than a real trend?
+    criteria:
+      'true': Likely flapping — advise review rather than call.
+      'false': Real, sustained trend.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    severity: 3
+  max_level: 4
+  bands:
+    call: 80
+    notify: 40
+    log: 0
+  band_order: [log, notify, call]
+  veto_nouls:
+    alert_needed: 0.8
+  veto_band: call
+  clarity_question: flap_risk
+  clarity_floor: 0.35

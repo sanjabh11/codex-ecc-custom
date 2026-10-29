@@ -1,0 +1,89 @@
+name: browser-verify-v2
+version: '1'
+model: jev-1.14.0
+artifact: browser-verify-v2.jsonl
+description: >-
+  Screenshot-native variant of browser-verify — JEV judges the actual
+  rendered pixels (asset `shot`) against the stated expectation, not a
+  text snapshot. Requires Jev 1.14 (box type) and the images danger-zone
+  header, which the batch layer sends automatically when assets are
+  attached. State must reference `shot` by name and describe the expected
+  element/page. Code bands pass/review/fail; the box answer lands in the
+  artifact as localization evidence for the consumer.
+questions:
+  render_health:
+    type: score
+    instructions: >-
+      Rate how well the screenshot `shot` shows the page/artifact
+      rendered and met the stated expectation — weight real content
+      present against blanks, error pages, or perpetual loaders.
+    criteria:
+      - Nothing rendered; crash, error page, or blank.
+      - Skeleton/spinner only; no real content.
+      - Content rendered but partially broken or expectation unmet.
+      - Renders correctly; minor cosmetic issues at most.
+      - Fully renders and matches the stated expectation.
+  defect_class:
+    type: choice
+    instructions: >-
+      Which single defect class best describes what `shot` shows?
+      Judge the dominant visible problem; 'none' when it renders and
+      matches the expectation.
+    criteria:
+      none: Renders correctly and matches the stated expectation.
+      layout-broken: Content present but visually broken — overlap,
+        clipped, unreadable, or collapsed layout.
+      wrong-content: Renders but shows wrong/missing data, placeholder
+        text, or obviously unintended content.
+      empty-state: Page rendered but the target content area is empty.
+      crashed: Error page, JS crash, or nothing rendered at all.
+      expectation-unmet: Renders fine but fails the stated expectation
+        (missing element, wrong state, wrong interaction result).
+      insufficient-evidence: Capture too thin to judge.
+  is_broken:
+    type: noul
+    instructions: >-
+      Is `shot` definitively broken — crashed, empty, error state, or
+      fails the stated expectation outright (not a judgment call)?
+    criteria:
+      'true': Definitively broken or expectation failed.
+      'false': Renders acceptably or issues are cosmetic/debatable.
+  element_missing:
+    type: noul
+    instructions: >-
+      Is the specific element named in the state's expectation absent
+      from `shot`? (answer false when the state names no concrete
+      element)
+    criteria:
+      'true': The named element is absent from the screenshot.
+      'false': The element is present, or no element was named.
+  element_box:
+    type: box
+    instructions: >-
+      the expected element described in the state's expectation,
+      within `shot` — locate it even if partially visible
+  state_sufficient:
+    type: noul
+    instructions: >-
+      Do `shot` and the stated expectation contain enough signal to
+      judge without guessing?
+    criteria:
+      'true': Enough signal to judge.
+      'false': Too thin; judgment would be a guess.
+decision:
+  kind: verdict
+verdict:
+  weights:
+    render_health: 3
+  max_level: 4
+  bands:
+    pass: 60
+    review: 25
+    fail: 0
+  band_order: [fail, review, pass]
+  veto_nouls:
+    is_broken: 0.8
+    element_missing: 0.85
+  veto_band: fail
+  clarity_question: state_sufficient
+  clarity_floor: 0.4

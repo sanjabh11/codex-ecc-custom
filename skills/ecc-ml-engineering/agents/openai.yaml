@@ -1,0 +1,7 @@
+interface:
+  display_name: "ML Engineering"
+  short_description: "Research-first ML training workflow with recipe design and experiment tracking"
+  default_prompt: "Use $ecc-ml-engineering to design a training recipe, audit the dataset, and run a preflight check before GPU training."
+
+policy:
+  allow_implicit_invocation: true

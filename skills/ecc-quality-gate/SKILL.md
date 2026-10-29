@@ -1,6 +1,6 @@
 ---
 name: ecc-quality-gate
-description: Codex adaptation of ECC `/quality-gate`. Codex adaptation of ECC /quality-gate.
+description: "Use when the user asks for the ECC /quality-gate workflow inside Codex; adapts the upstream Claude command using verification-loop, security-review, and coding-standards."
 ---
 
 # ecc-quality-gate

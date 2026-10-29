@@ -1,6 +1,6 @@
 ---
 name: ecc-multi-execute
-description: Codex adaptation of ECC `/multi-execute`. Codex adaptation of ECC /multi-execute.
+description: "Use when the user asks for the ECC /multi-execute workflow inside Codex; adapts the upstream Claude command via dmux-workflows and autonomous-loops; needs codeagent-wrapper/ccg prompts."
 ---
 
 # ecc-multi-execute

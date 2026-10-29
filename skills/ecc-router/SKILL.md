@@ -39,6 +39,12 @@ Route to `ecc-learn` when user says any of:
 - "show learnings", "review learnings", "what has the agent learned?"
 - "learning summary", "what patterns did you find?", "show failures"
 
+Route to `ecc-cass` when user says any of:
+- "search sessions", "find in history", "cross-session search"
+- "what did we discuss", "have I done this before"
+- "search agent history", "find conversation"
+- "find in past sessions", "search across tools"
+
 Route to `ecc-self-improve --dry-run` when user says any of:
 - "preview patches", "show proposed patches", "dry run", "what would you patch?"
 

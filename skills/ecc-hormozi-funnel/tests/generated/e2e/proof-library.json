@@ -1,0 +1,10 @@
+{
+  "library_id": "PL-WEEKLY-001",
+  "evidence_cited": [
+    "E-001",
+    "E-003"
+  ],
+  "update_type": "weekly_refresh",
+  "schema_version": "v8",
+  "weekly_mode": true
+}

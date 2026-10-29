@@ -5,3 +5,17 @@ interface:
 
 policy:
   allow_implicit_invocation: true
+
+invocation:
+  # Use the bootstrap wrapper so the canonical shared policy and revocation gate apply.
+  # FABLE_DIR remains an explicit project override when intentionally requested.
+  locate_cli: |
+    # Canonical global path (works from any CWD)
+    ADV_CLI="bash skills/ecc-advisor/scripts/call_advisor.sh"
+    # Explicit project override
+    # export FABLE_DIR=/path/to/fable
+    # ADV_CLI="python3 $FABLE_DIR/advisor_cli.py"
+  check_available: 'bash skills/ecc-advisor/scripts/call_advisor.sh --status'
+  get_advice: 'bash skills/ecc-advisor/scripts/call_advisor.sh "context here"'
+  dry_run: 'bash skills/ecc-advisor/scripts/call_advisor.sh --dry-run "test"'
+  reset: 'bash skills/ecc-advisor/scripts/call_advisor.sh --reset'

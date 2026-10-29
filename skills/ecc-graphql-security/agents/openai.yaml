@@ -1,0 +1,7 @@
+interface:
+  display_name: "GraphQL Security"
+  short_description: "GraphQL API security audit — DoS, authz, introspection, N+1"
+  default_prompt: "Use $ecc-graphql-security to audit this GraphQL API for security vulnerabilities."
+
+policy:
+  allow_implicit_invocation: true

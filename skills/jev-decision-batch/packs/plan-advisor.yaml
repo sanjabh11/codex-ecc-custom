@@ -1,0 +1,33 @@
+name: plan-advisor
+version: '1'
+extractor: python3 plan_state_builder.py
+artifact: plan-advisor-labels.jsonl
+description: 'Independent advisor: grades whether an implementation plan or package is execution-ready. Find problems; do not approve by default.'
+questions:
+  proceed_score:
+    type: score
+    instructions: 'Act as an independent adversarial advisor on this implementation plan. How ready is this package to execute? Judge evidence discipline, internal consistency, missing pieces, and blocked dependencies. 0 = do not start; 5 = execute now.'
+    criteria: ['0 - do not start', '1 - major gaps', '2 - needs rework', '3 - mostly ready with fixes', '4 - ready with noted caveats', '5 - execute now']
+  soundness:
+    type: score
+    instructions: 'How sound is the plan at the level of technical and procedural detail? Would a cold engineer following it produce correct outcomes without hidden assumptions? 0 = unsound; 5 = fully sound.'
+    criteria: ['0 - unsound', '1 - mostly unsound', '2 - partially sound', '3 - sound with gaps', '4 - sound', '5 - fully sound']
+  biggest_blocker:
+    type: choice
+    instructions: 'What is the single biggest blocker or risk in this plan? Pick the most damaging one, not the most numerous.'
+    criteria:
+      missing-implementation: 'Documents exist but the required code/tools do not yet.'
+      blocked-authority: 'Missing signatures, approvals, or external confirmations gate everything.'
+      internal-inconsistency: 'Documents still contradict each other on scope, numbers, or mode.'
+      unverified-claims: 'Statements are asserted without measurements, receipts, or evidence.'
+      external-dependency: 'A third party (customer, provider, hardware) must act before work can proceed.'
+      scope-or-estimate-wrong: 'Effort, cost, or capacity numbers do not cover the actual work.'
+      none-material: 'No single material blocker stands out.'
+  execute_now:
+    type: noul
+    instructions: 'Should the owner authorize execution of this plan as written, as-is?'
+    criteria:
+      'true': 'Yes — it is safe and correct to start now.'
+      'false': 'No — fix the identified issues first.'
+decision:
+  kind: sift

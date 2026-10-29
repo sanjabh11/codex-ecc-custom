@@ -5,14 +5,18 @@
   "type": "object",
   "required": ["advisor_model", "max_advisor_calls", "max_tokens_advisor", "advisor_system_prompt"],
   "properties": {
-    "advisor_model": { "type": "string", "default": "grok-4.5" },
-    "max_advisor_calls": { "type": "integer", "minimum": 1, "maximum": 10, "default": 3 },
-    "max_tokens_advisor": { "type": "integer", "minimum": 256, "maximum": 8192, "default": 2048 },
+    "advisor_model": { "type": "string", "default": "grok-4.6" },
+    "max_advisor_calls": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
+    "max_tokens_advisor": { "type": "integer", "minimum": 256, "maximum": 8192, "default": 4096 },
+    "reset_period": { "type": "string", "enum": ["none", "daily", "weekly", "monthly"], "default": "daily", "description": "Auto-reset call counter after this period elapses" },
     "advisor_system_prompt": { "type": "string", "minLength": 10 },
     "nudge_turn": { "type": "integer", "minimum": 1, "maximum": 10 },
     "nudge_text": { "type": "string" },
     "executor_system_prompt_addition": { "type": "string" },
-    "timeout_seconds": { "type": "integer", "minimum": 10, "maximum": 300, "default": 120 },
-    "retry_attempts": { "type": "integer", "minimum": 0, "maximum": 3, "default": 1 }
+    "timeout_seconds": { "type": "integer", "minimum": 10, "maximum": 300, "default": 180 },
+    "retry_attempts": { "type": "integer", "minimum": 0, "maximum": 3, "default": 1 },
+    "revoked": { "type": "boolean", "default": false },
+    "revocation_reason": { "type": "string", "maxLength": 512, "default": "" },
+    "revoked_until": { "type": ["string", "null"], "format": "date-time", "default": null }
   }
 }

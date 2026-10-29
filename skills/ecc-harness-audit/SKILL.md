@@ -1,6 +1,6 @@
 ---
 name: ecc-harness-audit
-description: Codex adaptation of ECC `/harness-audit`. Codex adaptation of ECC /harness-audit.
+description: "Use when the user asks for the ECC /harness-audit workflow inside Codex; adapts the upstream Claude command using agent-harness-construction and token-budget-advisor; advisory only."
 ---
 
 # ecc-harness-audit
@@ -32,3 +32,7 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 - Command file: `harness-audit.md`
 - Original description: Codex adaptation of ECC /harness-audit.
+
+## Auto-Revocation
+
+This skill is advisory and never blocks on tool availability. If the backing skills (`agent-harness-construction`, `token-budget-advisor`) or external tools (`cass`, `cm`, `gh`) are unavailable, the skill silently skips enrichment and falls back to the baseline guidance path. The baseline path requires only local repo access (`git`, `cat`, `grep`) and never blocks on missing integrations. Never claim a tool or integration is active when it is not verified in the current session.

@@ -77,6 +77,8 @@ Works on any harness. The executor calls a wrapper script that resolves the cano
 
 **Path Resolution:** always invoke via `bash skills/ecc-advisor/scripts/call_advisor.sh` — never `python3 fable/advisor_cli.py` directly (that path is CWD/git-root relative and breaks outside the canonical repo). The wrapper resolves, in order: `$FABLE_DIR`, the skill's own repo sibling path, `~/codex-ecc-custom/fable/advisor_cli.py`, then the git root.
 
+**MCP connector (Codex and other harnesses that only surface MCP tools):** `scripts/advisor_mcp.py` is a dependency-free stdio MCP server exposing `advisor`, `advisor_status`, and `advisor_probe` tools. Registered in `~/.codex/config.toml` as `[mcp_servers.ecc-advisor]`; other hosts can register the same script path — it wraps the canonical `fable/advisor_cli.py` and writes no state on status/probe calls.
+
 1. Work on the task normally — read files, run commands, orient
 2. **Before substantive work** (writing code, committing to an approach), call the advisor:
    ```bash
@@ -86,6 +88,15 @@ Works on any harness. The executor calls a wrapper script that resolves the cano
 4. If the advisor points out a flaw, adapt. If it confirms your approach, proceed with confidence
 5. **When stuck** (errors recurring, approach not converging), call the advisor again
 6. **Before declaring done**, call the advisor for a final review
+
+### Two-stage Jev evaluation (jev_gateway backend)
+
+When `advisor_eval_enabled` is on, each advisor call runs the eval model first and the chat model only phrases its verdict:
+
+- **Stage 1 — eval:** a bounded Jev eval call answers `sound` / `verdict` / `unaddressed_risk`. `advisor_eval_backend` (`auto`|`typesafe`|`vercel`|`off`) picks the endpoint; `auto` prefers `api.typesafe.ai` (`TYPESAFE_API_KEY`, same engine as jev-starter packs) and falls back to the Vercel `/evaluate` route. Bounded by `eval_timeout_seconds` (default 20s).
+- **Stage 2 — communicate:** the chat model receives the structured verdict and may only phrase it, never override it.
+- Responses carry `[Jev eval: sound=0.92 | verdict=proceed(0.8) | …]` when eval ran, or `[eval unavailable: <reason>]` when it failed — a missing prefix now means eval was disabled, not silently dead.
+- History entries record `latency_ms`, `eval_status`, `eval_latency_ms`, `fallback_used`, `backend`, `model`, `error_preview` — use `--status` to audit them.
 
 ## Advisor Timing — When to Call
 
@@ -128,9 +139,10 @@ If you've already retrieved data pointing one way and the advisor points another
 - Check status: `bash skills/ecc-advisor/scripts/call_advisor.sh --status`
 - Reset counter: `bash skills/ecc-advisor/scripts/call_advisor.sh --reset`
 - Advisor output capped at 2048 tokens per call
-- Timeout: 120s per call (configurable via `timeout_seconds` in config)
-- Retry: 1 retry on failure (configurable via `retry_attempts` in config)
+- Timeout: 60s per request (configurable via `timeout_seconds` in config), plus a single wall-clock budget across eval + retries + fallback (`total_timeout_seconds`, default 90s)
+- Retry: 1 retry on failure (configurable via `retry_attempts` in config); deterministic 4xx (non-429) errors are never retried
 - Dry run: `bash skills/ecc-advisor/scripts/call_advisor.sh --dry-run "<context>"` (no call budget consumed)
+- Gateway health check: `bash skills/ecc-advisor/scripts/call_advisor.sh --probe` (times every advisor endpoint — typesafe eval, gemini chat, gpt-4o fallback, vercel eval — and prints status + latency; use this first when the advisor feels slow or unavailable)
 - JSON output: `bash skills/ecc-advisor/scripts/call_advisor.sh --json "<context>"` (for programmatic use)
 - Context from file: `bash skills/ecc-advisor/scripts/call_advisor.sh --context-file <path> "<question>"`
 - Session tagging: `bash skills/ecc-advisor/scripts/call_advisor.sh --session <id> "<context>"` (tags history entries for audit trail; call count is global)

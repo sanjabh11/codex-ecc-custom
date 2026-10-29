@@ -107,3 +107,13 @@ Use this skill when the user asks which integrations are required, optional, or 
 - Required for: None
 - Optional for: skill-create at large repo scale, team sharing, auto-PRs
 - Notes: Advanced replacement for the local git-history flow.
+## cass (Coding Agent Session Search)
+
+- Required for: None
+- Optional for: ecc-self-improve (Tier C), ecc-learn (cross-session), ecc-cass (direct)
+- Notes: Rust binary at `/opt/homebrew/bin/cass`. Indexes 19 agent connectors (codex, claude_code, cursor, gemini, aider, cline, opencode, chatgpt, copilot, kimi, qwen, crush, etc.). Health check: `cass health --json`. Robot mode: `--robot` or `--json` required (never bare `cass`). Install: `curl -sSf https://raw.githubusercontent.com/Dicklesworthstone/coding_agent_session_search/main/install.sh | sh`. Auto-revocable: all calls guarded by health check, silent skip if unhealthy.
+## Codex-Orchestration Plugin
+
+- Required for: None
+- Optional for: multi-model Planner/Advisor/Executor routing, plan review loops, custom agent role creation
+- Notes: Companion plugin (v0.5.1, MIT, Python 3.11+). Install via `codex plugin marketplace add Cjbuilds/Codex-Orchestration` then `codex plugin add codex-orchestration@codex-orchestration`. Complements `ecc-advisor` (code-level) with model-routing-level orchestration. Provides Claude Fable 5 bridge via read-only MCP, explicit seat labels, PLAN_APPROVED/PLAN_REVISE protocol (up to 5 reviews), and truthful route states.

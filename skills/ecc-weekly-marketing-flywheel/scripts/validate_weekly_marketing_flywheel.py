@@ -131,6 +131,88 @@ def check_output_constraints(content):
           "1 experiment constraint missing")
 
 
+def check_runner():
+    """Verify the deterministic runner exists and produces valid output in dry-run mode."""
+    import tempfile
+    runner = os.path.join(SKILL_DIR, "scripts", "run_weekly_marketing_flywheel.py")
+    check("runner_exists", os.path.exists(runner), "run_weekly_marketing_flywheel.py not found")
+
+    if not os.path.exists(runner):
+        return
+
+    # Run in dry-run mode with the test positioning export
+    hormozi_test_export = os.path.join(
+        os.path.dirname(SKILL_DIR), "ecc-hormozi-funnel", "tests", "positioning-export-test.json"
+    )
+    result = subprocess.run(
+        [sys.executable, runner,
+         "--repository", "/tmp/test-repo",
+         "--objective", "validator test",
+         "--week", "2026-07-20",
+         "--mode", "dry-run",
+         "--positioning-export", hormozi_test_export],
+        capture_output=True, text=True, cwd=os.path.dirname(SKILL_DIR),
+    )
+    check("runner_dry_run_exit", result.returncode == 0,
+          f"Runner failed: {result.stderr.strip()[:200]}")
+
+    # Find output directory from stdout
+    output_dir = None
+    for line in result.stdout.split("\n"):
+        if "Output directory:" in line:
+            output_dir = line.split("Output directory:")[1].strip()
+            break
+
+    if output_dir and os.path.isdir(output_dir):
+        # Check for required output files
+        required_files = [
+            "run-manifest.json", "offer.json", "hooks.json",
+            "content-calendar.json", "funnel-audit.json", "proof-library.json",
+            "evidence-ledger.json", "approval-required.md", "hashes.json",
+        ]
+        for f in required_files:
+            check(f"runner_output_{f}", os.path.exists(os.path.join(output_dir, f)),
+                  f"{f} not produced by runner")
+
+        # Validate manifest against schema
+        try:
+            import jsonschema
+            manifest_path = os.path.join(output_dir, "run-manifest.json")
+            schema_path = os.path.join(SKILL_DIR, "schemas", "run-manifest.schema.json")
+            if os.path.exists(manifest_path) and os.path.exists(schema_path):
+                with open(manifest_path) as fh:
+                    manifest = json.load(fh)
+                with open(schema_path) as fh:
+                    schema = json.load(fh)
+                try:
+                    jsonschema.validate(instance=manifest, schema=schema)
+                    check("runner_manifest_schema", True)
+                except jsonschema.ValidationError as e:
+                    check("runner_manifest_schema", False, e.message)
+        except ImportError:
+            check("runner_manifest_schema", False, "jsonschema not installed")
+    else:
+        check("runner_output_dir", False, "Could not find output directory")
+
+
+def check_runner_stops_without_input():
+    """Verify the runner stops explicitly when no positioning export is provided."""
+    runner = os.path.join(SKILL_DIR, "scripts", "run_weekly_marketing_flywheel.py")
+    if not os.path.exists(runner):
+        return
+
+    result = subprocess.run(
+        [sys.executable, runner,
+         "--repository", "/tmp/test-repo",
+         "--objective", "stop test",
+         "--week", "2026-07-20",
+         "--mode", "dry-run"],
+        capture_output=True, text=True, cwd=os.path.dirname(SKILL_DIR),
+    )
+    check("runner_stops_without_input", "STOPPED" in result.stdout,
+          "Runner should stop when Stage 1 is unavailable")
+
+
 def main():
     print("=== ecc-weekly-marketing-flywheel Validator ===\n")
 
@@ -148,6 +230,8 @@ def main():
     check_repo_profiles(content)
     check_agents_file()
     check_output_constraints(content)
+    check_runner()
+    check_runner_stops_without_input()
 
     # Run scenarios
     scenario_dir = os.path.join(SKILL_DIR, "tests", "scenarios")

@@ -1,6 +1,6 @@
 ---
 name: ecc-multi-plan
-description: Codex adaptation of ECC `/multi-plan`. Codex adaptation of ECC /multi-plan.
+description: "Use when the user asks for the ECC /multi-plan workflow inside Codex; adapts the upstream Claude command via dmux-workflows and autonomous-loops; needs codeagent-wrapper/ccg prompts."
 ---
 
 # ecc-multi-plan

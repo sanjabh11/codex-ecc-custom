@@ -1,0 +1,7 @@
+interface:
+  display_name: "Accessibility Audit"
+  short_description: "WCAG 2.2 AA accessibility auditing and testing workflow"
+  default_prompt: "Use $ecc-a11y-audit to audit this code for WCAG 2.2 AA compliance."
+
+policy:
+  allow_implicit_invocation: true

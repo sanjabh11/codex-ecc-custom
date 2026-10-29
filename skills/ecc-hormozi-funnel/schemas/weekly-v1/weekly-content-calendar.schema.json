@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Weekly-v1 Content Calendar",
+  "description": "Schema for weekly-mode 7-day content/action slice. v8 expects 30-day calendar with pillars/entries; weekly-v1 uses a simpler days array.",
+  "type": "object",
+  "required": ["calendar_id", "segment_id", "horizon_days", "start_date", "days", "schema_version", "weekly_mode"],
+  "properties": {
+    "schema_version": { "const": "weekly-v1" },
+    "weekly_mode": { "const": true },
+    "calendar_id": { "type": "string" },
+    "segment_id": { "type": "string" },
+    "horizon_days": { "const": 7 },
+    "start_date": { "type": "string", "description": "ISO date YYYY-MM-DD" },
+    "days": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "required": ["day", "date", "action_type"],
+        "properties": {
+          "day": { "type": "integer", "minimum": 1, "maximum": 7 },
+          "date": { "type": "string" },
+          "hook_id": { "type": ["string", "null"] },
+          "action_type": { "type": "string", "enum": ["content", "engagement", "rest"] },
+          "evidence_citations": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "evidence_citations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

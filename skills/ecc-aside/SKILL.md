@@ -32,3 +32,7 @@ This skill adapts the upstream Claude-oriented command into a Codex-usable workf
 
 - Command file: `aside.md`
 - Original description: Answer a quick side question without interrupting or losing context from the current task. Resume work automatically after answering.
+
+## Auto-Revocation
+
+This skill is advisory and never blocks on tool availability. If the backing skills (`iterative-retrieval`, `strategic-compact`) or external tools (`cass`, `cm`) are unavailable, the skill silently skips enrichment and falls back to the baseline guidance path. The baseline path requires only local repo access and never blocks on missing integrations. Never claim a tool or integration is active when it is not verified in the current session.

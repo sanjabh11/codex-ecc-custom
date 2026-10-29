@@ -1,0 +1,7 @@
+interface:
+  display_name: "Multi-Model Blindspot Review"
+  short_description: "Cross-review multiple model outputs to surface blindspots before shipping"
+  default_prompt: "Use $ecc-multi-model-blindspot to cross-review multiple models and find blind spots."
+
+policy:
+  allow_implicit_invocation: true

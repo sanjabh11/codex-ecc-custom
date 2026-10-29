@@ -1,6 +1,6 @@
 ---
 name: ecc-multi-workflow
-description: Codex adaptation of ECC `/multi-workflow`. Codex adaptation of ECC /multi-workflow.
+description: "Use when the user asks for the ECC /multi-workflow workflow inside Codex; adapts the upstream Claude command via dmux-workflows and autonomous-loops; needs codeagent-wrapper/ccg prompts."
 ---
 
 # ecc-multi-workflow

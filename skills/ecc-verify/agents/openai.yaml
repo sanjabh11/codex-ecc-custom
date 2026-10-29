@@ -1,0 +1,7 @@
+interface:
+  display_name: "Verify"
+  short_description: "ECC verification workflow — evidence-bound checks before merge or release"
+  default_prompt: "Use $ecc-verify to run verification checks before merging or releasing."
+
+policy:
+  allow_implicit_invocation: true

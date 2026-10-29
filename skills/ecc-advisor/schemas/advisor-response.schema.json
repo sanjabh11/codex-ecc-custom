@@ -9,7 +9,7 @@
     "advice": { "type": "string", "description": "Advisor guidance text or fallback message" },
     "call_count": { "type": "integer", "minimum": 0 },
     "calls_remaining": { "type": "integer", "minimum": 0 },
-    "backend": { "type": "string", "enum": ["grok_cli", "claude_native", "codex_orchestration", "fallback"] },
+    "backend": { "type": "string", "enum": ["jev_gateway", "grok_cli", "claude_native", "codex_orchestration", "fallback"] },
     "session_id": { "type": "string" },
     "error": { "type": "string", "description": "Error details if status is error/timeout" }
   }

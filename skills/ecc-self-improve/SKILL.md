@@ -1,11 +1,12 @@
 ---
 name: ecc-self-improve
 description: The 4-stage self-improvement flywheel. Mines LEARNINGS.md for systematic weaknesses, generates textual gradient patches for SKILL.md files, gates them through regression fixtures, and commits only passing patches. This is the core of the self-improvement learning agent.
-argument-hint: 'self-improve, improve yourself, patch skills, apply learnings'
 allowed-tools: Read, Write, Bash
 ---
 
 # ecc-self-improve — The 4-Stage Self-Improvement Flywheel
+
+> **Usage hint:** `self-improve, improve yourself, patch skills, apply learnings`
 
 This skill turns raw session observations (from LEARNINGS.md) into verified,
 committed improvements to your ECC skill files — automatically, safely, and

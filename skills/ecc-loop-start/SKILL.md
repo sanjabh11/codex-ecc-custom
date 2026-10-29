@@ -1,6 +1,6 @@
 ---
 name: ecc-loop-start
-description: Codex adaptation of ECC `/loop-start`. Codex adaptation of ECC /loop-start.
+description: "Use when the user asks for the ECC /loop-start workflow inside Codex; adapts the upstream Claude command using autonomous-loops and enterprise-agent-ops, with a loop-completion hook."
 ---
 
 # ecc-loop-start
@@ -39,6 +39,15 @@ Invoke: ecc-trace-wrap
 Purpose: Record what succeeded, failed, and was discovered this loop.
 Result: Entries appended to LEARNINGS.md with conversation_evidence.
 ```
+
+### Step 1b: Refresh cass index (advisory)
+```bash
+if command -v cass >/dev/null 2>&1; then
+  cass health --json 2>/dev/null | grep -q '"healthy":true' && \
+    cass index --json 2>/dev/null | tail -1 || true
+fi
+```
+Silent, non-blocking. Ensures loop session is searchable by ecc-cass and ecc-self-improve.
 
 ### Step 2: Check auto-improvement boundary conditions
 
